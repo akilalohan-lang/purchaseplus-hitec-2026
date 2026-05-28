@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HITEC 2026 Hub · PurchasePlus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/logo-emblem.png">
+<style>
+:root {
+  --grad: linear-gradient(135deg, #a956ff 0%, #7c5dff 50%, #3766fe 100%);
+  --purple: #a956ff;
+  --violet: #7c5dff;
+  --blue: #3766fe;
+  --ink: #111827;
+  --body: #374151;
+  --muted: #9ca3af;
+  --border: #e5e7eb;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --radius: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--bg); }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--body);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, p { text-wrap: balance; }
+.grad-text {
+  background: var(--grad);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gpulse 5s linear infinite;
+}
+@keyframes gpulse {
+  0%   { background-position: 200% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Header ── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.header-logo img { height: 28px; }
+.header-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+  background: #f3efff;
+  border: 1px solid #d8ccff;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+/* ── Hero ── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 72px 32px 56px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(169,86,255,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(55,102,254,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-char {
+  position: absolute;
+  bottom: 0;
+  width: 180px;
+  opacity: 0.92;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 24px rgba(124,93,255,.12));
+}
+.hero-char.left  { left: 32px; }
+.hero-char.right { right: 32px; transform: scaleX(-1); }
+.hero-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet);
+  background: #f5f0ff;
+  border: 1px solid #ddd6fe;
+  padding: 5px 14px;
+  border-radius: 99px;
+  margin-bottom: 20px;
+}
+.hero-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--grad); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(.75); } }
+.hero h1 {
+  font-size: clamp(42px, 7vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.hero-meta {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--body);
+  margin-bottom: 8px;
+}
+.hero-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.hero-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--body);
+  max-width: 520px;
+  margin: 0 auto 32px;
+}
+.hero-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  padding: 6px 14px; border-radius: 99px;
+  white-space: nowrap;
+}
+.pill-grad { background: var(--grad); color: #fff; }
+.pill-soft { background: #f3f4f6; color: var(--ink); border: 1px solid var(--border); }
+.countdown {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 6px 16px;
+  font-size: 13px; font-weight: 600; color: var(--ink);
+}
+.countdown-num { font-weight: 800; font-size: 16px; color: var(--violet); }
+
+/* ── Section wrapper ── */
+.section { padding: 56px 32px; }
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 24px; text-align: center;
+}
+
+/* ── CTA Grid ── */
+.cta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.cta-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow .2s, transform .2s, border-color .2s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--grad);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.cta-card:hover { box-shadow: 0 12px 40px rgba(124,93,255,.12); transform: translateY(-3px); border-color: #d0c4ff; }
+.cta-card:hover::before { opacity: 1; }
+.cta-week {
+  display: inline-flex;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 99px;
+}
+.cta-week.wk12  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.cta-week.wk3   { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.cta-week.wk4   { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+.cta-week.post  { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.cta-icon { font-size: 28px; }
+.cta-title { font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.cta-body { font-size: 13px; color: var(--body); line-height: 1.6; flex: 1; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--violet);
+  padding: 0; background: none; border: none; cursor: pointer;
+  white-space: nowrap;
+}
+.cta-btn svg { transition: transform .15s; }
+.cta-card:hover .cta-btn svg { transform: translateX(4px); }
+
+/* ── Progress ── */
+.progress-section { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.progress-grid { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.prog-item {}
+.prog-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.prog-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.prog-pct { font-size: 13px; font-weight: 700; }
+.prog-pct.done   { color: var(--green); }
+.prog-pct.half   { color: var(--amber); }
+.prog-pct.zero   { color: var(--muted); }
+.prog-track {
+  height: 8px; background: #f3f4f6; border-radius: 99px; overflow: hidden; margin-bottom: 10px;
+}
+.prog-fill {
+  height: 100%; border-radius: 99px;
+  background: var(--grad);
+  width: 0;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+.prog-fill.zero-fill { background: #e5e7eb; }
+.prog-checks {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+}
+.chk {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 99px;
+  white-space: nowrap;
+}
+.chk.done { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.chk.todo { background: #f9fafb; color: var(--muted); border: 1px solid #e5e7eb; }
+.chk-icon { font-size: 10px; }
+
+.prog-warning {
+  margin-top: 10px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #78350f;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.prog-warning-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Modal ── */
+.modal-backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.4);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.18);
+  width: 100%; max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 36px;
+  position: relative;
+}
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #f3f4f6; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--muted); transition: background .15s;
+}
+.modal-close:hover { background: #e5e7eb; }
+.modal-week { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--violet); margin-bottom: 8px; }
+.modal h2 { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.modal-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.todo-group { margin-bottom: 20px; }
+.todo-group h4 { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.todo-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: #fafafa;
+}
+.todo-item.urgent { border-color: #fecaca; background: #fff5f5; }
+.todo-cb { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px; }
+.todo-item.urgent .todo-cb { border-color: #f87171; }
+.todo-label { color: var(--ink); line-height: 1.4; }
+.todo-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fee2e2; padding: 1px 7px; border-radius: 99px; margin-left: 6px; }
+.soon-card {
+  text-align: center; padding: 40px 20px;
+  color: var(--muted); font-size: 14px;
+}
+.soon-icon { font-size: 40px; margin-bottom: 12px; }
+.soon-card h3 { color: var(--ink); font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+
+/* ── Footer ── */
+.footer {
+  text-align: center; padding: 32px;
+  font-size: 12px; color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hero-char { width: 130px; }
+  .hero-char.left  { left: 8px; }
+  .hero-char.right { right: 8px; }
+}
+@media (max-width: 680px) {
+  .hero { padding: 48px 20px 40px; }
+  .hero-char { display: none; }
+  .section { padding: 40px 20px; }
+  .cta-grid { grid-template-columns: 1fr; gap: 14px; }
+  .header { padding: 0 20px; }
+  .modal { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header">
+  <a class="header-logo" href="https://www.purchaseplus.com" target="_blank">
+    <img src="assets/logo.png" alt="PurchasePlus">
+  </a>
+  <span class="header-badge">HITEC 2026</span>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <img class="hero-char left"  src="assets/agents/bellhop-1.png" alt="">
+  <img class="hero-char right" src="assets/agents/manager.png"   alt="">
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="hero-dot"></span>
+      First US Activation
+    </div>
+
+    <h1>
+      <span class="grad-text">HITEC</span> 2026
+    </h1>
+
+    <p class="hero-meta">Henry B. Gonzalez Convention Center, San Antonio, Texas, USA</p>
+    <p class="hero-sub">June 15 – 18, 2026  &nbsp;·&nbsp;  Booth #3715  &nbsp;·&nbsp;  Enhanced Plus Listing</p>
+
+    <p class="hero-desc">
+      PurchasePlus arrives at HITEC for the first time, backed by Strattam Capital and 25 years of hospitality procurement technology. We process 40 million invoices annually, connect 30,000 suppliers, and serve Accor, IHG, and Marriott. San Antonio is the start of the US chapter.
+    </p>
+
+    <div class="hero-pills">
+      <span class="countdown">
+        <span class="countdown-num" id="daysLeft">17</span>
+        days to go
+      </span>
+      <span class="pill pill-soft">40M+ invoices / year</span>
+      <span class="pill pill-soft">30K+ suppliers</span>
+      <span class="pill pill-grad">Booth #3715</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Playbook CTAs ── -->
+<section class="section">
+  <p class="section-title">HITEC Playbook</p>
+  <div class="cta-grid">
+
+    <a class="cta-card" href="hitec_pitch.html" target="_blank">
+      <span class="cta-week wk12">Week 1 – 2</span>
+      <div class="cta-icon">&#127775;</div>
+      <div class="cta-title">HITEC Pitch Deck</div>
+      <p class="cta-body">The full positioning deck for HITEC 2026. Theme, messaging, product proof points, booth concept, and 12-month plan. Built for Malcolm alignment before any production spend.</p>
+      <span class="cta-btn">
+        Open deck
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <div class="cta-card" onclick="openModal('wk3')">
+      <span class="cta-week wk3">Week 3 — Now</span>
+      <div class="cta-icon">&#9998;&#65039;</div>
+      <div class="cta-title">To-Do List: Week 3</div>
+      <p class="cta-body">Current week tasks. COI submission, exhibitor hub content (press releases, show specials, video), compliance forms, and lead outreach. Most of these are blocking profile completion.</p>
+      <span class="cta-btn">
+        View tasks
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+
+    <div class="cta-card" onclick="openModal('wk4')">
+      <span class="cta-week wk4">Week 4 — Last</span>
+      <div class="cta-icon">&#128073;</div>
+      <div class="cta-title">To-Do List: Week 4</div>
+      <p class="cta-body">Final week before show open. Logistics confirmation, hat delivery, run-of-show, lead flow, booth prep, and the last things that can only be done once you land in San Antonio.</p>
+      <span class="cta-btn">
+        View tasks
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+
+    <div class="cta-card" onclick="openModal('post')">
+      <span class="cta-week post">Post-Event</span>
+      <div class="cta-icon">&#128200;</div>
+      <div class="cta-title">Post-Event Action Plan</div>
+      <p class="cta-body">Follow-up sequences, lead scoring, pipeline creation, press and analyst outreach, and the internal debrief that turns booth conversations into closed US deals in 90 days.</p>
+      <span class="cta-btn">
+        View plan
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Progress ── -->
+<section class="section progress-section">
+  <p class="section-title">Activation Progress</p>
+  <div class="progress-grid">
+
+    <!-- Booth Setup 100% -->
+    <div class="prog-item" data-pct="100">
+      <div class="prog-header">
+        <span class="prog-name">Booth Setup</span>
+        <span class="prog-pct done">100%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill"></div></div>
+      <div class="prog-checks">
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Booth graphics</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Flooring</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Furnishings</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Electrical (Edlen)</span>
+      </div>
+    </div>
+
+    <!-- AV & Lead Capture 100% -->
+    <div class="prog-item" data-pct="100">
+      <div class="prog-header">
+        <span class="prog-name">AV & Lead Capture</span>
+        <span class="prog-pct done">100%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill"></div></div>
+      <div class="prog-checks">
+        <span class="chk done"><span class="chk-icon">&#10003;</span> 43" TV + stand (ON Services)</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Media player</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> LeadPod Pro (3 licences)</span>
+      </div>
+    </div>
+
+    <!-- Cowboy Hats 50% -->
+    <div class="prog-item" data-pct="50">
+      <div class="prog-header">
+        <span class="prog-name">Cowboy Hats (37 units)</span>
+        <span class="prog-pct half">50%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill"></div></div>
+      <div class="prog-checks">
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Order processed</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Manufacturing</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Shipping</span>
+      </div>
+      <div class="prog-warning">
+        <span class="prog-warning-icon">&#9888;</span>
+        <span>
+          Est. factory departure June 12.
+          Amazon delivery June 15 (show open day) to Henry B. Gonzalez Convention Center, San Antonio TX.
+          Arrive early for pick-up at booth before doors open.
+        </span>
+      </div>
+    </div>
+
+    <!-- Exhibitor Hub 43% -->
+    <div class="prog-item" data-pct="43">
+      <div class="prog-header">
+        <span class="prog-name">Exhibitor Hub Profile</span>
+        <span class="prog-pct half">43%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill"></div></div>
+      <div class="prog-checks">
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Company profile</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Products (10 listed)</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Press releases (10)</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Show specials (10)</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Video (1)</span>
+      </div>
+    </div>
+
+    <!-- Lead Hunter 25% -->
+    <div class="prog-item" data-pct="25">
+      <div class="prog-header">
+        <span class="prog-name">Lead Hunter</span>
+        <span class="prog-pct half">25%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill"></div></div>
+      <div class="prog-checks">
+        <span class="chk done"><span class="chk-icon">&#10003;</span> Attendee list downloaded</span>
+        <span class="chk done"><span class="chk-icon">&#10003;</span> 626 contacts parsed</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Pre-show outreach (83 priority leads)</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> VIP buyer pass invites sent</span>
+      </div>
+    </div>
+
+    <!-- Compliance 0% -->
+    <div class="prog-item" data-pct="0">
+      <div class="prog-header">
+        <span class="prog-name">Compliance & Admin</span>
+        <span class="prog-pct zero">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill zero-fill"></div></div>
+      <div class="prog-checks">
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> COI (mandatory)</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Booth design approval</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Saturday move-in request</span>
+        <span class="chk todo"><span class="chk-icon">&#9679;</span> Booth activity form</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  PurchasePlus LLC &nbsp;·&nbsp; HITEC 2026 &nbsp;·&nbsp; Booth #3715 &nbsp;·&nbsp; Henry B. Gonzalez Convention Center, San Antonio TX
+</footer>
+
+<!-- ── Modals ── -->
+
+<!-- Week 3 -->
+<div class="modal-backdrop" id="modal-wk3" onclick="closeModal(event, 'wk3')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal(null,'wk3')">&#10005;</button>
+    <p class="modal-week">Week 3 &nbsp;·&nbsp; May 29 – June 5</p>
+    <h2>To-Do List</h2>
+    <p class="modal-desc">Everything that must be done this week to keep the activation on track.</p>
+
+    <div class="todo-group">
+      <h4>Compliance (blocking)</h4>
+      <div class="todo-item urgent">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Submit COI (Certificate of Insurance) <span class="todo-tag">MANDATORY</span></span>
+      </div>
+      <div class="todo-item urgent">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Submit Island Booth Design Approval Form</span>
+      </div>
+      <div class="todo-item urgent">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Submit Saturday Move-In Request (island booths)</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Submit Booth Activity Approval Form (if applicable)</span>
+      </div>
+    </div>
+
+    <div class="todo-group">
+      <h4>Exhibitor Hub Content</h4>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Write and add 10 Press Releases</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Create and add 10 Show Specials</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Upload 1 video to hub profile</span>
+      </div>
+    </div>
+
+    <div class="todo-group">
+      <h4>Lead Outreach</h4>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Send pre-show LinkedIn messages to 83 priority leads</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Distribute VIP buyer pass link to key targets</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Week 4 -->
+<div class="modal-backdrop" id="modal-wk4" onclick="closeModal(event, 'wk4')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal(null,'wk4')">&#10005;</button>
+    <p class="modal-week">Week 4 &nbsp;·&nbsp; June 6 – 14</p>
+    <h2>Final Week To-Do</h2>
+    <p class="modal-desc">The last push before San Antonio. Logistics, delivery, run-of-show.</p>
+
+    <div class="todo-group">
+      <h4>Logistics</h4>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Confirm cowboy hat delivery (Amazon, June 15)</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Buy storage cabinet in San Antonio (on arrival)</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Confirm travel for Malcolm + booth crew</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Confirm new US employee is on the booth roster</span>
+      </div>
+    </div>
+
+    <div class="todo-group">
+      <h4>Booth Prep</h4>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Finalise run-of-show and booth assignments</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Demo walkthrough with the booth crew</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Print leave-behinds and talking points</span>
+      </div>
+    </div>
+
+    <div class="todo-group">
+      <h4>Lead Flow</h4>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Set up LeadPod Pro app on devices</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Brief crew on lead capture process</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-cb"></div>
+        <span class="todo-label">Final outreach to priority leads not yet replied</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Post-Event -->
+<div class="modal-backdrop" id="modal-post" onclick="closeModal(event, 'post')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal(null,'post')">&#10005;</button>
+    <p class="modal-week">Post-Event &nbsp;·&nbsp; June 19 onwards</p>
+    <h2>Post-Event Action Plan</h2>
+    <p class="modal-desc">Coming soon. Will be built during week 3 based on show outcomes.</p>
+    <div class="soon-card">
+      <div class="soon-icon">&#128200;</div>
+      <h3>In Progress</h3>
+      <p>The post-event plan will cover lead scoring, follow-up sequences, pipeline creation, press outreach, and the internal debrief. Check back here during week 3.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Countdown ──
+(function() {
+  const show = new Date('2026-06-15T00:00:00');
+  function tick() {
+    const diff = Math.ceil((show - Date.now()) / 86400000);
+    const el = document.getElementById('daysLeft');
+    if (el) el.textContent = diff > 0 ? diff : 0;
+  }
+  tick();
+  setInterval(tick, 60000);
+})();
+
+// ── Animate progress bars on scroll ──
+(function() {
+  const items = document.querySelectorAll('.prog-item');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const pct = parseInt(e.target.dataset.pct, 10);
+      const fill = e.target.querySelector('.prog-fill');
+      if (fill && !fill.style.width) {
+        setTimeout(() => { fill.style.width = pct + '%'; }, 120);
+      }
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.3 });
+  items.forEach(el => io.observe(el));
+})();
+
+// ── Modal ──
+function openModal(id) {
+  document.getElementById('modal-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e, id) {
+  if (e && e.target !== document.getElementById('modal-' + id)) return;
+  document.getElementById('modal-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop.open').forEach(el => {
+      el.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+});
+</script>
+</body>
+</html>
