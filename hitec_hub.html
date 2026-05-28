@@ -67,7 +67,7 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   justify-content: space-between;
 }
 .header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.header-logo img { height: 28px; }
+.header-logo img { height: 84px; }
 .header-badge {
   font-size: 11px;
   font-weight: 600;
@@ -181,11 +181,15 @@ h1, h2, h3, h4, p { text-wrap: balance; }
 /* ── CTA Grid ── */
 .cta-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
-  max-width: 860px;
+  max-width: 1060px;
   margin: 0 auto;
 }
+.cta-grid .cta-card { grid-column: span 2; }
+/* Center the bottom row of 2 cards in a 6-col grid */
+.cta-grid .cta-card:nth-child(4) { grid-column: 2 / 4; }
+.cta-grid .cta-card:nth-child(5) { grid-column: 4 / 6; }
 .cta-card {
   background: #fff;
   border: 1px solid var(--border);
@@ -209,17 +213,45 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   opacity: 0;
   transition: opacity .2s;
 }
-.cta-card:hover { box-shadow: 0 12px 40px rgba(124,93,255,.12); transform: translateY(-3px); border-color: #d0c4ff; }
-.cta-card:hover::before { opacity: 1; }
+.cta-card:not(.locked):hover { box-shadow: 0 12px 40px rgba(124,93,255,.12); transform: translateY(-3px); border-color: #d0c4ff; }
+.cta-card:not(.locked):hover::before { opacity: 1; }
+
+/* Locked / coming-soon cards */
+.cta-card.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+  position: relative;
+}
+.cta-card.locked::after {
+  content: 'Coming soon';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  background: rgba(255,255,255,0.6);
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.cta-card.locked:hover { opacity: 0.7; }
+.cta-card.locked:hover::after { opacity: 1; }
+
 .cta-week {
   display: inline-flex;
   font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 99px;
 }
-.cta-week.wk12  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-.cta-week.wk3   { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.cta-week.wk4   { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
-.cta-week.post  { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.cta-week.wk12   { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.cta-week.wk3    { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.cta-week.wk4    { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+.cta-week.event  { background: #f5f3ff; color: #5b21b6; border: 1px solid #ddd6fe; }
+.cta-week.post   { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 .cta-icon { font-size: 28px; }
 .cta-title { font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.3; }
 .cta-body { font-size: 13px; color: var(--body); line-height: 1.6; flex: 1; }
@@ -230,7 +262,7 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   white-space: nowrap;
 }
 .cta-btn svg { transition: transform .15s; }
-.cta-card:hover .cta-btn svg { transform: translateX(4px); }
+.cta-card:not(.locked):hover .cta-btn svg { transform: translateX(4px); }
 
 /* ── Progress ── */
 .progress-section { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -352,6 +384,9 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   .hero-char { display: none; }
   .section { padding: 40px 20px; }
   .cta-grid { grid-template-columns: 1fr; gap: 14px; }
+  .cta-grid .cta-card,
+  .cta-grid .cta-card:nth-child(4),
+  .cta-grid .cta-card:nth-child(5) { grid-column: 1 / -1; }
   .header { padding: 0 20px; }
   .modal { padding: 24px; }
 }
@@ -407,7 +442,10 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   <div class="cta-grid">
 
     <a class="cta-card" href="hitec_pitch.html" target="_blank">
-      <span class="cta-week wk12">Week 1 – 2</span>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span class="cta-week wk12">Week 1 – 2</span>
+        <span style="font-size:11px;font-weight:700;color:#059669;background:#d1fae5;border:1px solid #6ee7b7;border-radius:99px;padding:3px 10px;letter-spacing:.03em;">Approved ✓</span>
+      </div>
       <div class="cta-icon">&#127775;</div>
       <div class="cta-title">HITEC Pitch Deck</div>
       <p class="cta-body">The full positioning deck for HITEC 2026. Theme, messaging, product proof points, booth concept, and 12-month plan. Built for Malcolm alignment before any production spend.</p>
@@ -428,26 +466,25 @@ h1, h2, h3, h4, p { text-wrap: balance; }
       </span>
     </div>
 
-    <div class="cta-card" onclick="openModal('wk4')">
+    <div class="cta-card locked">
+      <span class="cta-week event">Events Action</span>
+      <div class="cta-icon">&#127381;</div>
+      <div class="cta-title">Events Action Plan</div>
+      <p class="cta-body">On-site playbook for June 15-18. Booth hours, team rotations, demo flow, lead capture process, cowboy hat distribution, and real-time escalation contacts.</p>
+    </div>
+
+    <div class="cta-card locked">
       <span class="cta-week wk4">Week 4 — Last</span>
       <div class="cta-icon">&#128073;</div>
       <div class="cta-title">To-Do List: Week 4</div>
       <p class="cta-body">Final week before show open. Logistics confirmation, hat delivery, run-of-show, lead flow, booth prep, and the last things that can only be done once you land in San Antonio.</p>
-      <span class="cta-btn">
-        View tasks
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
     </div>
 
-    <div class="cta-card" onclick="openModal('post')">
+    <div class="cta-card locked">
       <span class="cta-week post">Post-Event</span>
       <div class="cta-icon">&#128200;</div>
       <div class="cta-title">Post-Event Action Plan</div>
       <p class="cta-body">Follow-up sequences, lead scoring, pipeline creation, press and analyst outreach, and the internal debrief that turns booth conversations into closed US deals in 90 days.</p>
-      <span class="cta-btn">
-        View plan
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
     </div>
 
   </div>
