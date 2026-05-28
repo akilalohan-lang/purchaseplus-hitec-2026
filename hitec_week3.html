@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 3 To-Do · HITEC 2026 · PurchasePlus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/logo-emblem.png">
+<style>
+:root {
+  --grad: linear-gradient(90deg, #a956ff 0%, #7c5dff 50%, #3766fe 100%);
+  --purple: #7c5dff;
+  --pink: #a956ff;
+  --blue: #3766fe;
+  --ink: #111827;
+  --ink-soft: #1f2937;
+  --body: #4b5563;
+  --muted: #9ca3af;
+  --softer: #fafafa;
+  --border: #e5e7eb;
+  --border-soft: #f3f4f6;
+  --bg: #ffffff;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--body); font-size: 15px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; background: var(--bg);
+  height: 100dvh; overflow: hidden;
+}
+h1,h2,h3,h4,h5,h6,p { text-wrap: balance; color: var(--ink); }
+.mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+.grad {
+  background: linear-gradient(90deg,#a956ff 0%,#7c5dff 50%,#3766fe 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: gp 5s linear infinite;
+}
+@keyframes gp { 0%{background-position:200% 50%} 100%{background-position:0% 50%} }
+
+/* App shell */
+.app { display: grid; grid-template-columns: 300px 1fr; height: 100dvh; }
+
+/* Sidebar */
+.sb {
+  background: linear-gradient(180deg,#fafafa 0%,#fff 100%);
+  border-right: 1px solid var(--border);
+  padding: 22px 16px 18px;
+  display: flex; flex-direction: column;
+  height: 100dvh; overflow: hidden;
+}
+.sb-brand { display: flex; flex-direction: column; gap: 10px; padding: 0 6px 18px; border-bottom: 1px solid var(--border-soft); margin-bottom: 14px; }
+.sb-brand-top { display: flex; align-items: center; gap: 12px; }
+.sb-logo { height: 56px; width: auto; max-width: 200px; object-fit: contain; }
+.sb-tagline { font-size: 10.5px; font-weight: 400; color: var(--muted); letter-spacing: .01em; line-height: 1.4; padding-left: 1px; }
+.sb-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 0 8px 12px; }
+.sb-list { flex: 1; overflow-y: auto; padding-right: 2px; }
+.sb-list::-webkit-scrollbar { width: 4px; }
+.sb-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.sb-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer;
+  margin-bottom: 2px; transition: all .15s;
+  border: 1px solid transparent; user-select: none;
+}
+.sb-item:hover { background: var(--softer); }
+.sb-item.is-active {
+  background: linear-gradient(135deg,rgba(169,86,255,.08) 0%,rgba(55,102,254,.06) 100%);
+  border-color: rgba(124,93,255,.22);
+}
+.sb-item-num { font-size: 11px; font-weight: 600; color: var(--muted); font-family: 'JetBrains Mono',monospace; min-width: 22px; padding-top: 2px; letter-spacing: .04em; }
+.sb-item.is-active .sb-item-num { color: var(--purple); }
+.sb-item-label { font-size: 13px; font-weight: 500; color: var(--ink-soft); line-height: 1.35; }
+.sb-item.is-active .sb-item-label { color: var(--ink); font-weight: 600; }
+.sb-count { margin-left: auto; font-size: 10px; font-weight: 700; background: var(--softer); border: 1px solid var(--border); border-radius: 99px; padding: 1px 7px; color: var(--muted); font-family: 'JetBrains Mono',monospace; white-space: nowrap; }
+.sb-count.urgent { background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.2); color: var(--red); }
+.sb-foot { padding-top: 14px; border-top: 1px solid var(--border-soft); font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+.sb-foot a { color: var(--muted); text-decoration: none; }
+.sb-foot a:hover { color: var(--purple); }
+.dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; display: inline-block; box-shadow: 0 0 0 3px rgba(16,185,129,.18); animation: pulse 2.4s ease infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 3px rgba(16,185,129,.18)} 50%{box-shadow:0 0 0 7px rgba(16,185,129,.04)} }
+
+/* Mobile sidebar toggle */
+.sb-toggle { display:none; position:fixed; top:14px; left:14px; z-index:110; width:36px; height:36px; background:#fff; border:1px solid var(--border); border-radius:9px; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; }
+.sb-toggle span { width:16px; height:2px; background:var(--ink); border-radius:1px; display:block; }
+.sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:99; }
+.sb-overlay.is-open { display:block; }
+
+/* Main */
+.main { position: relative; height: 100dvh; overflow: hidden; }
+.slides { position: relative; height: 100%; }
+
+/* Slide base */
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: row;
+  opacity: 0; pointer-events: none;
+  transition: opacity .42s ease, transform .42s ease;
+  transform: translateY(12px);
+}
+.slide.is-active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+/* Left content panel */
+.slide-left {
+  flex: 0 0 58%; padding: 52px 64px 100px;
+  display: flex; flex-direction: column; justify-content: center;
+  overflow-y: auto; position: relative;
+}
+.slide-left::-webkit-scrollbar { width: 4px; }
+.slide-left::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Right visual panel */
+.slide-right {
+  flex: 1; position: relative; overflow: hidden;
+  background: var(--softer);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Content */
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 8px; }
+.sub { font-size: 15px; color: var(--body); line-height: 1.65; margin-bottom: 24px; }
+.divider { width: 40px; height: 3px; background: var(--grad); border-radius: 2px; margin-bottom: 24px; }
+
+/* Alert banner */
+.alert { border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: flex-start; gap: 10px; }
+.alert.blocking { background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.2); color: #b91c1c; }
+.alert.warning { background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.2); color: #b45309; }
+.alert.info { background: rgba(124,93,255,.07); border: 1px solid rgba(124,93,255,.2); color: var(--purple); }
+
+/* Checklist */
+.checklist { display: flex; flex-direction: column; gap: 0; }
+.cl-item { display: flex; align-items: flex-start; gap: 13px; padding: 11px 0; border-bottom: 1px solid var(--border-soft); }
+.cl-item:last-child { border-bottom: none; }
+.cl-check { width: 19px; height: 19px; border-radius: 5px; flex-shrink: 0; margin-top: 2px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.cl-check.done { background: var(--green); border-color: var(--green); }
+.cl-check.done::after { content: ''; width: 9px; height: 5px; border: 2px solid #fff; border-top: none; border-right: none; transform: rotate(-45deg) translateY(-1px); display: block; }
+.cl-check.urgent { border-color: var(--red); background: rgba(239,68,68,.06); }
+.cl-check.active { border-color: var(--purple); background: rgba(124,93,255,.06); }
+.cl-body { flex: 1; min-width: 0; }
+.cl-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+.cl-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.cl-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: .02em; white-space: nowrap; }
+.badge-blocking { background: rgba(239,68,68,.1); color: #dc2626; }
+.badge-now { background: rgba(169,86,255,.1); color: var(--pink); }
+.badge-hub { background: rgba(55,102,254,.1); color: var(--blue); }
+.badge-content { background: rgba(16,185,129,.1); color: #059669; }
+.cl-desc { font-size: 12px; color: var(--body); line-height: 1.5; }
+
+/* Schedule table */
+.sched { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.sched th { background: var(--softer); padding: 9px 14px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); border-bottom: 1px solid var(--border); }
+.sched td { padding: 10px 14px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+.sched tr:last-child td { border-bottom: none; }
+.sched tr:nth-child(even) td { background: #fafafa; }
+.sched .day { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.sched .date-badge { font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono',monospace; background: rgba(124,93,255,.1); color: var(--purple); border-radius: 99px; padding: 2px 7px; display: inline-block; margin-right: 6px; }
+.sched .anchor { color: var(--red); font-weight: 700; }
+
+/* Nav arrows */
+.nav-arrows { position: fixed; bottom: 28px; right: 28px; display: flex; gap: 8px; z-index: 50; }
+.nav-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: all .15s; box-shadow: 0 2px 8px rgba(15,23,42,.08); }
+.nav-btn:hover { background: var(--purple); color: #fff; border-color: var(--purple); }
+.nav-btn svg { pointer-events: none; }
+
+/* Progress dots */
+.slide-dots { position: fixed; bottom: 34px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 50; }
+.dot-item { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all .2s; cursor: pointer; }
+.dot-item.is-active { background: var(--purple); width: 18px; border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sb { display: none; position: fixed; left: 0; top: 0; bottom: 0; width: 280px; z-index: 100; }
+  .sb.is-open { display: flex; }
+  .sb-toggle { display: flex; }
+  .slide-left { flex: none; width: 100%; padding: 60px 24px 80px; }
+  .slide-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<button class="sb-toggle" id="sbToggle" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="sb-overlay" id="sbOverlay"></div>
+
+<div class="app">
+<!-- Sidebar -->
+<aside class="sb" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-top">
+      <img class="sb-logo" src="assets/logo.png" alt="PurchasePlus">
+    </div>
+    <div class="sb-tagline">HITEC 2026 · San Antonio, Texas<br>Week 3 · May 29 – June 5</div>
+  </div>
+  <p class="sb-eyebrow" style="color:var(--pink)">Week 3 — Now</p>
+  <nav class="sb-list" id="sbList">
+    <div class="sb-item is-active" data-slide="0">
+      <span class="sb-item-num">01</span>
+      <span class="sb-item-label">This Week</span>
+    </div>
+    <div class="sb-item" data-slide="1">
+      <span class="sb-item-num">02</span>
+      <span class="sb-item-label">Compliance</span>
+      <span class="sb-count urgent">4 blocking</span>
+    </div>
+    <div class="sb-item" data-slide="2">
+      <span class="sb-item-num">03</span>
+      <span class="sb-item-label">Exhibitor Hub</span>
+      <span class="sb-count">21 items</span>
+    </div>
+    <div class="sb-item" data-slide="3">
+      <span class="sb-item-num">04</span>
+      <span class="sb-item-label">Social Posts</span>
+      <span class="sb-count">10 posts</span>
+    </div>
+    <div class="sb-item" data-slide="4">
+      <span class="sb-item-num">05</span>
+      <span class="sb-item-label">Website Articles</span>
+      <span class="sb-count">10 articles</span>
+    </div>
+    <div class="sb-item" data-slide="5">
+      <span class="sb-item-num">06</span>
+      <span class="sb-item-label">Lead Outreach</span>
+      <span class="sb-count">83 leads</span>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <a href="hitec_hub.html">&#8592; Back to Hub</a>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span class="dot" style="background:var(--pink);box-shadow:0 0 0 3px rgba(169,86,255,.18);"></span>
+      <span>In progress</span>
+    </div>
+  </div>
+</aside>
+
+<!-- Main slides -->
+<main class="main">
+  <div class="slides" id="slides">
+
+    <!-- 01 This Week -->
+    <div class="slide is-active" id="slide-0">
+      <div class="slide-left">
+        <p class="eyebrow">01 / This Week</p>
+        <h2 class="headline">Week 3.<br><span class="grad">Everything is blocking.</span></h2>
+        <div class="divider"></div>
+        <p class="sub">May 29 – June 5. This week determines whether PurchasePlus shows up at HITEC as a credible first-time US exhibitor or an incomplete profile. Most tasks block something downstream.</p>
+        <div class="alert blocking">
+          <span>🚨</span>
+          <span>4 compliance items are blocking the entire exhibit. COI not submitted. Booth design approval form not submitted. Without these, GES will not build the booth.</span>
+        </div>
+        <div class="alert warning">
+          <span>⚠️</span>
+          <span>Exhibitor hub profile is 43% complete. Press releases, show specials, and video are all empty. The hub is live and visible to 600+ registered attendees right now.</span>
+        </div>
+        <div class="alert info">
+          <span>📅</span>
+          <span>LinkedIn anchor post (Strattam Capital investment) goes live Monday June 2. Leave it alone for the full week — let it accumulate engagement before the next post Friday.</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;">
+          <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--red);">4</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);">Compliance</div>
+          </div>
+          <div style="background:rgba(55,102,254,.06);border:1px solid rgba(55,102,254,.2);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--blue);">21</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);">Hub items</div>
+          </div>
+          <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--green);">83</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);">Leads</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#fff0f9 0%,#f0e8ff 50%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;">
+        <img src="assets/longarm_cowboy.png" alt="Longarms character" style="max-height:70%;max-width:90%;object-fit:contain;">
+      </div>
+    </div>
+
+    <!-- 02 Compliance -->
+    <div class="slide" id="slide-1">
+      <div class="slide-left">
+        <p class="eyebrow">02 / Compliance</p>
+        <h2 class="headline">4 Blocking<br><span class="grad">Submissions.</span></h2>
+        <div class="divider"></div>
+        <div class="alert blocking" style="margin-bottom:16px;">
+          <span>🚨</span>
+          <span>Do these first. Nothing else matters if the booth is not approved to be built.</span>
+        </div>
+        <div class="checklist">
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top">
+                <span class="cl-title">Submit COI — Certificate of Insurance</span>
+                <span class="cl-badge badge-blocking">MANDATORY</span>
+              </div>
+              <div class="cl-desc">Nothing can proceed without this. GES will not build the booth if COI is not on file. PurchasePlus LLC US entity: 111 Congress Ave #1140, Austin TX 78701. Contact HFTP: drew.bechdolt@hftp.org / (512) 220-4037.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top">
+                <span class="cl-title">Submit Island Booth Design Approval Form</span>
+                <span class="cl-badge badge-blocking">BLOCKING</span>
+              </div>
+              <div class="cl-desc">Required for island booth configurations. Submit the booth design to HFTP for approval. The Brand Ready Eco Fabric Display (10×20) needs to be formally approved before GES builds it.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top">
+                <span class="cl-title">Submit Saturday Move-In Request</span>
+                <span class="cl-badge badge-blocking">ISLAND BOOTHS ONLY</span>
+              </div>
+              <div class="cl-desc">Island booths require a specific move-in request for Saturday June 15. Must be submitted to GES. Without this, access to the floor on Saturday may not be granted.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top">
+                <span class="cl-title">Submit Booth Activity Approval Form</span>
+                <span class="cl-badge badge-now">IF APPLICABLE</span>
+              </div>
+              <div class="cl-desc">Required if any special activities are planned at the booth (demos, presentations, draws, giveaways). Confirm with HFTP whether the cowboy hat distribution and live demos require this form.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#fff5f5 0%,#fef3f2 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
+        <div style="font-size:64px;text-align:center;">📋</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Key contact — HFTP</p>
+          <div style="font-size:13px;color:var(--ink);display:flex;flex-direction:column;gap:8px;">
+            <div><strong>Drew Bechdolt</strong><br><span style="color:var(--muted);font-size:12px;">Global Sales Manager</span></div>
+            <div style="font-size:12px;color:var(--body);">drew.bechdolt@hftp.org</div>
+            <div style="font-size:12px;color:var(--body);" class="mono">+1 (512) 220-4037</div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;">PurchasePlus LLC US Entity</p>
+          <div style="font-size:12px;color:var(--body);">111 Congress Avenue, Suite 1140<br>Austin, Texas 78701</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Exhibitor Hub -->
+    <div class="slide" id="slide-2">
+      <div class="slide-left">
+        <p class="eyebrow">03 / Exhibitor Hub</p>
+        <h2 class="headline">21 Hub Items.<br><span class="grad">Profile at 43%.</span></h2>
+        <div class="divider"></div>
+        <p class="sub" style="margin-bottom:16px;">The HITEC exhibitor hub is live and visible to all registered attendees. Press releases, show specials, and video are completely empty. Publish all 10 press releases within the next 10 days.</p>
+        <div class="checklist">
+          <div class="cl-item">
+            <div class="cl-check done"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Company profile + 10 products</span><span class="cl-badge badge-content">Done</span></div>
+              <div class="cl-desc">Profile text, product listings, and company description completed.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Submit video — PurchasePlus 2025 PROMO (3:47)</span><span class="cl-badge badge-hub">HUB</span></div>
+              <div class="cl-desc">Embed URL ready: player.vimeo.com/video/1012281072?title=0&byline=0&portrait=0&badge=0&dnt=1 — paste into the hub video slot.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">10 Press Releases — post all within 10 days</span><span class="cl-badge badge-blocking">10 needed</span></div>
+              <div class="cl-desc">PR1: Strattam Capital investment (biggest). PR2: HITEC debut. PR3: AI Invoicing 99% accuracy. PR4: 40M invoices / 30K suppliers / 25 years. PR5: Customer proof (Accor, IHG, Marriott, Qantas, Emirates). PR6: AP Automation 75% cost reduction. PR7: Commitment-based budgeting. PR8: GTM Machine (14 AI agents). PR9: Multi-property rollup. PR10: Come meet us — Booth #3715.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">10 Show Specials — plan + publish</span><span class="cl-badge badge-hub">10 needed</span></div>
+              <div class="cl-desc">Special 1 confirmed: Free cowboy hat at Booth #3715 (while stocks last). Specials 2-10: to be decided. Options include demos, free trials, discounted onboarding, procurement health-check report, fast-track implementation, HITEC-only pricing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
+        <div style="width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Hub profile completion</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:100%;background:var(--border);border-radius:4px;height:8px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;">Company ✓</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:100%;background:var(--border);border-radius:4px;height:8px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;">Products ✓</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:100%;background:var(--border);border-radius:4px;height:8px;overflow:hidden;"><div style="width:0%;height:100%;background:var(--red);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--red);white-space:nowrap;">Video — 0</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:100%;background:var(--border);border-radius:4px;height:8px;overflow:hidden;"><div style="width:0%;height:100%;background:var(--red);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--red);white-space:nowrap;">Press — 0/10</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:100%;background:var(--border);border-radius:4px;height:8px;overflow:hidden;"><div style="width:0%;height:100%;background:var(--red);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--red);white-space:nowrap;">Specials — 0/10</span></div>
+          </div>
+          <div style="margin-top:16px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:32px;font-weight:800;color:var(--amber);">43%</div>
+            <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Profile complete</div>
+            <div style="font-size:11px;color:var(--body);margin-top:4px;">Visible now to 600+ registered attendees</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Social Posts -->
+    <div class="slide" id="slide-3">
+      <div class="slide-left">
+        <p class="eyebrow">04 / Social Posts</p>
+        <h2 class="headline">10 Posts.<br><span class="grad">June 2 to June 13.</span></h2>
+        <div class="divider"></div>
+        <div class="alert info" style="margin-bottom:16px;">
+          <span>📌</span>
+          <span>Post 1 (Strattam Capital) goes up Monday June 2 and stays as the only post for the full week. Let it breathe. Resume daily posts from Friday June 5.</span>
+        </div>
+        <table class="sched">
+          <thead>
+            <tr><th>Date</th><th>Post</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="date-badge">Jun 2</span><span class="day anchor">Mon</span></td>
+              <td><strong>Post 1 — Strattam Capital investment</strong> anchor post. Leave for the full week. No other posts until Friday.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 5</span><span class="day">Fri</span></td>
+              <td><strong>Post 2 — HITEC debut.</strong> PurchasePlus arriving in North America for the first time.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 6</span><span class="day">Sat</span></td>
+              <td><strong>Post 3 — AI Invoicing.</strong> 99% accuracy, 90% straight-through processing.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 7</span><span class="day">Sun</span></td>
+              <td><strong>Post 4 — Customer logos.</strong> Accor, IHG, Marriott, Qantas, Emirates — who we serve.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 8</span><span class="day">Mon</span></td>
+              <td><strong>Post 5 — AP Automation.</strong> 75% reduction in invoice processing costs.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 9</span><span class="day">Tue</span></td>
+              <td><strong>Post 6 — Live GP%.</strong> Commitment-based budgeting — before the invoice arrives.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 10</span><span class="day">Wed</span></td>
+              <td><strong>Post 7 — GTM Machine.</strong> 14 AI agents running the pre-MQL pipeline.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 11</span><span class="day">Thu</span></td>
+              <td><strong>Post 8 — Multi-property.</strong> F&amp;B performance across 10+ properties in one view.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 12</span><span class="day">Fri</span></td>
+              <td><strong>Post 9 — Cowboy hat teaser.</strong> Texas energy. We're coming.</td>
+            </tr>
+            <tr>
+              <td><span class="date-badge">Jun 13</span><span class="day">Sat</span></td>
+              <td><strong>Post 10 — Final countdown.</strong> See you at Booth #3715.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
+        <div style="font-size:48px;text-align:center;">📱</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Posting rhythm</p>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--body);">
+            <div style="padding:8px 10px;background:rgba(239,68,68,.06);border-radius:8px;border:1px solid rgba(239,68,68,.15);color:#b91c1c;font-weight:600;">June 2 — Strattam anchor. No other posts.</div>
+            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 5 Fri — HITEC debut</div>
+            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 6 Sat — AI Invoicing</div>
+            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 7 Sun — Customer logos</div>
+            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 8–11 — Daily: AP, GP%, GTM, Multi-prop</div>
+            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 12 — Cowboy hat teaser</div>
+            <div style="padding:8px 10px;background:rgba(124,93,255,.06);border-radius:8px;border:1px solid rgba(124,93,255,.15);color:var(--purple);font-weight:600;">June 13 — Final countdown. See you at 3715.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Website Articles -->
+    <div class="slide" id="slide-4">
+      <div class="slide-left">
+        <p class="eyebrow">05 / Website Articles</p>
+        <h2 class="headline">10 Articles.<br><span class="grad">Published by June 7.</span></h2>
+        <div class="divider"></div>
+        <p class="sub" style="margin-bottom:16px;">All 10 to be published within the next 10 days. These support the hub press releases and give SEO depth before HITEC attendees research PurchasePlus.</p>
+        <div class="checklist">
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Strattam Capital invests in PurchasePlus — US expansion begins</span></div><div class="cl-desc">Publish with the June 2 social post. Biggest piece. Needs to be live before the LinkedIn announcement.</div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Why we built for hospitality — 25 years, 40M invoices, one platform</span></div><div class="cl-desc">Foundation story. Connects heritage to current product.</div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">How AI invoicing works — 99% accuracy explained</span></div><div class="cl-desc">Supports the AI Invoicing social post (June 6).</div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">The hidden cost of maverick spending in hotels</span></div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Commitment-based budgeting vs traditional month-end finance</span></div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">How Accor / IHG / Marriott control multi-property F&amp;B spend</span></div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">What is the GTM Machine — 14 AI agents explained</span></div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Procure-to-pay vs fragmented hotel purchasing</span></div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">PurchasePlus at HITEC 2026 — what to expect at Booth #3715</span></div></div></div>
+          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">How to get audit-ready in hospitality finance</span></div></div></div>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
+        <div style="font-size:48px;text-align:center;">✍️</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Production target</p>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="font-size:42px;font-weight:800;color:var(--red);">0</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink);">of 10 published</div>
+              <div style="font-size:11px;color:var(--muted);">Deadline: June 7</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;background:var(--softer);border-radius:8px;padding:10px;font-size:12px;color:var(--body);">
+            Article 1 must go live before or with the June 2 LinkedIn post — Strattam Capital announcement.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 Lead Outreach -->
+    <div class="slide" id="slide-5">
+      <div class="slide-left">
+        <p class="eyebrow">06 / Lead Outreach</p>
+        <h2 class="headline">83 Priority Leads.<br><span class="grad">Start with Tier 1.</span></h2>
+        <div class="divider"></div>
+        <p class="sub" style="margin-bottom:16px;">CSV is ready in the Lead Hunter folder. Pre-show messages go out this week. Tier 1 are the most valuable — reach them personally before the show floor becomes a race.</p>
+        <div class="checklist">
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Vicki Hamilton — Hilton</span><span class="cl-badge badge-blocking">Tier 1</span></div>
+              <div class="cl-desc">Senior Manager, Procurement Applications · vicki.hamilton@hilton.com</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">John Hearns — Marriott International</span><span class="cl-badge badge-blocking">Tier 1</span></div>
+              <div class="cl-desc">SVP Global Residential Operations · john.hearns@marriott.com</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Suzette Barreto — Loews Hotels</span><span class="cl-badge badge-blocking">Tier 1</span></div>
+              <div class="cl-desc">Director of Accounting Services · suzette.barreto@loewshotels.com</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Jigs Gandhi — MR Hotel Management</span><span class="cl-badge badge-blocking">Tier 1</span></div>
+              <div class="cl-desc">VP Procurement, IT &amp; Corporate Services · jgandhi@mrhotelmanagement.net</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Dawn Fenech — Corinthia Hotels</span><span class="cl-badge badge-blocking">Tier 1</span></div>
+              <div class="cl-desc">Head of Finance · dawnfenech@gmail.com</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Send pre-show messages to 83 priority leads</span><span class="cl-badge badge-now">83 total</span></div>
+              <div class="cl-desc">CSV ready at: Lead Hunter/HITEC2026_Priority_Leads.csv. Personalise Tier 1 messages. Tier 2 can use a templated outreach.</div>
+            </div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-check urgent"></div>
+            <div class="cl-body">
+              <div class="cl-top"><span class="cl-title">Distribute VIP Buyer Pass to top 20 targets</span><span class="cl-badge badge-now">20 VIP passes</span></div>
+              <div class="cl-desc">VIP buyer pass link gives top targets expedited access. Send with the pre-show message to Tier 1 contacts.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
+        <div style="font-size:48px;text-align:center;">🎯</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Lead breakdown</p>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:8px;">
+              <span style="font-weight:700;color:#b91c1c;">Tier 1 — Major brands</span>
+              <span class="mono" style="font-weight:800;color:#b91c1c;">14</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--softer);border:1px solid var(--border);border-radius:8px;">
+              <span style="font-weight:600;color:var(--ink);">Tier 2 — Regional hotels</span>
+              <span class="mono" style="font-weight:700;">69</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(124,93,255,.05);border:1px solid rgba(124,93,255,.15);border-radius:8px;">
+              <span style="font-weight:700;color:var(--purple);">Total priority leads</span>
+              <span class="mono" style="font-weight:800;color:var(--purple);">83</span>
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:11px;color:var(--muted);">Full list: Lead Hunter/HITEC2026_Priority_Leads.csv</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+</main>
+</div><!-- /app -->
+
+<!-- Nav arrows -->
+<div class="nav-arrows">
+  <button class="nav-btn" id="btnPrev" title="Previous">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 13V3M3 8l5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="nav-btn" id="btnNext" title="Next">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M13 8l-5 5-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<!-- Progress dots -->
+<div class="slide-dots" id="slideDots"></div>
+
+<script>
+(function() {
+  const TOTAL = 6;
+  let cur = 0;
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const sbItems = Array.from(document.querySelectorAll('.sb-item'));
+  const dotsWrap = document.getElementById('slideDots');
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot-item' + (i === 0 ? ' is-active' : '');
+    d.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(d);
+  }
+  function go(n) {
+    if (n < 0 || n >= TOTAL) return;
+    slides[cur].classList.remove('is-active');
+    sbItems[cur].classList.remove('is-active');
+    dotsWrap.children[cur].classList.remove('is-active');
+    cur = n;
+    slides[cur].classList.add('is-active');
+    sbItems[cur].classList.add('is-active');
+    dotsWrap.children[cur].classList.add('is-active');
+  }
+  sbItems.forEach((item, i) => item.addEventListener('click', () => go(i)));
+  document.getElementById('btnPrev').addEventListener('click', () => go(cur - 1));
+  document.getElementById('btnNext').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') go(cur + 1);
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') go(cur - 1);
+  });
+  let touchY = null;
+  document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; });
+  document.addEventListener('touchend', e => {
+    if (touchY === null) return;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) go(dy > 0 ? cur + 1 : cur - 1);
+    touchY = null;
+  });
+  const sbToggle = document.getElementById('sbToggle');
+  const sbOverlay = document.getElementById('sbOverlay');
+  const sidebar = document.getElementById('sidebar');
+  sbToggle.addEventListener('click', () => { sidebar.classList.toggle('is-open'); sbOverlay.classList.toggle('is-open'); });
+  sbOverlay.addEventListener('click', () => { sidebar.classList.remove('is-open'); sbOverlay.classList.remove('is-open'); });
+})();
+</script>
+</body>
+</html>

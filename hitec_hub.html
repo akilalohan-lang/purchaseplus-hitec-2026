@@ -160,15 +160,15 @@ h1, h2, h3, h4, p { text-wrap: balance; }
 }
 .pill-grad { background: var(--grad); color: #fff; }
 .pill-soft { background: #f3f4f6; color: var(--ink); border: 1px solid var(--border); }
-.countdown {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 6px 16px;
-  font-size: 13px; font-weight: 600; color: var(--ink);
+.live-countdown {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #fff; border: 1px solid var(--border); border-radius: 14px;
+  padding: 8px 16px;
 }
-.countdown-num { font-weight: 800; font-size: 16px; color: var(--violet); }
+.cd-unit { display: flex; flex-direction: column; align-items: center; min-width: 34px; }
+.cd-num { font-weight: 800; font-size: 20px; color: var(--violet); line-height: 1; font-variant-numeric: tabular-nums; }
+.cd-lbl { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 1px; }
+.cd-sep { font-weight: 700; font-size: 18px; color: var(--muted); padding-bottom: 10px; line-height: 1; }
 
 /* ── Section wrapper ── */
 .section { padding: 56px 32px; }
@@ -426,10 +426,15 @@ h1, h2, h3, h4, p { text-wrap: balance; }
     </p>
 
     <div class="hero-pills">
-      <span class="countdown">
-        <span class="countdown-num" id="daysLeft">17</span>
-        days to go
-      </span>
+      <div class="live-countdown" id="liveCd">
+        <div class="cd-unit"><div class="cd-num" id="cd-d">17</div><div class="cd-lbl">days</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">hrs</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">min</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">sec</div></div>
+      </div>
       <span class="pill pill-soft">40M+ invoices / year</span>
       <span class="pill pill-soft">30K+ suppliers</span>
       <span class="pill pill-grad">Booth #3715</span>
@@ -459,7 +464,7 @@ h1, h2, h3, h4, p { text-wrap: balance; }
     </a>
 
     <!-- Card 2: Week 2 — Booth Design & Setup — Done -->
-    <div class="cta-card" style="cursor:default;">
+    <a class="cta-card" href="hitec_booth.html" target="_blank">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span class="cta-week wk2">Week 2</span>
         <span class="done-badge">Approved by Malcolm ✓</span>
@@ -468,10 +473,14 @@ h1, h2, h3, h4, p { text-wrap: balance; }
       <div class="cta-icon">&#127959;&#65039;</div>
       <div class="cta-title">Booth Design & Setup</div>
       <p class="cta-body">Island booth #3715 fully ordered. Booth graphics, flooring, furnishings, electrical, AV, and LeadPod lead capture. GES orders placed and paid. Floor plan approved.</p>
-    </div>
+      <span class="cta-btn">
+        View all orders
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
 
     <!-- Card 3: Week 3 — To-Do List — Active now -->
-    <div class="cta-card" onclick="openModal('wk3')">
+    <a class="cta-card" href="hitec_week3.html" target="_blank">
       <span class="cta-week wk3">Week 3 — Now</span>
       <div class="cta-icon">&#9998;&#65039;</div>
       <div class="cta-title">To-Do List: Week 3</div>
@@ -480,7 +489,7 @@ h1, h2, h3, h4, p { text-wrap: balance; }
         View tasks
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
-    </div>
+    </a>
 
     <!-- Card 4: Week 4 — Locked -->
     <div class="cta-card locked">
@@ -757,16 +766,24 @@ h1, h2, h3, h4, p { text-wrap: balance; }
 </div>
 
 <script>
-// ── Countdown ──
+// ── Live countdown ──
 (function() {
   const show = new Date('2026-06-15T00:00:00');
+  function pad(n) { return String(n).padStart(2,'0'); }
   function tick() {
-    const diff = Math.ceil((show - Date.now()) / 86400000);
-    const el = document.getElementById('daysLeft');
-    if (el) el.textContent = diff > 0 ? diff : 0;
+    const diff = show - Date.now();
+    const safe = Math.max(diff, 0);
+    const days = Math.floor(safe / 86400000);
+    const hrs  = Math.floor((safe % 86400000) / 3600000);
+    const min  = Math.floor((safe % 3600000) / 60000);
+    const sec  = Math.floor((safe % 60000) / 1000);
+    const d = document.getElementById('cd-d'); if (d) d.textContent = days;
+    const h = document.getElementById('cd-h'); if (h) h.textContent = pad(hrs);
+    const m = document.getElementById('cd-m'); if (m) m.textContent = pad(min);
+    const s = document.getElementById('cd-s'); if (s) s.textContent = pad(sec);
   }
   tick();
-  setInterval(tick, 60000);
+  setInterval(tick, 1000);
 })();
 
 // ── Animate progress bars on scroll ──

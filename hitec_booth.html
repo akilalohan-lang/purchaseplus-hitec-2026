@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booth Design &amp; Setup · HITEC 2026 · PurchasePlus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/logo-emblem.png">
+<style>
+:root {
+  --grad: linear-gradient(90deg, #a956ff 0%, #7c5dff 50%, #3766fe 100%);
+  --purple: #7c5dff;
+  --pink: #a956ff;
+  --blue: #3766fe;
+  --ink: #111827;
+  --ink-soft: #1f2937;
+  --body: #4b5563;
+  --muted: #9ca3af;
+  --softer: #fafafa;
+  --border: #e5e7eb;
+  --border-soft: #f3f4f6;
+  --bg: #ffffff;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--body); font-size: 15px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; background: var(--bg);
+  height: 100dvh; overflow: hidden;
+}
+h1,h2,h3,h4,h5,h6,p { text-wrap: balance; color: var(--ink); }
+.mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+.grad {
+  background: linear-gradient(90deg,#a956ff 0%,#7c5dff 50%,#3766fe 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: gp 5s linear infinite;
+}
+@keyframes gp { 0%{background-position:200% 50%} 100%{background-position:0% 50%} }
+
+/* App shell */
+.app { display: grid; grid-template-columns: 300px 1fr; height: 100dvh; }
+
+/* Sidebar */
+.sb {
+  background: linear-gradient(180deg,#fafafa 0%,#fff 100%);
+  border-right: 1px solid var(--border);
+  padding: 22px 16px 18px;
+  display: flex; flex-direction: column;
+  height: 100dvh; overflow: hidden;
+}
+.sb-brand { display: flex; flex-direction: column; gap: 10px; padding: 0 6px 18px; border-bottom: 1px solid var(--border-soft); margin-bottom: 14px; }
+.sb-brand-top { display: flex; align-items: center; gap: 12px; }
+.sb-logo { height: 56px; width: auto; max-width: 200px; object-fit: contain; }
+.sb-tagline { font-size: 10.5px; font-weight: 400; color: var(--muted); letter-spacing: .01em; line-height: 1.4; padding-left: 1px; }
+.sb-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 0 8px 12px; }
+.sb-list { flex: 1; overflow-y: auto; padding-right: 2px; }
+.sb-list::-webkit-scrollbar { width: 4px; }
+.sb-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.sb-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer;
+  margin-bottom: 2px; transition: all .15s;
+  border: 1px solid transparent; user-select: none;
+}
+.sb-item:hover { background: var(--softer); }
+.sb-item.is-active {
+  background: linear-gradient(135deg,rgba(169,86,255,.08) 0%,rgba(55,102,254,.06) 100%);
+  border-color: rgba(124,93,255,.22);
+}
+.sb-item-num { font-size: 11px; font-weight: 600; color: var(--muted); font-family: 'JetBrains Mono',monospace; min-width: 22px; padding-top: 2px; letter-spacing: .04em; }
+.sb-item.is-active .sb-item-num { color: var(--purple); }
+.sb-item-label { font-size: 13px; font-weight: 500; color: var(--ink-soft); line-height: 1.35; }
+.sb-item.is-active .sb-item-label { color: var(--ink); font-weight: 600; }
+.sb-foot { padding-top: 14px; border-top: 1px solid var(--border-soft); font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+.sb-foot a { color: var(--muted); text-decoration: none; }
+.sb-foot a:hover { color: var(--purple); }
+.kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; font-size: 10px; font-weight: 600; font-family: 'JetBrains Mono',monospace; background: #fff; border: 1px solid var(--border); border-radius: 4px; color: var(--ink); }
+.dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; display: inline-block; box-shadow: 0 0 0 3px rgba(16,185,129,.18); animation: pulse 2.4s ease infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 3px rgba(16,185,129,.18)} 50%{box-shadow:0 0 0 7px rgba(16,185,129,.04)} }
+
+/* Mobile sidebar toggle */
+.sb-toggle { display:none; position:fixed; top:14px; left:14px; z-index:110; width:36px; height:36px; background:#fff; border:1px solid var(--border); border-radius:9px; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; }
+.sb-toggle span { width:16px; height:2px; background:var(--ink); border-radius:1px; display:block; }
+.sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:99; }
+.sb-overlay.is-open { display:block; }
+
+/* Main */
+.main { position: relative; height: 100dvh; overflow: hidden; }
+.slides { position: relative; height: 100%; }
+
+/* Slide base */
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: row;
+  opacity: 0; pointer-events: none;
+  transition: opacity .42s ease, transform .42s ease;
+  transform: translateY(12px);
+}
+.slide.is-active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+/* Left content panel */
+.slide-left {
+  flex: 0 0 58%; padding: 52px 64px 100px;
+  display: flex; flex-direction: column; justify-content: center;
+  overflow-y: auto; position: relative;
+}
+.slide-left::-webkit-scrollbar { width: 4px; }
+.slide-left::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Right visual panel */
+.slide-right {
+  flex: 1; position: relative; overflow: hidden;
+  background: var(--softer);
+  display: flex; align-items: center; justify-content: center;
+}
+.slide-right img { width: 100%; height: 100%; object-fit: cover; }
+.slide-right.contain img { object-fit: contain; padding: 24px; }
+
+/* Content elements */
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 8px; }
+.sub { font-size: 15px; color: var(--body); line-height: 1.65; margin-bottom: 24px; }
+.divider { width: 40px; height: 3px; background: var(--grad); border-radius: 2px; margin-bottom: 24px; }
+
+/* Status badge */
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 12px; margin-bottom: 20px; }
+.status.paid { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; }
+.status.pending { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
+.status.tbd { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+
+/* Data rows */
+.data-grid { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+.data-row { display: flex; align-items: flex-start; padding: 10px 16px; gap: 12px; border-bottom: 1px solid var(--border-soft); }
+.data-row:last-child { border-bottom: none; }
+.data-row:nth-child(even) { background: var(--softer); }
+.data-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; width: 130px; flex-shrink: 0; padding-top: 1px; }
+.data-val { font-size: 13.5px; font-weight: 500; color: var(--ink); flex: 1; }
+.data-val.mono { font-size: 13px; }
+
+/* Stat cards */
+.stat-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat { flex: 1; min-width: 90px; background: var(--softer); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px 16px; }
+.stat-num { font-size: 26px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+.stat-num.grad { font-size: 26px; }
+.stat-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+
+/* Item list */
+.item-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.item { display: flex; align-items: flex-start; gap: 12px; background: var(--softer); border: 1px solid var(--border-soft); border-radius: 10px; padding: 12px 14px; }
+.item-icon { font-size: 18px; flex-shrink: 0; line-height: 1.2; }
+.item-body { flex: 1; }
+.item-name { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.item-detail { font-size: 12px; color: var(--body); }
+.item-price { font-size: 14px; font-weight: 700; color: var(--purple); white-space: nowrap; margin-left: auto; padding-left: 12px; align-self: center; }
+
+/* Total bar */
+.total-bar { background: linear-gradient(135deg,rgba(169,86,255,.06) 0%,rgba(55,102,254,.04) 100%); border: 1px solid rgba(124,93,255,.2); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.total-label { font-size: 13px; font-weight: 700; color: var(--ink); }
+.total-amount { font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: var(--purple); }
+
+/* Budget table */
+.budget-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13px; }
+.budget-table th { background: var(--softer); padding: 10px 16px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); border-bottom: 1px solid var(--border); }
+.budget-table td { padding: 11px 16px; border-bottom: 1px solid var(--border-soft); }
+.budget-table tr:last-child td { border-bottom: none; }
+.budget-table tr:nth-child(even) td { background: #fafafa; }
+.budget-table .amount { font-weight: 700; color: var(--ink); font-family: 'JetBrains Mono',monospace; text-align: right; }
+.budget-table .total-row td { background: linear-gradient(135deg,rgba(169,86,255,.06),rgba(55,102,254,.04)); font-weight: 800; border-top: 2px solid rgba(124,93,255,.2); color: var(--ink); }
+.budget-table .total-row .amount { color: var(--purple); font-size: 15px; }
+.tag { display: inline-block; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 2px 8px; }
+.tag.paid { background: #d1fae5; color: #059669; }
+.tag.proforma { background: #fef3c7; color: #d97706; }
+.tag.tbd { background: #f3f4f6; color: #6b7280; }
+
+/* Floor plan */
+.floorplan-wrap { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f8f9ff; overflow: hidden; padding: 24px; }
+.floorplan-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; box-shadow: 0 6px 28px rgba(15,23,42,.12); }
+
+/* Nav arrows */
+.nav-arrows { position: fixed; bottom: 28px; right: 28px; display: flex; gap: 8px; z-index: 50; }
+.nav-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: all .15s; box-shadow: 0 2px 8px rgba(15,23,42,.08); }
+.nav-btn:hover { background: var(--purple); color: #fff; border-color: var(--purple); }
+.nav-btn svg { pointer-events: none; }
+
+/* Progress dots */
+.slide-dots { position: fixed; bottom: 34px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 50; }
+.dot-item { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all .2s; cursor: pointer; }
+.dot-item.is-active { background: var(--purple); width: 18px; border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sb { display: none; position: fixed; left: 0; top: 0; bottom: 0; width: 280px; z-index: 100; }
+  .sb.is-open { display: flex; }
+  .sb-toggle { display: flex; }
+  .slide-left { flex: none; width: 100%; padding: 60px 24px 80px; justify-content: flex-start; padding-top: 60px; }
+  .slide-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<button class="sb-toggle" id="sbToggle" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="sb-overlay" id="sbOverlay"></div>
+
+<div class="app">
+<!-- Sidebar -->
+<aside class="sb" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-top">
+      <img class="sb-logo" src="assets/logo.png" alt="PurchasePlus">
+    </div>
+    <div class="sb-tagline">HITEC 2026 · San Antonio, Texas<br>Booth #3715 · June 15-18</div>
+  </div>
+  <p class="sb-eyebrow" style="color:var(--purple)">Booth Design</p>
+  <nav class="sb-list" id="sbList">
+    <div class="sb-item is-active" data-slide="0"><span class="sb-item-num">01</span><span class="sb-item-label">Booth Overview</span></div>
+    <div class="sb-item" data-slide="1"><span class="sb-item-num">02</span><span class="sb-item-label">Booth Graphics</span></div>
+    <div class="sb-item" data-slide="2"><span class="sb-item-num">03</span><span class="sb-item-label">Flooring &amp; Furnishings</span></div>
+    <div class="sb-item" data-slide="3"><span class="sb-item-num">04</span><span class="sb-item-label">Electrical</span></div>
+    <div class="sb-item" data-slide="4"><span class="sb-item-num">05</span><span class="sb-item-label">AV &amp; Lead Capture</span></div>
+    <div class="sb-item" data-slide="5"><span class="sb-item-num">06</span><span class="sb-item-label">Cowboy Hats</span></div>
+    <div class="sb-item" data-slide="6"><span class="sb-item-num">07</span><span class="sb-item-label">Storage Cabinet</span></div>
+    <div class="sb-item" data-slide="7"><span class="sb-item-num">08</span><span class="sb-item-label">Floor Plan</span></div>
+    <div class="sb-item" data-slide="8"><span class="sb-item-num">09</span><span class="sb-item-label">Budget Summary</span></div>
+  </nav>
+  <div class="sb-foot">
+    <a href="hitec_hub.html">&#8592; Back to Hub</a>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span class="dot"></span>
+      <span>Week 2 — Done</span>
+    </div>
+  </div>
+</aside>
+
+<!-- Main slides -->
+<main class="main">
+  <div class="slides" id="slides">
+
+    <!-- 01 Overview -->
+    <div class="slide is-active" id="slide-0">
+      <div class="slide-left">
+        <p class="eyebrow">01 / Booth Overview</p>
+        <h2 class="headline">Booth #3715.<br><span class="grad">San Antonio.</span></h2>
+        <div class="divider"></div>
+        <p class="sub">PurchasePlus steps onto US soil for the first time. Island booth configuration in the Enhanced Plus tier. Adjacent to the North Concession Area.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num grad">3715</div><div class="stat-label">Booth number</div></div>
+          <div class="stat"><div class="stat-num grad">10×20</div><div class="stat-label">Square feet</div></div>
+          <div class="stat"><div class="stat-num grad">3 days</div><div class="stat-label">On the floor</div></div>
+        </div>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Exhibitor</span><span class="data-val">PurchasePlus LLC</span></div>
+          <div class="data-row"><span class="data-label">Listing tier</span><span class="data-val">Enhanced Plus (Island Booth)</span></div>
+          <div class="data-row"><span class="data-label">Booth fee</span><span class="data-val mono">$10,580.00 — paid</span></div>
+          <div class="data-row"><span class="data-label">Venue</span><span class="data-val">Henry B. Gonzalez Convention Center</span></div>
+          <div class="data-row"><span class="data-label">Move-in</span><span class="data-val">Saturday 15 June 2026</span></div>
+          <div class="data-row"><span class="data-label">Show dates</span><span class="data-val">Tuesday–Thursday 16–18 June 2026</span></div>
+          <div class="data-row"><span class="data-label">Booking contact</span><span class="data-val">Drew Bechdolt, HFTP — drew.bechdolt@hftp.org</span></div>
+          <div class="data-row"><span class="data-label">On-site services</span><span class="data-val">GES (Global Experience Specialists)</span></div>
+        </div>
+      </div>
+      <div class="slide-right">
+        <img src="assets/booth_3d.jpg" alt="Booth 3D render" loading="eager">
+      </div>
+    </div>
+
+    <!-- 02 Booth Graphics -->
+    <div class="slide" id="slide-1">
+      <div class="slide-left">
+        <p class="eyebrow">02 / Booth Graphics</p>
+        <h2 class="headline">Brand Ready<br><span class="grad">Eco Fabric Display.</span></h2>
+        <div class="divider"></div>
+        <span class="status paid">&#10003; Paid — 19 May 2026</span>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Vendor</span><span class="data-val">GES — Global Experience Specialists</span></div>
+          <div class="data-row"><span class="data-label">Order #</span><span class="data-val mono">6185662</span></div>
+          <div class="data-row"><span class="data-label">Product</span><span class="data-val">Brand Ready Eco Fabric Display (10×20) Booth D</span></div>
+          <div class="data-row"><span class="data-label">Size</span><span class="data-val">10 ft × 20 ft island display system</span></div>
+          <div class="data-row"><span class="data-label">Unit price</span><span class="data-val mono">$7,081.00</span></div>
+          <div class="data-row"><span class="data-label">PSP surcharge</span><span class="data-val mono">—</span></div>
+          <div class="data-row"><span class="data-label">Tax</span><span class="data-val mono">$584.18</span></div>
+          <div class="data-row"><span class="data-label">Total paid</span><span class="data-val mono" style="font-weight:800;color:var(--purple)">$7,665.18</span></div>
+          <div class="data-row"><span class="data-label">Account</span><span class="data-val mono">#1390137</span></div>
+        </div>
+        <div class="total-bar">
+          <span class="total-label">GES Graphics — Order #6185662</span>
+          <span class="total-amount">$7,665.18</span>
+        </div>
+      </div>
+      <div class="slide-right">
+        <img src="assets/booth_mockup.jpg" alt="Booth graphics mockup" loading="lazy">
+      </div>
+    </div>
+
+    <!-- 03 Flooring & Furnishings -->
+    <div class="slide" id="slide-2">
+      <div class="slide-left">
+        <p class="eyebrow">03 / Flooring &amp; Furnishings</p>
+        <h2 class="headline">Light Maple Floor.<br><span class="grad">Lounge + Bar.</span></h2>
+        <div class="divider"></div>
+        <span class="status paid">&#10003; Paid — 25 May 2026</span>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Vendor</span><span class="data-val">GES — Global Experience Specialists</span></div>
+          <div class="data-row"><span class="data-label">Order #</span><span class="data-val mono">6190519</span></div>
+        </div>
+        <div class="item-list">
+          <div class="item">
+            <span class="item-icon">🪵</span>
+            <div class="item-body">
+              <div class="item-name">Value Vinyl Flooring — Light Maple</div>
+              <div class="item-detail">200 sq ft · Custom cut + visqueen + padding · Install &amp; dismantle included</div>
+            </div>
+            <span class="item-price">$2,305.73</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🛋️</span>
+            <div class="item-body">
+              <div class="item-name">Lounge Classic Package 1 (GPSEV1)</div>
+              <div class="item-detail">2× White Vinyl Swanson Swivel Chair · 1× Mesa End Table Wood/Bronze Base</div>
+            </div>
+            <span class="item-price">$1,454.80</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🍽️</span>
+            <div class="item-body">
+              <div class="item-name">Bar Premium Package 1 (GPBEL1)</div>
+              <div class="item-detail">1× Ventura Maple Communal Table Bar · 4× Chrome &amp; White Lift Barstool</div>
+            </div>
+            <span class="item-price">$2,413.47</span>
+          </div>
+        </div>
+        <div class="total-bar">
+          <span class="total-label">GES Flooring &amp; Furnishings — Order #6190519</span>
+          <span class="total-amount">$6,174.00</span>
+        </div>
+      </div>
+      <div class="slide-right">
+        <img src="assets/booth_3d.jpg" alt="Booth layout with furnishings" loading="lazy">
+      </div>
+    </div>
+
+    <!-- 04 Electrical -->
+    <div class="slide" id="slide-3">
+      <div class="slide-left">
+        <p class="eyebrow">04 / Electrical</p>
+        <h2 class="headline">3 Outlets.<br><span class="grad">Full Power.</span></h2>
+        <div class="divider"></div>
+        <span class="status paid">&#10003; Paid — 25 May 2026</span>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Vendor</span><span class="data-val">Edlen Electrical Exhibition Services</span></div>
+          <div class="data-row"><span class="data-label">Event #</span><span class="data-val mono">066001SA</span></div>
+          <div class="data-row"><span class="data-label">Facility</span><span class="data-val">Henry B. Gonzalez Convention Center</span></div>
+          <div class="data-row"><span class="data-label">Contact</span><span class="data-val">exhibitorservices-sanantonio@edlen.com</span></div>
+          <div class="data-row"><span class="data-label">Phone</span><span class="data-val mono">(210) 662-9450</span></div>
+          <div class="data-row"><span class="data-label">Address</span><span class="data-val">5811 La Colonia, San Antonio TX 78218</span></div>
+        </div>
+        <div class="item-list">
+          <div class="item">
+            <span class="item-icon">🔌</span>
+            <div class="item-body">
+              <div class="item-name">500 Watt Outlet × 3</div>
+              <div class="item-detail">1× for TV · 1× for laptop/demo station · 1× spare</div>
+            </div>
+            <span class="item-price">$330.00</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🔋</span>
+            <div class="item-body">
+              <div class="item-name">Power Strip × 1</div>
+              <div class="item-detail">For the demo station</div>
+            </div>
+            <span class="item-price">$35.00</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">👷</span>
+            <div class="item-body">
+              <div class="item-name">Install Labor (Straight Time)</div>
+              <div class="item-detail">1× Install + 0.5× Disconnect</div>
+            </div>
+            <span class="item-price">$180.00</span>
+          </div>
+        </div>
+        <div class="total-bar">
+          <span class="total-label">Edlen Electrical — Event #066001SA</span>
+          <span class="total-amount">$545.00</span>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:48px;">
+        <div style="text-align:center;">
+          <div style="font-size:72px;margin-bottom:16px;">⚡</div>
+          <p style="font-size:14px;font-weight:600;color:var(--ink);">Power plan: Booth #3715</p>
+          <p style="font-size:12px;color:var(--muted);margin-top:4px;">Cables run under flooring — no trip hazards</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:320px;">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:20px;font-weight:800;color:var(--purple);">1</div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;">TV</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:20px;font-weight:800;color:var(--purple);">1</div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Demo</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:20px;font-weight:800;color:var(--purple);">1</div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Spare</div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--muted);text-align:center;">Edlen coordinates directly with GES to run cables under the Light Maple vinyl — selected during flooring order.</p>
+      </div>
+    </div>
+
+    <!-- 05 AV & Lead Capture -->
+    <div class="slide" id="slide-4">
+      <div class="slide-left">
+        <p class="eyebrow">05 / AV &amp; Lead Capture</p>
+        <h2 class="headline">43" Display.<br><span class="grad">3 Lead Scanners.</span></h2>
+        <div class="divider"></div>
+        <span class="status paid">&#10003; Paid — 26 May 2026</span>
+        <div class="item-list">
+          <div class="item">
+            <span class="item-icon">📺</span>
+            <div class="item-body">
+              <div class="item-name">43" LED/LCD Monitor — ON Services</div>
+              <div class="item-detail">Dual post wheeled stand · Delivery Monday 15 June · Order #2041</div>
+            </div>
+            <span class="item-price">$960.00</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🎬</span>
+            <div class="item-body">
+              <div class="item-name">Micca Speck G2 HD Digital Media Player</div>
+              <div class="item-detail">Loops the PurchasePlus promo video on the 43" display</div>
+            </div>
+            <span class="item-price">$60.00</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🏗️</span>
+            <div class="item-body">
+              <div class="item-name">Stand Mount — Dual Post Stand</div>
+              <div class="item-detail">Wheeled / mobile, positions anywhere on the booth floor</div>
+            </div>
+            <span class="item-price">$240.00</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🔧</span>
+            <div class="item-body">
+              <div class="item-name">AV Service Charge + Tax + Fees</div>
+              <div class="item-detail">Dismantling Thursday 18 June · 8.25% sales tax · convenience fee</div>
+            </div>
+            <span class="item-price">$180.75</span>
+          </div>
+        </div>
+        <div class="total-bar" style="margin-bottom:10px;">
+          <span class="total-label">ON Services — Order #2041</span>
+          <span class="total-amount">$1,440.75</span>
+        </div>
+        <div class="item-list">
+          <div class="item">
+            <span class="item-icon">📡</span>
+            <div class="item-body">
+              <div class="item-name">LeadPod Pro — 3 Licenses Bundle</div>
+              <div class="item-detail">Expo Logic · 3× complimentary devices included · Return within 30 min after close · Order Date 26 May</div>
+            </div>
+            <span class="item-price">$860.00</span>
+          </div>
+        </div>
+        <div class="total-bar">
+          <span class="total-label">AV + Lead Capture Combined</span>
+          <span class="total-amount">$2,300.75</span>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:48px;">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px 28px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">ON Services — Order #2041</p>
+          <div style="font-size:13px;color:var(--body);display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;"><span>43" LED/LCD Monitor</span><span class="mono" style="font-weight:600;">$960.00</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Stand mount (dual post)</span><span class="mono" style="font-weight:600;">$240.00</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Micca media player</span><span class="mono" style="font-weight:600;">$60.00</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Service charge</span><span class="mono" style="font-weight:600;">$306.00</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Tax + fees</span><span class="mono" style="font-weight:600;">$114.75</span></div>
+            <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;font-weight:800;color:var(--purple);"><span>Total</span><span class="mono">$1,440.75</span></div>
+          </div>
+          <p style="font-size:10.5px;color:var(--muted);margin-top:12px;">Paid by Malcolm Jull · Visa ****0985 · 26 May 2026</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 28px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;">LeadPod Pro — Expo Logic</p>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="font-size:32px;font-weight:800;color:var(--purple);">3</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink);">Badge scanner licenses</div>
+              <div style="font-size:11px;color:var(--muted);">Pick up on-site at service counter</div>
+              <div style="font-size:11px;color:var(--muted);">Return within 30 min of show close</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 Cowboy Hats -->
+    <div class="slide" id="slide-5">
+      <div class="slide-left">
+        <p class="eyebrow">06 / Cowboy Hats</p>
+        <h2 class="headline">37 Hats.<br><span class="grad">Texas Welcome.</span></h2>
+        <div class="divider"></div>
+        <span class="status pending">⏳ Proforma — Manufacturing in progress</span>
+        <p class="sub" style="margin-bottom:16px;">Branded cowboy hats produced by Baoding Hexin. Two SKUs — plain beige and logo-embossed. Shipping to Henry B. Gonzalez Convention Center for June 15 arrival.</p>
+        <div class="item-list">
+          <div class="item">
+            <span class="item-icon">🤠</span>
+            <div class="item-body">
+              <div class="item-name">AL524 — Beige Cowboy Hat (No Logo)</div>
+              <div class="item-detail">21 units · Plain beige felt · No branding · Team use</div>
+            </div>
+            <span class="item-price">$923.00</span>
+          </div>
+          <div class="item">
+            <span class="item-icon">🤠</span>
+            <div class="item-body">
+              <div class="item-name">AL528 — Beige Cowboy Hat (PurchasePlus Logo)</div>
+              <div class="item-detail">16 units · Beige felt · PurchasePlus emblem on band · Giveaway to VIP leads</div>
+            </div>
+            <span class="item-price">$808.00</span>
+          </div>
+        </div>
+        <div class="total-bar">
+          <span class="total-label">Baoding Hexin — Proforma #AL524 + AL528</span>
+          <span class="total-amount">$1,731.00</span>
+        </div>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Supplier</span><span class="data-val">Baoding Hexin Hat Co.</span></div>
+          <div class="data-row"><span class="data-label">Total units</span><span class="data-val">37 hats (21 plain + 16 branded)</span></div>
+          <div class="data-row"><span class="data-label">Status</span><span class="data-val">Proforma accepted — manufacturing pending</span></div>
+          <div class="data-row"><span class="data-label">Delivery</span><span class="data-val">Monday 15 June — Henry B. Gonzalez Convention Center</span></div>
+        </div>
+      </div>
+      <div class="slide-right">
+        <img src="assets/hats.jpg" alt="PurchasePlus cowboy hats" loading="lazy">
+      </div>
+    </div>
+
+    <!-- 07 Storage Cabinet -->
+    <div class="slide" id="slide-6">
+      <div class="slide-left">
+        <p class="eyebrow">07 / Storage Cabinet</p>
+        <h2 class="headline">DEVAISE Cabinet.<br><span class="grad">Buy on Arrival.</span></h2>
+        <div class="divider"></div>
+        <span class="status tbd">&#9711; To buy in San Antonio</span>
+        <p class="sub">Do not ship — buy in person at Amazon pickup or a local retailer on arrival in San Antonio. Avoids drayage fees. Goes directly to the booth on move-in day.</p>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Product</span><span class="data-val">DEVAISE Office File Cabinet with Lock, 1-Drawer Wood Lateral Filing Cabinet on Wheels</span></div>
+          <div class="data-row"><span class="data-label">ASIN</span><span class="data-val mono">B0BHW17Y9V</span></div>
+          <div class="data-row"><span class="data-label">Model</span><span class="data-val mono">AHDG053WH</span></div>
+          <div class="data-row"><span class="data-label">Price</span><span class="data-val mono">~$79 USD</span></div>
+          <div class="data-row"><span class="data-label">Rating</span><span class="data-val">4.3 / 5 (864 reviews)</span></div>
+          <div class="data-row"><span class="data-label">Colour</span><span class="data-val">White wood finish</span></div>
+          <div class="data-row"><span class="data-label">Load capacity</span><span class="data-val">150 lbs</span></div>
+          <div class="data-row"><span class="data-label">Wheels</span><span class="data-val">5 wheels — 2 lockable</span></div>
+        </div>
+        <div class="item-list">
+          <div class="item">
+            <span class="item-icon">🎩</span>
+            <div class="item-body">
+              <div class="item-name">Top surface</div>
+              <div class="item-detail">Flat top — perfect for stacking the cowboy hat pile at the booth entrance</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="item-icon">🔐</span>
+            <div class="item-body">
+              <div class="item-name">Locking drawer</div>
+              <div class="item-detail">Secures team bags, passes, documents overnight</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="item-icon">🧳</span>
+            <div class="item-body">
+              <div class="item-name">Open shelves</div>
+              <div class="item-detail">Side cabinet + removable shelf for pamphlets and giveaways</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;">
+        <div style="font-size:96px;text-align:center;margin-bottom:24px;">🗃️</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:320px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Action on arrival</p>
+          <ol style="font-size:13px;color:var(--ink);padding-left:18px;line-height:2;">
+            <li>Land in San Antonio</li>
+            <li>Order from Amazon / pick up locally</li>
+            <li>Bring to booth on move-in day (June 15)</li>
+            <li>Assemble — tools included in the box</li>
+            <li>Stack cowboy hats on top</li>
+            <li>Lock bags and documents overnight</li>
+          </ol>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:16px;text-align:center;">Do not ship to GES warehouse — buying on arrival avoids drayage fees.</p>
+      </div>
+    </div>
+
+    <!-- 08 Floor Plan -->
+    <div class="slide" id="slide-7">
+      <div class="slide-left">
+        <p class="eyebrow">08 / Floor Plan</p>
+        <h2 class="headline">Booth Location.<br><span class="grad">North Concession.</span></h2>
+        <div class="divider"></div>
+        <p class="sub">Booth #3715 is circled on the floor plan. Located adjacent to the North Concession Area — high foot traffic zone. Across from the main entrance walkways.</p>
+        <div class="data-grid">
+          <div class="data-row"><span class="data-label">Booth #</span><span class="data-val mono">3715</span></div>
+          <div class="data-row"><span class="data-label">Configuration</span><span class="data-val">Island (10×20) — four open sides</span></div>
+          <div class="data-row"><span class="data-label">Location</span><span class="data-val">Adjacent North Concession Area</span></div>
+          <div class="data-row"><span class="data-label">Zone</span><span class="data-val">Across from main entrance walkways</span></div>
+          <div class="data-row"><span class="data-label">Nearest landmark</span><span class="data-val">North Concession (food &amp; beverages — high traffic)</span></div>
+        </div>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;font-size:13px;color:#166534;">
+          <strong>Island advantage:</strong> Four open sides means attendees can approach from any direction. Maximize with the lounge on one side and the bar table on the other — two natural conversation zones.
+        </div>
+      </div>
+      <div class="slide-right">
+        <div class="floorplan-wrap">
+          <img src="assets/floor_plan.png" alt="HITEC 2026 floor plan — Booth #3715 circled">
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 Budget Summary -->
+    <div class="slide" id="slide-8">
+      <div class="slide-left">
+        <p class="eyebrow">09 / Budget Summary</p>
+        <h2 class="headline">Total Booth<br><span class="grad">Investment.</span></h2>
+        <div class="divider"></div>
+        <table class="budget-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Vendor</th>
+              <th style="text-align:center;">Status</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Booth floor space — Enhanced Plus</td>
+              <td>HFTP / Drew Bechdolt</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$10,580.00</td>
+            </tr>
+            <tr>
+              <td>Booth graphics — Brand Ready Eco Fabric 10×20</td>
+              <td>GES #6185662</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$7,665.18</td>
+            </tr>
+            <tr>
+              <td>Flooring — Light Maple vinyl 200sqft</td>
+              <td>GES #6190519</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$2,305.73</td>
+            </tr>
+            <tr>
+              <td>Furnishings — Lounge Classic Package 1</td>
+              <td>GES #6190519</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$1,454.80</td>
+            </tr>
+            <tr>
+              <td>Furnishings — Bar Premium Package 1</td>
+              <td>GES #6190519</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$2,413.47</td>
+            </tr>
+            <tr>
+              <td>Electrical — 3× 500W outlets + labor</td>
+              <td>Edlen #066001SA</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$545.00</td>
+            </tr>
+            <tr>
+              <td>AV — 43" TV + stand + media player</td>
+              <td>ON Services #2041</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$1,440.75</td>
+            </tr>
+            <tr>
+              <td>Lead Capture — LeadPod Pro 3 licenses</td>
+              <td>Expo Logic</td>
+              <td style="text-align:center;"><span class="tag paid">Paid</span></td>
+              <td class="amount">$860.00</td>
+            </tr>
+            <tr>
+              <td>Cowboy Hats — 37 units (21 plain + 16 branded)</td>
+              <td>Baoding Hexin</td>
+              <td style="text-align:center;"><span class="tag proforma">Proforma</span></td>
+              <td class="amount">$1,731.00</td>
+            </tr>
+            <tr>
+              <td>Storage cabinet — DEVAISE</td>
+              <td>Amazon (buy on arrival)</td>
+              <td style="text-align:center;"><span class="tag tbd">TBD</span></td>
+              <td class="amount">~$79.00</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3"><strong>Total committed</strong></td>
+              <td class="amount">$29,074.93</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px;color:var(--muted);margin-top:10px;">Paid to date (excl. proforma + TBD): $27,264.93. Cowboy hat invoice awaiting final payment. Cabinet purchased on arrival.</p>
+      </div>
+      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:48px;">
+        <div style="text-align:center;margin-bottom:8px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;">Total Paid</div>
+          <div style="font-size:52px;font-weight:800;letter-spacing:-.03em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">$27,265</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:360px;">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:var(--purple);">8</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Items paid</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:var(--amber);">2</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Pending</div>
+          </div>
+          <div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:12px;padding:14px;text-align:center;grid-column:1/-1;">
+            <div style="font-size:13px;font-weight:700;color:#059669;">Booth design approved by Malcolm ✓</div>
+            <div style="font-size:11px;color:#059669;margin-top:2px;">All GES, Edlen, ON Services orders confirmed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+</main>
+</div><!-- /app -->
+
+<!-- Nav arrows -->
+<div class="nav-arrows">
+  <button class="nav-btn" id="btnPrev" title="Previous (↑)">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 13V3M3 8l5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="nav-btn" id="btnNext" title="Next (↓)">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M13 8l-5 5-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<!-- Progress dots -->
+<div class="slide-dots" id="slideDots"></div>
+
+<script>
+(function() {
+  const TOTAL = 9;
+  let cur = 0;
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const sbItems = Array.from(document.querySelectorAll('.sb-item'));
+  const dotsWrap = document.getElementById('slideDots');
+
+  // Build dots
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot-item' + (i === 0 ? ' is-active' : '');
+    d.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(d);
+  }
+
+  function go(n) {
+    if (n < 0 || n >= TOTAL) return;
+    slides[cur].classList.remove('is-active');
+    sbItems[cur].classList.remove('is-active');
+    dotsWrap.children[cur].classList.remove('is-active');
+    cur = n;
+    slides[cur].classList.add('is-active');
+    sbItems[cur].classList.add('is-active');
+    dotsWrap.children[cur].classList.add('is-active');
+  }
+
+  sbItems.forEach((item, i) => item.addEventListener('click', () => go(i)));
+  document.getElementById('btnPrev').addEventListener('click', () => go(cur - 1));
+  document.getElementById('btnNext').addEventListener('click', () => go(cur + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') go(cur + 1);
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') go(cur - 1);
+  });
+
+  // Swipe
+  let touchY = null;
+  document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; });
+  document.addEventListener('touchend', e => {
+    if (touchY === null) return;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) go(dy > 0 ? cur + 1 : cur - 1);
+    touchY = null;
+  });
+
+  // Mobile sidebar
+  const sbToggle = document.getElementById('sbToggle');
+  const sbOverlay = document.getElementById('sbOverlay');
+  const sidebar = document.getElementById('sidebar');
+  sbToggle.addEventListener('click', () => { sidebar.classList.toggle('is-open'); sbOverlay.classList.toggle('is-open'); });
+  sbOverlay.addEventListener('click', () => { sidebar.classList.remove('is-open'); sbOverlay.classList.remove('is-open'); });
+})();
+</script>
+</body>
+</html>
