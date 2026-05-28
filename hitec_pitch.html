@@ -1472,7 +1472,8 @@ h1, h2, h3, h4, h5, h6, p { text-wrap: balance; color: var(--ink); }
 
 <audio id="bgAudio" src="backup_plan.mp3" loop preload="auto"></audio>
 
-<div class="mp" id="musicPlayer">
+<div class="mp" id="musicPlayer" style="position:fixed;">
+  <span class="mp-nudge" id="mpNudge">&#9654; Click to play music</span>
   <div class="mp-controls">
     <button class="mp-btn mp-play" id="mpPlay" aria-label="Play">
       <svg id="mpIconPlay" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -1551,6 +1552,24 @@ h1, h2, h3, h4, h5, h6, p { text-wrap: balance; color: var(--ink); }
   0%,100% { box-shadow: 0 0 0 0 rgba(169,86,255,.4); }
   50%      { box-shadow: 0 0 0 6px rgba(169,86,255,0); }
 }
+/* Tap-to-play nudge — shown when autoplay is blocked */
+.mp-nudge {
+  position: absolute; bottom: calc(100% + 10px); right: 0;
+  background: rgba(17,10,35,.92); border: 1px solid rgba(169,86,255,.4);
+  color: #fff; font-size: 11px; font-weight: 600; white-space: nowrap;
+  padding: 5px 12px; border-radius: 20px;
+  pointer-events: none;
+  animation: nudgeBounce 1.8s ease-in-out infinite;
+}
+.mp-nudge::after {
+  content: ''; position: absolute; top: 100%; right: 20px;
+  border: 5px solid transparent; border-top-color: rgba(169,86,255,.4);
+}
+@keyframes nudgeBounce {
+  0%,100% { transform: translateY(0); opacity: .9; }
+  50%      { transform: translateY(-4px); opacity: 1; }
+}
+.mp.is-playing .mp-nudge { display: none; }
 /* Responsive */
 @media (max-width: 1100px) {
   .mp {
@@ -1578,6 +1597,7 @@ h1, h2, h3, h4, h5, h6, p { text-wrap: balance; color: var(--ink); }
   const total = document.getElementById('mpTotal');
   const vol = document.getElementById('mpVol');
   const player = document.getElementById('musicPlayer');
+  const nudge = document.getElementById('mpNudge');
 
   function fmt(s) {
     s = Math.floor(s || 0);
@@ -1600,6 +1620,7 @@ h1, h2, h3, h4, h5, h6, p { text-wrap: balance; color: var(--ink); }
     iconPlay.style.display = on ? 'none' : '';
     iconPause.style.display = on ? '' : 'none';
     on ? player.classList.add('is-playing') : player.classList.remove('is-playing');
+    if (nudge) nudge.style.display = on ? 'none' : '';
   }
 
   audio.addEventListener('loadedmetadata', function(){ total.textContent = fmt(audio.duration); });

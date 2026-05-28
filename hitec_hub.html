@@ -187,9 +187,6 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   margin: 0 auto;
 }
 .cta-grid .cta-card { grid-column: span 2; }
-/* Center the bottom row of 2 cards in a 6-col grid */
-.cta-grid .cta-card:nth-child(4) { grid-column: 2 / 4; }
-.cta-grid .cta-card:nth-child(5) { grid-column: 4 / 6; }
 .cta-card {
   background: #fff;
   border: 1px solid var(--border);
@@ -248,10 +245,16 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   padding: 3px 10px; border-radius: 99px;
 }
 .cta-week.wk12   { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-.cta-week.wk3    { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.cta-week.wk4    { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+.cta-week.wk2    { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.cta-week.wk3    { background: #fdf4ff; color: #a956ff; border: 1px solid #e9d5ff; }
+.cta-week.wk4    { background: #f5f3ff; color: #7c5dff; border: 1px solid #ddd6fe; }
 .cta-week.event  { background: #f5f3ff; color: #5b21b6; border: 1px solid #ddd6fe; }
 .cta-week.post   { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.done-badge {
+  font-size: 11px; font-weight: 700; border-radius: 99px;
+  padding: 3px 10px; letter-spacing: .03em;
+  color: #059669; background: #d1fae5; border: 1px solid #6ee7b7;
+}
 .cta-icon { font-size: 28px; }
 .cta-title { font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.3; }
 .cta-body { font-size: 13px; color: var(--body); line-height: 1.6; flex: 1; }
@@ -384,9 +387,7 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   .hero-char { display: none; }
   .section { padding: 40px 20px; }
   .cta-grid { grid-template-columns: 1fr; gap: 14px; }
-  .cta-grid .cta-card,
-  .cta-grid .cta-card:nth-child(4),
-  .cta-grid .cta-card:nth-child(5) { grid-column: 1 / -1; }
+  .cta-grid .cta-card { grid-column: 1 / -1; }
   .header { padding: 0 20px; }
   .modal { padding: 24px; }
 }
@@ -441,10 +442,12 @@ h1, h2, h3, h4, p { text-wrap: balance; }
   <p class="section-title">HITEC Playbook</p>
   <div class="cta-grid">
 
+    <!-- Card 1: Week 1 — Pitch Deck — Done -->
     <a class="cta-card" href="hitec_pitch.html" target="_blank">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <span class="cta-week wk12">Week 1 – 2</span>
-        <span style="font-size:11px;font-weight:700;color:#059669;background:#d1fae5;border:1px solid #6ee7b7;border-radius:99px;padding:3px 10px;letter-spacing:.03em;">Approved ✓</span>
+        <span class="cta-week wk12">Week 1</span>
+        <span class="done-badge">Approved by Malcolm ✓</span>
+        <span class="done-badge">Done ✓</span>
       </div>
       <div class="cta-icon">&#127775;</div>
       <div class="cta-title">HITEC Pitch Deck</div>
@@ -455,6 +458,19 @@ h1, h2, h3, h4, p { text-wrap: balance; }
       </span>
     </a>
 
+    <!-- Card 2: Week 2 — Booth Design & Setup — Done -->
+    <div class="cta-card" style="cursor:default;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span class="cta-week wk2">Week 2</span>
+        <span class="done-badge">Approved by Malcolm ✓</span>
+        <span class="done-badge">Done ✓</span>
+      </div>
+      <div class="cta-icon">&#127959;&#65039;</div>
+      <div class="cta-title">Booth Design & Setup</div>
+      <p class="cta-body">Island booth #3715 fully ordered. Booth graphics, flooring, furnishings, electrical, AV, and LeadPod lead capture. GES orders placed and paid. Floor plan approved.</p>
+    </div>
+
+    <!-- Card 3: Week 3 — To-Do List — Active now -->
     <div class="cta-card" onclick="openModal('wk3')">
       <span class="cta-week wk3">Week 3 — Now</span>
       <div class="cta-icon">&#9998;&#65039;</div>
@@ -466,13 +482,7 @@ h1, h2, h3, h4, p { text-wrap: balance; }
       </span>
     </div>
 
-    <div class="cta-card locked">
-      <span class="cta-week event">Events Action</span>
-      <div class="cta-icon">&#127381;</div>
-      <div class="cta-title">Events Action Plan</div>
-      <p class="cta-body">On-site playbook for June 15-18. Booth hours, team rotations, demo flow, lead capture process, cowboy hat distribution, and real-time escalation contacts.</p>
-    </div>
-
+    <!-- Card 4: Week 4 — Locked -->
     <div class="cta-card locked">
       <span class="cta-week wk4">Week 4 — Last</span>
       <div class="cta-icon">&#128073;</div>
@@ -480,6 +490,15 @@ h1, h2, h3, h4, p { text-wrap: balance; }
       <p class="cta-body">Final week before show open. Logistics confirmation, hat delivery, run-of-show, lead flow, booth prep, and the last things that can only be done once you land in San Antonio.</p>
     </div>
 
+    <!-- Card 5: Events Action — Locked -->
+    <div class="cta-card locked">
+      <span class="cta-week event">Events Action</span>
+      <div class="cta-icon">&#127381;</div>
+      <div class="cta-title">Events Action Plan</div>
+      <p class="cta-body">On-site playbook for June 15-18. Booth hours, team rotations, demo flow, lead capture process, cowboy hat distribution, and real-time escalation contacts.</p>
+    </div>
+
+    <!-- Card 6: Post-Event — Locked -->
     <div class="cta-card locked">
       <span class="cta-week post">Post-Event</span>
       <div class="cta-icon">&#128200;</div>
