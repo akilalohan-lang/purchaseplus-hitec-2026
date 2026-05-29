@@ -175,6 +175,120 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 .dot-item { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all .2s; cursor: pointer; }
 .dot-item.is-active { background: var(--purple); width: 18px; border-radius: 3px; }
 
+/* ── Scout Events Agent ──────────────────────────────────────── */
+#scout-root { position:fixed; bottom:84px; right:24px; z-index:200; font-family:'Inter',sans-serif; }
+#scout-fab {
+  width:50px; height:50px; border-radius:15px;
+  background:linear-gradient(135deg,#a956ff 0%,#3766fe 100%);
+  border:none; cursor:pointer; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 20px rgba(124,93,255,.35);
+  position:relative; transition:transform .15s, box-shadow .15s;
+}
+#scout-fab:hover { transform:scale(1.07); box-shadow:0 6px 28px rgba(124,93,255,.45); }
+#scout-fab-badge {
+  position:absolute; top:-5px; right:-5px;
+  min-width:18px; height:18px; padding:0 4px;
+  background:#ef4444; border-radius:9px;
+  font-size:10px; font-weight:800; color:#fff;
+  display:none; align-items:center; justify-content:center;
+  border:2px solid #fff;
+}
+#scout-panel {
+  position:absolute; bottom:62px; right:0;
+  width:340px; background:#fff;
+  border:1px solid var(--border); border-radius:18px;
+  box-shadow:0 12px 48px rgba(15,23,42,.14);
+  display:flex; flex-direction:column; max-height:540px;
+  opacity:0; pointer-events:none;
+  transform:translateY(10px) scale(.97);
+  transition:all .2s cubic-bezier(.34,1.5,.64,1);
+}
+#scout-panel.open { opacity:1; pointer-events:auto; transform:translateY(0) scale(1); }
+.scout-hd {
+  padding:14px 16px 12px; border-bottom:1px solid var(--border-soft);
+  background:linear-gradient(135deg,rgba(169,86,255,.04) 0%,rgba(55,102,254,.04) 100%);
+  border-radius:18px 18px 0 0;
+  display:flex; align-items:flex-start; gap:10px; flex-shrink:0;
+}
+.scout-avatar {
+  width:36px; height:36px; border-radius:10px;
+  background:linear-gradient(135deg,#a956ff 0%,#3766fe 100%);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:14px; flex-shrink:0; font-weight:700;
+}
+.scout-hd-text { flex:1; min-width:0; }
+.scout-name { font-size:13px; font-weight:700; color:var(--ink); }
+.scout-ctx { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
+.scout-hd-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:16px; line-height:1; padding:2px 4px; border-radius:6px; }
+.scout-hd-close:hover { color:var(--ink); background:var(--softer); }
+.scout-feed { flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+.scout-feed::-webkit-scrollbar { width:4px; }
+.scout-feed::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.scout-empty { text-align:center; padding:24px 12px; color:var(--muted); font-size:12px; line-height:1.7; }
+.scout-comment-item { background:var(--softer); border:1px solid var(--border-soft); border-radius:10px; padding:10px 12px; }
+.scout-ci-sel {
+  font-size:11.5px; color:var(--purple); font-style:italic;
+  border-left:2px solid var(--purple); padding-left:8px; margin-bottom:6px; line-height:1.4;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.scout-ci-text { font-size:12.5px; color:var(--ink); line-height:1.5; }
+.scout-ci-meta { display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
+.scout-ci-time { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+.scout-ci-del { background:none; border:none; color:var(--muted); cursor:pointer; font-size:11px; padding:2px 6px; border-radius:4px; }
+.scout-ci-del:hover { color:var(--red); background:rgba(239,68,68,.07); }
+.scout-input-area { padding:10px 14px 14px; border-top:1px solid var(--border-soft); display:flex; gap:8px; align-items:flex-end; flex-shrink:0; }
+.scout-ta {
+  flex:1; resize:none; border:1px solid var(--border); border-radius:10px;
+  padding:8px 10px; font-size:12.5px; font-family:'Inter',sans-serif;
+  color:var(--ink); line-height:1.45; outline:none; min-height:36px; max-height:100px; background:#fff;
+}
+.scout-ta:focus { border-color:var(--purple); }
+.scout-send {
+  width:34px; height:34px; border-radius:9px; background:var(--purple);
+  border:none; cursor:pointer; color:#fff;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;
+}
+.scout-send:hover { background:var(--pink); }
+#scout-sel-tip {
+  position:fixed; z-index:300; background:var(--ink); color:#fff;
+  border-radius:8px; padding:6px 12px; font-size:12px; font-weight:600;
+  cursor:pointer; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,.2);
+  opacity:0; pointer-events:none; transition:opacity .12s; user-select:none;
+}
+#scout-sel-tip.show { opacity:1; pointer-events:auto; }
+#scout-sel-tip::after {
+  content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+  border:5px solid transparent; border-top-color:var(--ink);
+}
+#scout-popover {
+  position:fixed; z-index:310; background:#fff; border:1px solid var(--border);
+  border-radius:14px; padding:14px; width:280px;
+  box-shadow:0 8px 32px rgba(15,23,42,.14);
+  opacity:0; pointer-events:none; transform:translateY(6px); transition:all .15s;
+}
+#scout-popover.show { opacity:1; pointer-events:auto; transform:translateY(0); }
+.sc-pop-quote {
+  font-size:11.5px; color:var(--purple); font-style:italic;
+  border-left:2px solid var(--purple); padding-left:8px; margin-bottom:10px; line-height:1.45;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.sc-pop-ta {
+  width:100%; resize:none; border:1px solid var(--border); border-radius:8px;
+  padding:8px 10px; font-size:12.5px; font-family:'Inter',sans-serif; color:var(--ink);
+  line-height:1.45; outline:none; min-height:64px; background:#fff; display:block; box-sizing:border-box;
+}
+.sc-pop-ta:focus { border-color:var(--purple); }
+.sc-pop-actions { display:flex; gap:8px; margin-top:10px; }
+.sc-pop-cancel { flex:1; padding:7px; border-radius:8px; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:12px; font-weight:600; color:var(--body); }
+.sc-pop-save { flex:1; padding:7px; border-radius:8px; border:none; background:var(--purple); cursor:pointer; font-size:12px; font-weight:700; color:#fff; }
+.sc-pop-save:hover { background:var(--pink); }
+.sc-hl {
+  background:rgba(251,191,36,.3); border-radius:2px; cursor:pointer;
+  border-bottom:2px solid rgba(251,191,36,.65); transition:background .15s;
+}
+.sc-hl:hover { background:rgba(251,191,36,.55); }
+
 /* Responsive */
 @media (max-width: 900px) {
   .app { grid-template-columns: 1fr; }
@@ -832,6 +946,7 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
     slides[cur].classList.add('is-active');
     sbItems[cur].classList.add('is-active');
     dotsWrap.children[cur].classList.add('is-active');
+    if (window.scoutOnSlideChange) window.scoutOnSlideChange(cur);
   }
   sbItems.forEach((item, i) => item.addEventListener('click', () => go(i)));
   document.getElementById('btnPrev').addEventListener('click', () => go(cur - 1));
@@ -947,6 +1062,7 @@ function cvRender(type) {
       <div class="post-tags">${tagsHtml}</div>
     </div>`;
   }
+  if (window.scoutAfterRender) window.scoutAfterRender(type, cvIdx[type]);
 }
 
 function cvNav(type, dir) {
@@ -961,6 +1077,300 @@ function cvNav(type, dir) {
 cvRender('art');
 cvRender('eml');
 cvRender('post');
+</script>
+
+<!-- Scout Events Agent HTML -->
+<div id="scout-root">
+  <button id="scout-fab" onclick="scoutToggle()" title="Scout, Events Agent">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span id="scout-fab-badge"></span>
+  </button>
+  <div id="scout-panel">
+    <div class="scout-hd">
+      <div class="scout-avatar">S</div>
+      <div class="scout-hd-text">
+        <div class="scout-name">Scout</div>
+        <div class="scout-ctx" id="scout-ctx-line">Events Agent</div>
+      </div>
+      <button class="scout-hd-close" onclick="scoutToggle()">&#x2715;</button>
+    </div>
+    <div class="scout-feed" id="scout-feed"></div>
+    <div class="scout-input-area">
+      <textarea class="scout-ta" id="scout-ta" placeholder="Add a note for this content..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();scoutSubmit();}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button class="scout-send" onclick="scoutSubmit()" title="Save note">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M14 2L7 9M14 2L9 14l-2-5L2 7l12-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div id="scout-sel-tip" onclick="scoutOpenPopover()">Add comment</div>
+<div id="scout-popover">
+  <div class="sc-pop-quote" id="sc-pop-quote"></div>
+  <textarea class="sc-pop-ta" id="sc-pop-ta" placeholder="Your comment..." rows="3"
+    onkeydown="if(event.key==='Escape')scoutClosePopover();if(event.key==='Enter'&&(event.metaKey||event.ctrlKey)){scoutSaveSelection();}"></textarea>
+  <div class="sc-pop-actions">
+    <button class="sc-pop-cancel" onclick="scoutClosePopover()">Cancel</button>
+    <button class="sc-pop-save" onclick="scoutSaveSelection()">Save</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const SCOUT_KEY = 'scout_v1';
+  let comments = [];
+  try { comments = JSON.parse(localStorage.getItem(SCOUT_KEY)) || []; } catch(e) {}
+
+  let ctx = { type: null, idx: 0, slideIdx: 0 };
+  let panelOpen = false;
+  let pendingSel = null;
+
+  function save() { localStorage.setItem(SCOUT_KEY, JSON.stringify(comments)); }
+
+  function ctxKey() {
+    return ctx.type ? (ctx.type + ':' + ctx.idx) : ('slide:' + ctx.slideIdx);
+  }
+
+  function ctxLabel() {
+    if (!ctx.type) {
+      const names = ['This Week','Compliance','Exhibitor Hub','Social Posts','Articles','Lead Outreach','Articles Viewer','Emails Viewer','Posts Viewer'];
+      return names[ctx.slideIdx] || ('Slide ' + (ctx.slideIdx + 1));
+    }
+    const typeNames = { art: 'Article', eml: 'Email', post: 'Post' };
+    const data = window.cvData && window.cvData[ctx.type];
+    const item = data && data[ctx.idx];
+    const raw = item ? item.title : '';
+    const short = raw.length > 34 ? raw.slice(0, 34) + '...' : raw;
+    return typeNames[ctx.type] + ' ' + (ctx.idx + 1) + (short ? ': ' + short : '');
+  }
+
+  function ctxComments() {
+    const k = ctxKey();
+    return comments.filter(function(c) { return c.ctx === k; });
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function updateBadge() {
+    const badge = document.getElementById('scout-fab-badge');
+    const n = ctxComments().length;
+    badge.textContent = n;
+    badge.style.display = n > 0 ? 'flex' : 'none';
+  }
+
+  function renderFeed() {
+    const feed = document.getElementById('scout-feed');
+    const ctxLine = document.getElementById('scout-ctx-line');
+    if (ctxLine) ctxLine.textContent = ctxLabel();
+    const list = ctxComments();
+    if (!list.length) {
+      feed.innerHTML = '<div class="scout-empty">No notes yet for this content.<br>Select text to annotate it, or type a note below.</div>';
+      return;
+    }
+    feed.innerHTML = list.map(function(c) {
+      return '<div class="scout-comment-item" data-id="' + esc(c.id) + '">' +
+        (c.sel ? '<div class="scout-ci-sel">“' + esc(c.sel) + '”</div>' : '') +
+        '<div class="scout-ci-text">' + esc(c.text) + '</div>' +
+        '<div class="scout-ci-meta">' +
+          '<span class="scout-ci-time">' + esc(c.time) + '</span>' +
+          '<button class="scout-ci-del" onclick="window.scoutDel(\'' + c.id + '\')">Remove</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  function highlightText(container, text, id) {
+    if (!text || text.length < 3) return;
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    const nodes = [];
+    let node;
+    while ((node = walker.nextNode())) nodes.push(node);
+    nodes.forEach(function(textNode) {
+      const val = textNode.nodeValue;
+      const idx = val.indexOf(text);
+      if (idx === -1) return;
+      const mark = document.createElement('mark');
+      mark.className = 'sc-hl';
+      mark.dataset.scId = id;
+      mark.textContent = text;
+      const cm = comments.find(function(c) { return c.id === id; });
+      mark.title = cm ? cm.text : '';
+      mark.addEventListener('click', function() {
+        if (!panelOpen) { panelOpen = true; document.getElementById('scout-panel').classList.add('open'); }
+        renderFeed();
+        setTimeout(function() {
+          const el = document.querySelector('[data-id="' + id + '"]');
+          if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+        }, 150);
+      });
+      const frag = document.createDocumentFragment();
+      if (idx > 0) frag.appendChild(document.createTextNode(val.slice(0, idx)));
+      frag.appendChild(mark);
+      if (idx + text.length < val.length) frag.appendChild(document.createTextNode(val.slice(idx + text.length)));
+      textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+
+  function applyHighlights(type, idx) {
+    const bodyEl = document.getElementById(window.cvBodyId && window.cvBodyId[type]);
+    if (!bodyEl) return;
+    const k = type + ':' + idx;
+    comments.filter(function(c) { return c.ctx === k && c.sel; }).forEach(function(c) {
+      highlightText(bodyEl, c.sel, c.id);
+    });
+  }
+
+  function fmtTime() {
+    const now = new Date();
+    const d = now.toLocaleDateString('en-AU', { day:'2-digit', month:'short' });
+    const t = now.toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+    return d + ' ' + t;
+  }
+
+  window.scoutAfterRender = function(type, idx) {
+    ctx.type = type;
+    ctx.idx = idx;
+    updateBadge();
+    if (panelOpen) renderFeed();
+    applyHighlights(type, idx);
+  };
+
+  window.scoutOnSlideChange = function(slideIdx) {
+    ctx.slideIdx = slideIdx;
+    if (slideIdx < 6) ctx.type = null;
+    updateBadge();
+    if (panelOpen) renderFeed();
+  };
+
+  window.scoutToggle = function() {
+    panelOpen = !panelOpen;
+    document.getElementById('scout-panel').classList.toggle('open', panelOpen);
+    if (panelOpen) renderFeed();
+  };
+
+  window.scoutSubmit = function() {
+    const ta = document.getElementById('scout-ta');
+    const text = ta.value.trim();
+    if (!text) return;
+    const id = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
+    comments.push({ id: id, ctx: ctxKey(), text: text, sel: null, time: fmtTime() });
+    save();
+    ta.value = '';
+    ta.style.height = 'auto';
+    updateBadge();
+    renderFeed();
+  };
+
+  window.scoutDel = function(id) {
+    comments = comments.filter(function(c) { return c.id !== id; });
+    save();
+    document.querySelectorAll('.sc-hl[data-sc-id="' + id + '"]').forEach(function(el) {
+      el.parentNode.replaceChild(document.createTextNode(el.textContent), el);
+    });
+    updateBadge();
+    renderFeed();
+  };
+
+  // Selection tooltip
+  const selTip = document.getElementById('scout-sel-tip');
+  const popover = document.getElementById('scout-popover');
+
+  document.addEventListener('mouseup', function(e) {
+    if (popover.contains(e.target) || e.target === selTip) return;
+    if (!popover.contains(e.target)) popover.classList.remove('show');
+
+    setTimeout(function() {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+        selTip.classList.remove('show');
+        return;
+      }
+      let range;
+      try { range = sel.getRangeAt(0); } catch(err) { return; }
+      const ancestor = range.commonAncestorContainer;
+      const node = ancestor.nodeType === 1 ? ancestor : ancestor.parentElement;
+      if (!node) { selTip.classList.remove('show'); return; }
+      const cvMain = node.closest('.cv-main');
+      if (!cvMain) { selTip.classList.remove('show'); return; }
+
+      const selText = sel.toString().trim();
+      if (selText.length < 3) { selTip.classList.remove('show'); return; }
+
+      pendingSel = { text: selText, range: range.cloneRange() };
+
+      const rect = range.getBoundingClientRect();
+      let tipLeft = rect.left + rect.width / 2;
+      selTip.style.opacity = '0';
+      selTip.style.pointerEvents = 'none';
+      selTip.classList.add('show');
+      const tipW = selTip.offsetWidth;
+      selTip.style.left = Math.max(8, Math.min(tipLeft - tipW / 2, window.innerWidth - tipW - 8)) + 'px';
+      selTip.style.top = (rect.top - 44) + 'px';
+      selTip.style.opacity = '';
+      selTip.style.pointerEvents = '';
+    }, 10);
+  });
+
+  document.addEventListener('mousedown', function(e) {
+    if (!selTip.contains(e.target) && !popover.contains(e.target)) {
+      selTip.classList.remove('show');
+    }
+  });
+
+  window.scoutOpenPopover = function() {
+    if (!pendingSel) return;
+    selTip.classList.remove('show');
+    document.getElementById('sc-pop-quote').textContent = '“' + pendingSel.text + '”';
+    document.getElementById('sc-pop-ta').value = '';
+
+    const rect = pendingSel.range.getBoundingClientRect();
+    let top = rect.bottom + 10;
+    let left = rect.left + rect.width / 2 - 140;
+    left = Math.max(8, Math.min(left, window.innerWidth - 288));
+    if (top + 220 > window.innerHeight) top = Math.max(8, rect.top - 220);
+
+    popover.style.top = top + 'px';
+    popover.style.left = left + 'px';
+    popover.classList.add('show');
+    setTimeout(function() { document.getElementById('sc-pop-ta').focus(); }, 60);
+  };
+
+  window.scoutClosePopover = function() {
+    popover.classList.remove('show');
+    pendingSel = null;
+  };
+
+  window.scoutSaveSelection = function() {
+    if (!pendingSel) return;
+    const text = document.getElementById('sc-pop-ta').value.trim();
+    if (!text) { document.getElementById('sc-pop-ta').focus(); return; }
+    const id = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
+    comments.push({ id: id, ctx: ctxKey(), text: text, sel: pendingSel.text, time: fmtTime() });
+    save();
+
+    if (ctx.type !== null) {
+      const bodyEl = document.getElementById(window.cvBodyId && window.cvBodyId[ctx.type]);
+      if (bodyEl) highlightText(bodyEl, pendingSel.text, id);
+    }
+
+    scoutClosePopover();
+    updateBadge();
+    if (!panelOpen) { panelOpen = true; document.getElementById('scout-panel').classList.add('open'); }
+    renderFeed();
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { scoutClosePopover(); selTip.classList.remove('show'); }
+  });
+
+  updateBadge();
+})();
 </script>
 </body>
 </html>
