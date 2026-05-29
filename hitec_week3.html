@@ -1044,154 +1044,19 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 
 
     <!-- SLIDE: Show Specials -->
-    <div class="slide" id="slide-specials">
-      <div class="specials-wrap">
-        <div class="specials-hd">
-          <span class="specials-eyebrow">HITEC 2026 &middot; San Antonio &middot; Booth 3715</span>
-          <h2 class="specials-title">Show Specials: <span class="grad">8 Approved by Malcolm</span></h2>
-          <p class="specials-sub">Confirmed 29 May. Ready to build into email sequence and exhibitor one-pager.</p>
+    <div class="slide slide--viewer" id="slide-specials">
+      <div class="cv-topbar">
+        <div class="cv-nav">
+          <button class="cv-arrow" id="pdfPrev" onclick="pdfNav(-1)">&#8592;</button>
+          <span class="cv-counter" id="pdfCounter">1 / 8</span>
+          <button class="cv-arrow" id="pdfNext" onclick="pdfNav(1)">&#8594;</button>
         </div>
-        <!-- PDF One-Pager Slider -->
-        <div class="pdf-section">
-          <div class="pdf-sec-hd">
-            <div>
-              <div class="pdf-sec-eyebrow">Generated One-Pagers</div>
-              <div class="pdf-sec-title">Show Special PDFs</div>
-            </div>
-            <div class="pdf-sec-nav">
-              <button class="pdf-nav-btn" id="pdfPrev" onclick="pdfSlide(-1)" disabled>&#8592;</button>
-              <span class="pdf-nav-count" id="pdfNavCount">1 / 8</span>
-              <button class="pdf-nav-btn" id="pdfNext" onclick="pdfSlide(1)">&#8594;</button>
-            </div>
-          </div>
-          <div class="pdf-track-outer" id="pdfTrackOuter">
-            <div class="pdf-track" id="pdfTrack">
-
-              <div class="pdf-card-item" style="--card-color:#7c5dff" onclick="openPdf(0)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(124,93,255,.1),rgba(124,93,255,.03))">
-                  <div class="pdf-card-num" style="background:#7c5dff">02</div>
-                  <div class="pdf-card-name">AP Cost Calculator Report</div>
-                  <div class="pdf-card-tagline">Show them exactly what they're overpaying. In writing.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 02</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(1)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(169,86,255,.1),rgba(169,86,255,.03))">
-                  <div class="pdf-card-num" style="background:#a956ff">03</div>
-                  <div class="pdf-card-name">HITEC Founding Customer Status</div>
-                  <div class="pdf-card-tagline">Be part of the North American launch story.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 03</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(2)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(55,102,254,.1),rgba(55,102,254,.03))">
-                  <div class="pdf-card-num" style="background:#3766fe">04</div>
-                  <div class="pdf-card-name">Statement Reconciliation Health Check</div>
-                  <div class="pdf-card-tagline">Find out what your suppliers owe you before you ask.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 04</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(3)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.03))">
-                  <div class="pdf-card-num" style="background:#10b981">05</div>
-                  <div class="pdf-card-name">Waived Onboarding Fee</div>
-                  <div class="pdf-card-tagline">Get started without the setup cost.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 05</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(4)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(245,158,11,.03))">
-                  <div class="pdf-card-num" style="background:#f59e0b">07</div>
-                  <div class="pdf-card-name">Free 60-Day Single-Property POC</div>
-                  <div class="pdf-card-tagline">Prove the value before the full commitment.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 07</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(5)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(124,93,255,.1),rgba(124,93,255,.03))">
-                  <div class="pdf-card-num" style="background:#7c5dff">08</div>
-                  <div class="pdf-card-name">Post-Show Executive Briefing with Malcolm</div>
-                  <div class="pdf-card-tagline">A direct conversation at the highest level.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 08</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(6)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(55,102,254,.1),rgba(55,102,254,.03))">
-                  <div class="pdf-card-num" style="background:#3766fe">09</div>
-                  <div class="pdf-card-name">F&amp;B GP% Baseline Model</div>
-                  <div class="pdf-card-tagline">See your food cost performance before the invoice arrives.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 09</span>
-                </div>
-              </div>
-
-              <div class="pdf-card-item" onclick="openPdf(7)">
-                <div class="pdf-card-hdr" style="background:linear-gradient(135deg,rgba(169,86,255,.1),rgba(169,86,255,.03))">
-                  <div class="pdf-card-num" style="background:#a956ff">10</div>
-                  <div class="pdf-card-name">Priority Integration Queue</div>
-                  <div class="pdf-card-tagline">Skip the line. Your integrations go first.</div>
-                </div>
-                <div class="pdf-card-foot">
-                  <span class="pdf-card-open">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7c5dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    View PDF
-                  </span>
-                  <span style="font-size:10px;color:var(--muted)">Special 10</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
+        <div class="cv-title-area">
+          <span class="cv-label">06 / Show Specials</span>
+          <span class="cv-item-title" id="pdfTitle">AP Cost Calculator Report</span>
         </div>
-
       </div>
+      <embed id="pdfEmbed" src="specials-pdfs/Special_02_AP_Cost_Calculator_Report.pdf" type="application/pdf" style="flex:1;width:100%;display:block;border:none;">
     </div>
 
     <!-- SLIDE 8: Emails viewer -->
@@ -2233,97 +2098,35 @@ cvRender('post');
 })();
 </script>
 
-<!-- PDF Modal -->
-<div class="pdf-modal" id="pdfModal" style="display:none" role="dialog" aria-modal="true">
-  <div class="pdf-modal-bg" onclick="closePdf()"></div>
-  <div class="pdf-modal-box">
-    <div class="pdf-modal-hdr">
-      <span class="pdf-modal-title" id="pdfModalTitle">Show Special</span>
-      <span class="pdf-modal-hint">Scroll to zoom &nbsp;·&nbsp; Ctrl+scroll or pinch</span>
-      <button class="pdf-modal-close" onclick="closePdf()" title="Close">&times;</button>
-    </div>
-    <embed id="pdfModalEmbed" src="" type="application/pdf" class="pdf-modal-embed">
-  </div>
-</div>
-
 <script>
 (function() {
-  var PDF_FILES = [
-    { title:'Special 02 — AP Cost Calculator Report',        file:'specials-pdfs/Special_02_AP_Cost_Calculator_Report.pdf' },
-    { title:'Special 03 — HITEC Founding Customer Status',   file:'specials-pdfs/Special_03_HITEC_Founding_Customer_Status.pdf' },
-    { title:'Special 04 — Statement Reconciliation Health Check', file:'specials-pdfs/Special_04_Statement_Reconciliation_Health_Check.pdf' },
-    { title:'Special 05 — Waived Onboarding Fee',            file:'specials-pdfs/Special_05_Waived_Onboarding_Fee.pdf' },
-    { title:'Special 07 — Free 60-Day Single-Property POC',  file:'specials-pdfs/Special_07_Free_60_Day_Single_Property_POC.pdf' },
-    { title:'Special 08 — Post-Show Executive Briefing',     file:'specials-pdfs/Special_08_Post_Show_Executive_Briefing_with_Malcolm.pdf' },
-    { title:'Special 09 — F&B GP% Baseline Model',           file:'specials-pdfs/Special_09_F_B_GP_Baseline_Model.pdf' },
-    { title:'Special 10 — Priority Integration Queue',       file:'specials-pdfs/Special_10_Priority_Integration_Queue.pdf' },
+  var PDF_DATA = [
+    { title:'AP Cost Calculator Report',              file:'specials-pdfs/Special_02_AP_Cost_Calculator_Report.pdf' },
+    { title:'HITEC Founding Customer Status',         file:'specials-pdfs/Special_03_HITEC_Founding_Customer_Status.pdf' },
+    { title:'Statement Reconciliation Health Check',  file:'specials-pdfs/Special_04_Statement_Reconciliation_Health_Check.pdf' },
+    { title:'Waived Onboarding Fee',                  file:'specials-pdfs/Special_05_Waived_Onboarding_Fee.pdf' },
+    { title:'Free 60-Day Single-Property POC',        file:'specials-pdfs/Special_07_Free_60_Day_Single_Property_POC.pdf' },
+    { title:'Post-Show Executive Briefing with Malcolm', file:'specials-pdfs/Special_08_Post_Show_Executive_Briefing_with_Malcolm.pdf' },
+    { title:'F&B GP% Baseline Model',                 file:'specials-pdfs/Special_09_F_B_GP_Baseline_Model.pdf' },
+    { title:'Priority Integration Queue',             file:'specials-pdfs/Special_10_Priority_Integration_Queue.pdf' },
   ];
-
-  // ── Slider ──────────────────────────────────────────────────────
   var pdfIdx = 0;
-  var PDF_VISIBLE = 3;
 
-  function getCardWidth() {
-    var outer = document.getElementById('pdfTrackOuter');
-    if (!outer) return 280;
-    return Math.floor((outer.offsetWidth - 14 * (PDF_VISIBLE - 1)) / PDF_VISIBLE);
-  }
-
-  function initPdfCards() {
-    var w = getCardWidth();
-    var cards = document.querySelectorAll('.pdf-card-item');
-    cards.forEach(function(c) { c.style.width = w + 'px'; });
-  }
-
-  function updatePdfSlider() {
-    var w = getCardWidth();
-    var offset = pdfIdx * (w + 14);
-    document.getElementById('pdfTrack').style.transform = 'translateX(-' + offset + 'px)';
-    var total = PDF_FILES.length;
-    document.getElementById('pdfNavCount').textContent = (pdfIdx + 1) + ' – ' + Math.min(pdfIdx + PDF_VISIBLE, total) + ' / ' + total;
+  function pdfRender() {
+    var d = PDF_DATA[pdfIdx];
+    document.getElementById('pdfEmbed').src = d.file;
+    document.getElementById('pdfTitle').textContent = d.title;
+    document.getElementById('pdfCounter').textContent = (pdfIdx + 1) + ' / ' + PDF_DATA.length;
     document.getElementById('pdfPrev').disabled = pdfIdx === 0;
-    document.getElementById('pdfNext').disabled = pdfIdx >= total - PDF_VISIBLE;
+    document.getElementById('pdfNext').disabled = pdfIdx === PDF_DATA.length - 1;
   }
 
-  window.pdfSlide = function(dir) {
-    pdfIdx = Math.max(0, Math.min(PDF_FILES.length - PDF_VISIBLE, pdfIdx + dir));
-    updatePdfSlider();
+  window.pdfNav = function(dir) {
+    pdfIdx = Math.max(0, Math.min(PDF_DATA.length - 1, pdfIdx + dir));
+    pdfRender();
   };
 
-  // ── Modal ────────────────────────────────────────────────────────
-  window.openPdf = function(idx) {
-    var d = PDF_FILES[idx];
-    document.getElementById('pdfModalTitle').textContent = d.title;
-    document.getElementById('pdfModalEmbed').src = d.file;
-    var modal = document.getElementById('pdfModal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  };
-
-  window.closePdf = function() {
-    var modal = document.getElementById('pdfModal');
-    modal.style.display = 'none';
-    document.getElementById('pdfModalEmbed').src = '';
-    document.body.style.overflow = '';
-  };
-
-  // Close on Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      var modal = document.getElementById('pdfModal');
-      if (modal && modal.style.display !== 'none') closePdf();
-    }
-  });
-
-  // Init on load
-  window.addEventListener('load', function() {
-    initPdfCards();
-    updatePdfSlider();
-  });
-  window.addEventListener('resize', function() {
-    initPdfCards();
-    updatePdfSlider();
-  });
+  window.addEventListener('load', pdfRender);
 })();
 </script>
 </body>
