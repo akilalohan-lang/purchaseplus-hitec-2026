@@ -394,6 +394,51 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 .sp-badge--link { color:#3766fe; background:rgba(55,102,254,.09); }
 .sp-badge--internal { color:var(--muted); background:var(--border-soft); }
 
+
+/* Malcolm approval bar */
+.cv-approval-bar {
+  flex-shrink:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 32px; height:44px;
+  border-bottom:1px solid var(--border-soft);
+  background:linear-gradient(180deg,#fffdf5 0%,#fff 100%);
+  gap:12px;
+}
+.cv-approval-bar.is-approved {
+  background:linear-gradient(180deg,#f0fdf4 0%,#fff 100%);
+  border-bottom-color:rgba(16,185,129,.2);
+}
+.cv-appr-left {
+  display:flex; align-items:center; gap:8px; min-width:0;
+}
+.cv-appr-lbl {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--muted);
+}
+.cv-appr-status {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; color:var(--muted);
+}
+.cv-appr-status.pending { color:#b45309; }
+.cv-appr-status.approved { color:#059669; }
+.cv-appr-dot {
+  width:7px; height:7px; border-radius:50%; flex-shrink:0;
+}
+.cv-appr-dot.pending { background:#f59e0b; }
+.cv-appr-dot.approved { background:#10b981; }
+.cv-appr-time { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+.cv-appr-btn {
+  flex-shrink:0; height:28px; padding:0 14px;
+  border-radius:8px; border:1.5px solid var(--border);
+  background:#fff; cursor:pointer; font-size:11px; font-weight:700;
+  color:var(--body); transition:all .15s; white-space:nowrap;
+}
+.cv-appr-btn:hover { border-color:var(--green); color:var(--green); background:rgba(16,185,129,.06); }
+.cv-appr-btn.approved {
+  background:#10b981; border-color:#10b981; color:#fff;
+}
+.cv-appr-btn.approved:hover { background:#059669; border-color:#059669; }
+
 /* Responsive */
 @media (max-width: 900px) {
   .app { grid-template-columns: 1fr; }
@@ -923,6 +968,7 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
           <span class="cv-item-title" id="artTitle">Loading...</span>
         </div>
       </div>
+      <div class="cv-approval-bar" id="artApprovalBar"></div>
       <div class="cv-body-wrap">
         <div class="cv-side-fade cv-side-fade--l"></div>
         <button class="cv-side-btn cv-side-btn--prev" id="artSidePrev" onclick="cvNav('art',-1)">&#8592;</button>
@@ -1057,6 +1103,7 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
           <span class="cv-item-title" id="emlTitle">Loading...</span>
         </div>
       </div>
+      <div class="cv-approval-bar" id="emlApprovalBar"></div>
       <div class="cv-body-wrap">
         <div class="cv-side-fade cv-side-fade--l"></div>
         <button class="cv-side-btn cv-side-btn--prev" id="emlSidePrev" onclick="cvNav('eml',-1)">&#8592;</button>
@@ -1079,6 +1126,7 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
           <span class="cv-item-title" id="postTitle">Loading...</span>
         </div>
       </div>
+      <div class="cv-approval-bar" id="postApprovalBar"></div>
       <div class="cv-body-wrap">
         <div class="cv-side-fade cv-side-fade--l"></div>
         <button class="cv-side-btn cv-side-btn--prev" id="postSidePrev" onclick="cvNav('post',-1)">&#8592;</button>
@@ -1571,6 +1619,49 @@ const cvPrevId = { art: 'artPrev', eml: 'emlPrev', post: 'postPrev' };
 const cvNextId = { art: 'artNext', eml: 'emlNext', post: 'postNext' };
 const cvSidePrevId = { art: 'artSidePrev', eml: 'emlSidePrev', post: 'postSidePrev' };
 const cvSideNextId = { art: 'artSideNext', eml: 'emlSideNext', post: 'postSideNext' };
+const cvApprovalBarId = { art: 'artApprovalBar', eml: 'emlApprovalBar', post: 'postApprovalBar' };
+
+const APPR_KEY = 'pp_approvals_v1';
+function apprLoad() { try { return JSON.parse(localStorage.getItem(APPR_KEY)) || {}; } catch(e) { return {}; } }
+function apprSave(d) { try { localStorage.setItem(APPR_KEY, JSON.stringify(d)); } catch(e) {} }
+function apprState(id) { return apprLoad()[id] || null; }
+
+function renderApprovalBar(type) {
+  const bar = document.getElementById(cvApprovalBarId[type]);
+  if (!bar) return;
+  const item = cvData[type][cvIdx[type]];
+  const id = item.id;
+  const state = apprState(id);
+  const approved = !!(state && state.approved);
+  bar.className = 'cv-approval-bar' + (approved ? ' is-approved' : '');
+  bar.innerHTML =
+    '<div class="cv-appr-left">' +
+      '<span class="cv-appr-lbl">Malcolm Review</span>' +
+      '<span class="cv-appr-status ' + (approved ? 'approved' : 'pending') + '">' +
+        '<span class="cv-appr-dot ' + (approved ? 'approved' : 'pending') + '"></span>' +
+        (approved ? 'Approved' : 'Pending approval') +
+      '</span>' +
+      (approved && state.time ? '<span class="cv-appr-time">' + state.time + '</span>' : '') +
+    '</div>' +
+    '<button class="cv-appr-btn' + (approved ? ' approved' : '') + '" onclick="cvToggleApproval(\'' + type + '\')">' +
+      (approved ? '&#x2713; Approved' : 'Approve') +
+    '</button>';
+}
+
+function cvToggleApproval(type) {
+  const item = cvData[type][cvIdx[type]];
+  const id = item.id;
+  const d = apprLoad();
+  if (d[id] && d[id].approved) {
+    delete d[id];
+  } else {
+    const now = new Date();
+    const timeStr = now.toLocaleDateString('en-AU', {day:'2-digit',month:'short'}) + ' ' + now.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit'});
+    d[id] = { approved: true, time: timeStr };
+  }
+  apprSave(d);
+  renderApprovalBar(type);
+}
 
 function cvRender(type) {
   const items = cvData[type];
@@ -1583,6 +1674,7 @@ function cvRender(type) {
   document.getElementById(cvNextId[type]).disabled = atEnd;
   document.getElementById(cvSidePrevId[type]).disabled = atStart;
   document.getElementById(cvSideNextId[type]).disabled = atEnd;
+  renderApprovalBar(type);
   const body = document.getElementById(cvBodyId[type]);
   body.scrollTop = 0;
 
