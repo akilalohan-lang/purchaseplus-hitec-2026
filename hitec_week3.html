@@ -351,6 +351,69 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 .cv-main::-webkit-scrollbar { width: 5px; }
 .cv-main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
+/* Side navigation arrows for content viewers */
+.cv-body-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.cv-body-wrap .cv-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px 80px 80px;
+}
+.cv-side-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #a956ff 0%, #7c5dff 50%, #3766fe 100%);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(124,93,255,.35), 0 2px 8px rgba(0,0,0,.12);
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, opacity .2s;
+  user-select: none;
+  opacity: .88;
+}
+.cv-side-btn:hover {
+  transform: translateY(-50%) scale(1.13);
+  box-shadow: 0 8px 32px rgba(124,93,255,.5), 0 4px 12px rgba(0,0,0,.15);
+  opacity: 1;
+}
+.cv-side-btn:active {
+  transform: translateY(-50%) scale(.96);
+}
+.cv-side-btn:disabled {
+  opacity: .18;
+  cursor: default;
+  box-shadow: none;
+  pointer-events: none;
+}
+.cv-side-btn--prev { left: 14px; }
+.cv-side-btn--next { right: 14px; }
+.cv-side-fade {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 96px;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity .2s;
+}
+.cv-side-fade--l {
+  left: 0;
+  background: linear-gradient(to right, rgba(255,255,255,.92) 0%, rgba(255,255,255,0) 100%);
+}
+.cv-side-fade--r {
+  right: 0;
+  background: linear-gradient(to left, rgba(255,255,255,.92) 0%, rgba(255,255,255,0) 100%);
+}
+
 /* Article renderer */
 .art-meta {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 24px;
@@ -451,33 +514,23 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
     </div>
     <div class="sb-item" data-slide="3">
       <span class="sb-item-num">04</span>
-      <span class="sb-item-label">Social Posts</span>
-      <span class="sb-count">10 posts</span>
-    </div>
-    <div class="sb-item" data-slide="4">
-      <span class="sb-item-num">05</span>
-      <span class="sb-item-label">Website Articles</span>
-      <span class="sb-count">10 articles</span>
-    </div>
-    <div class="sb-item" data-slide="5">
-      <span class="sb-item-num">06</span>
       <span class="sb-item-label">Lead Outreach</span>
       <span class="sb-count">83 leads</span>
     </div>
-    <div class="sb-item" data-slide="6">
-      <span class="sb-item-num">07</span>
+    <div class="sb-item" data-slide="4">
+      <span class="sb-item-num">05</span>
       <span class="sb-item-label">Articles</span>
       <span class="sb-count">10 drafts</span>
     </div>
-    <div class="sb-item" data-slide="7">
-      <span class="sb-item-num">08</span>
+    <div class="sb-item" data-slide="5">
+      <span class="sb-item-num">06</span>
       <span class="sb-item-label">Emails</span>
       <span class="sb-count">10 drafts</span>
     </div>
-    <div class="sb-item" data-slide="8">
-      <span class="sb-item-num">09</span>
+    <div class="sb-item" data-slide="6">
+      <span class="sb-item-num">07</span>
       <span class="sb-item-label">LinkedIn Posts</span>
-      <span class="sb-count">10 posts</span>
+      <span class="sb-count">7 posts</span>
     </div>
   </nav>
   <div class="sb-foot">
@@ -659,118 +712,7 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
       </div>
     </div>
 
-    <!-- 04 Social Posts -->
-    <div class="slide" id="slide-3">
-      <div class="slide-left">
-        <p class="eyebrow">04 / Social Posts</p>
-        <h2 class="headline">10 Posts.<br><span class="grad">June 2 to June 13.</span></h2>
-        <div class="divider"></div>
-        <div class="alert info" style="margin-bottom:16px;">
-          <span>📌</span>
-          <span>Post 1 (Strattam Capital) goes up Monday June 2 and stays as the only post for the full week. Let it breathe. Resume daily posts from Friday June 5.</span>
-        </div>
-        <table class="sched">
-          <thead>
-            <tr><th>Date</th><th>Post</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="date-badge">Jun 2</span><span class="day anchor">Mon</span></td>
-              <td><strong>Post 1, Strattam Capital investment</strong> anchor post. Leave for the full week. No other posts until Friday.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 5</span><span class="day">Fri</span></td>
-              <td><strong>Post 2, HITEC debut.</strong> PurchasePlus arriving in North America for the first time.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 6</span><span class="day">Sat</span></td>
-              <td><strong>Post 3, AI Invoicing.</strong> 99% accuracy, 90% straight-through processing.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 7</span><span class="day">Sun</span></td>
-              <td><strong>Post 4, Customer logos.</strong> Accor, IHG, Marriott, Qantas, Emirates, who we serve.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 8</span><span class="day">Mon</span></td>
-              <td><strong>Post 5, AP Automation.</strong> 75% reduction in invoice processing costs.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 9</span><span class="day">Tue</span></td>
-              <td><strong>Post 6, Live GP%.</strong> Commitment-based budgeting, before the invoice arrives.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 10</span><span class="day">Wed</span></td>
-              <td><strong>Post 7, GTM Machine.</strong> 14 AI agents running the pre-MQL pipeline.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 11</span><span class="day">Thu</span></td>
-              <td><strong>Post 8, Multi-property.</strong> F&amp;B performance across 10+ properties in one view.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 12</span><span class="day">Fri</span></td>
-              <td><strong>Post 9, Cowboy hat teaser.</strong> Texas energy. We're coming.</td>
-            </tr>
-            <tr>
-              <td><span class="date-badge">Jun 13</span><span class="day">Sat</span></td>
-              <td><strong>Post 10, Final countdown.</strong> See you at Booth #3715.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
-        <div style="font-size:48px;text-align:center;">📱</div>
-        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
-          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Posting rhythm</p>
-          <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--body);">
-            <div style="padding:8px 10px;background:rgba(239,68,68,.06);border-radius:8px;border:1px solid rgba(239,68,68,.15);color:#b91c1c;font-weight:600;">June 2, Strattam anchor. No other posts.</div>
-            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 5 Fri, HITEC debut</div>
-            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 6 Sat, AI Invoicing</div>
-            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 7 Sun, Customer logos</div>
-            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 8-11, Daily: AP, GP%, GTM, Multi-prop</div>
-            <div style="padding:8px 10px;background:var(--softer);border-radius:8px;">June 12, Cowboy hat teaser</div>
-            <div style="padding:8px 10px;background:rgba(124,93,255,.06);border-radius:8px;border:1px solid rgba(124,93,255,.15);color:var(--purple);font-weight:600;">June 13, Final countdown. See you at 3715.</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- 05 Website Articles -->
-    <div class="slide" id="slide-4">
-      <div class="slide-left">
-        <p class="eyebrow">05 / Website Articles</p>
-        <h2 class="headline">10 Articles.<br><span class="grad">Published by June 7.</span></h2>
-        <div class="divider"></div>
-        <p class="sub" style="margin-bottom:16px;">All 10 to be published within the next 10 days. These support the hub press releases and give SEO depth before HITEC attendees research PurchasePlus.</p>
-        <div class="checklist">
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Strattam Capital invests in PurchasePlus, US expansion begins</span></div><div class="cl-desc">Publish with the June 2 social post. Biggest piece. Needs to be live before the LinkedIn announcement.</div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Why we built for hospitality, 25 years, 40M invoices, one platform</span></div><div class="cl-desc">Foundation story. Connects heritage to current product.</div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">How AI invoicing works, 99% accuracy explained</span></div><div class="cl-desc">Supports the AI Invoicing social post (June 6).</div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">The hidden cost of maverick spending in hotels</span></div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Commitment-based budgeting vs traditional month-end finance</span></div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">How Accor / IHG / Marriott control multi-property F&amp;B spend</span></div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">What is the GTM Machine, 14 AI agents explained</span></div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">Procure-to-pay vs fragmented hotel purchasing</span></div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">PurchasePlus at HITEC 2026, what to expect at Booth #3715</span></div></div></div>
-          <div class="cl-item"><div class="cl-check urgent"></div><div class="cl-body"><div class="cl-top"><span class="cl-title">How to get audit-ready in hospitality finance</span></div></div></div>
-        </div>
-      </div>
-      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
-        <div style="font-size:48px;text-align:center;">✍️</div>
-        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
-          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Production target</p>
-          <div style="display:flex;align-items:center;gap:16px;">
-            <div style="font-size:42px;font-weight:800;color:var(--red);">0</div>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--ink);">of 10 published</div>
-              <div style="font-size:11px;color:var(--muted);">Deadline: June 7</div>
-            </div>
-          </div>
-          <div style="margin-top:12px;background:var(--softer);border-radius:8px;padding:10px;font-size:12px;color:var(--body);">
-            Article 1 must go live before or with the June 2 LinkedIn post, Strattam Capital announcement.
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- 06 Lead Outreach -->
     <div class="slide" id="slide-5">
@@ -867,12 +809,16 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
           <button class="cv-arrow" id="artNext" onclick="cvNav('art',1)">&#8594;</button>
         </div>
         <div class="cv-title-area">
-          <span class="cv-label">07 / Articles</span>
+          <span class="cv-label">05 / Articles</span>
           <span class="cv-item-title" id="artTitle">Loading...</span>
         </div>
       </div>
-      <div class="cv-main" id="artBody">
-        <!-- rendered by JS -->
+      <div class="cv-body-wrap">
+        <div class="cv-side-fade cv-side-fade--l"></div>
+        <button class="cv-side-btn cv-side-btn--prev" id="artSidePrev" onclick="cvNav('art',-1)">&#8592;</button>
+        <div class="cv-main" id="artBody"><!-- rendered by JS --></div>
+        <button class="cv-side-btn cv-side-btn--next" id="artSideNext" onclick="cvNav('art',1)">&#8594;</button>
+        <div class="cv-side-fade cv-side-fade--r"></div>
       </div>
     </div>
 
@@ -885,12 +831,16 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
           <button class="cv-arrow" id="emlNext" onclick="cvNav('eml',1)">&#8594;</button>
         </div>
         <div class="cv-title-area">
-          <span class="cv-label">08 / Emails</span>
+          <span class="cv-label">06 / Emails</span>
           <span class="cv-item-title" id="emlTitle">Loading...</span>
         </div>
       </div>
-      <div class="cv-main" id="emlBody">
-        <!-- rendered by JS -->
+      <div class="cv-body-wrap">
+        <div class="cv-side-fade cv-side-fade--l"></div>
+        <button class="cv-side-btn cv-side-btn--prev" id="emlSidePrev" onclick="cvNav('eml',-1)">&#8592;</button>
+        <div class="cv-main" id="emlBody"><!-- rendered by JS --></div>
+        <button class="cv-side-btn cv-side-btn--next" id="emlSideNext" onclick="cvNav('eml',1)">&#8594;</button>
+        <div class="cv-side-fade cv-side-fade--r"></div>
       </div>
     </div>
 
@@ -899,16 +849,20 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
       <div class="cv-topbar">
         <div class="cv-nav">
           <button class="cv-arrow" id="postPrev" onclick="cvNav('post',-1)">&#8592;</button>
-          <span class="cv-counter" id="postCounter">1 / 10</span>
+          <span class="cv-counter" id="postCounter">1 / 7</span>
           <button class="cv-arrow" id="postNext" onclick="cvNav('post',1)">&#8594;</button>
         </div>
         <div class="cv-title-area">
-          <span class="cv-label">09 / LinkedIn Posts</span>
+          <span class="cv-label">07 / LinkedIn Posts</span>
           <span class="cv-item-title" id="postTitle">Loading...</span>
         </div>
       </div>
-      <div class="cv-main" id="postBody">
-        <!-- rendered by JS -->
+      <div class="cv-body-wrap">
+        <div class="cv-side-fade cv-side-fade--l"></div>
+        <button class="cv-side-btn cv-side-btn--prev" id="postSidePrev" onclick="cvNav('post',-1)">&#8592;</button>
+        <div class="cv-main" id="postBody"><!-- rendered by JS --></div>
+        <button class="cv-side-btn cv-side-btn--next" id="postSideNext" onclick="cvNav('post',1)">&#8594;</button>
+        <div class="cv-side-fade cv-side-fade--r"></div>
       </div>
     </div>
 
@@ -932,7 +886,7 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 
 <script>
 (function() {
-  const TOTAL = 9;
+  const TOTAL = 7;
   let cur = 0;
   const slides = Array.from(document.querySelectorAll('.slide'));
   const sbItems = Array.from(document.querySelectorAll('.sb-item'));
@@ -1362,29 +1316,26 @@ const CV_ARTICLES = [
 
 
 const CV_EMAILS = [
-{id:'email-01',title:'Tier 1, Finance Director / CFO (Template)',to:'[First Name] [Last Name], [Title], [Hotel Group]',subject:'One thing we do that your AP team will thank you for',body:`Hi [First Name],\n\nI'm Akila, Head of Marketing at PurchasePlus, the procurement platform used by Accor, IHG, and Marriott to automate hotel purchasing and invoice processing.\n\nWe process 40M invoices a year at 99% AI accuracy. Hotels using our platform cut AP processing costs by 75% and get live committed spend visibility before the invoice lands.\n\nWe're exhibiting at HITEC 2026 this June in San Antonio, Booth #3715. I'd love to show you a 10-minute demo on the floor. Would any time on June 16, 17, or 18 work?`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com\n+61 420 413 528'},
-{id:'email-02',title:'Vicki Hamilton, Hilton (Personalized)',to:'Vicki Hamilton, Senior Manager Procurement Applications, Hilton',subject:'Procurement automation for Hilton, worth 10 minutes at HITEC?',body:`Hi Vicki,\n\nHilton's procurement complexity, global supplier base, multi-property operations, brand standards, is exactly the environment PurchasePlus was built for. We automate invoice processing at 99% AI accuracy and give procurement teams live committed spend visibility across every property.\n\nAccor and IHG use us for the same reason you're likely evaluating options now: the scale problem doesn't get smaller, and spreadsheet-driven AP doesn't scale.\n\nI'll be at HITEC 2026, Booth #3715. Would you have 15 minutes to see a live demo? I'll keep it specific to Hilton's procurement context.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-03',title:'John Hearns, Marriott (Personalized)',to:'John Hearns, SVP Global Residential Operations, Marriott International',subject:'Multi-property purchasing visibility, PurchasePlus at HITEC',body:`Hi John,\n\nFor an operation at Marriott's scale, the challenge isn't purchasing, it's visibility. Knowing what's committed across hundreds of properties, in real time, before month end.\n\nPurchasePlus gives residential and hotel operations teams a live rollup of committed spend, F&B cost performance, and supplier compliance across every property simultaneously. Accor uses it for exactly this purpose.\n\nI'll be at HITEC this June in San Antonio, Booth #3715. Happy to walk you through how the multi-property dashboard works. Would any slot on June 16 or 17 work for a 15-minute session?`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-04',title:'Suzette Barreto, Loews Hotels (Personalized)',to:'Suzette Barreto, Director of Accounting Services, Loews Hotels',subject:'Your AP team and ours should talk, HITEC June 2026',body:`Hi Suzette,\n\nHotel AP operations are where most procurement value leaks: manual matching, approval delays, invoices without POs, duplicate payments. It's invisible until you measure it.\n\nPurchasePlus automates the entire purchase-to-pay cycle, 99% AI accuracy, 90% straight-through processing, full audit trail. For an accounting director managing a multi-property portfolio like Loews, the audit readiness benefit alone is typically worth the conversation.\n\nI'll be at Booth #3715 at HITEC this June. Can I put 20 minutes on your HITEC calendar for a demo focused on Loews's AP workflow?`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-05',title:'Jigs Gandhi, MR Hotel Management (Personalized)',to:'Jigs Gandhi, VP Procurement IT & Corporate Services, MR Hotel Management',subject:'Procurement + IT, a platform worth seeing at HITEC',body:`Hi Jigs,\n\nVP of Procurement and IT is a rare combination, it means you're evaluating not just what the platform does but how it integrates. PurchasePlus connects to the ERP stack, handles EDI supplier integrations, and runs fully cloud-native.\n\nOn the procurement side: 30,000+ supplier network, AI invoice processing at 99% accuracy, and live spend dashboards across every property and cost centre.\n\nI'll be at HITEC Booth #3715, would you have time for a 20-minute technical demo? I can walk through both the functional and integration architecture.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-06',title:'Dawn Fenech, Corinthia Hotels (Personalized)',to:'Dawn Fenech, Head of Finance, Corinthia Hotels',subject:'Hotel finance visibility, live committed spend before month end',body:`Hi Dawn,\n\nThe Corinthia portfolio, luxury, multi-property, international, is the exact profile where PurchasePlus delivers the most impact: real-time committed spend across every property, live GP% for F&B operations, and an audit trail that survives any owner or brand review.\n\nWe process over 40 million hotel invoices a year for groups including Accor and IHG. The finance director use case is our strongest.\n\nI'll be at HITEC 2026, Booth #3715 in San Antonio. Would you be open to 20 minutes on June 16 or 17 to see the platform?`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-07',title:'Tier 2, Regional Hotel Operators (Template)',to:'[First Name] [Last Name], [Title], [Regional Hotel Group]',subject:'How regional hotel groups cut invoice processing costs by 75%',body:`Hi [First Name],\n\nIf your team is still processing hotel invoices manually, you're paying 3-5x more than you need to, and your budget visibility is always at least 30 days late.\n\nPurchasePlus automates hotel purchasing and invoicing for operators ranging from single properties to 100+ property groups. The platform connects your approved suppliers, automates invoice matching at 99% accuracy, and shows you committed spend in real time.\n\nI'll be at HITEC 2026 in San Antonio, Booth #3715, June 15-18. Happy to show you a 15-minute demo relevant to a group your size.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-08',title:'Technology Partner, Integration Opportunity',to:'[Name], [CEO / MD / VP], [Technology Company]',subject:'PurchasePlus at HITEC, integration partnership conversation',body:`Hi [Name],\n\nPurchasePlus connects 30,000 hospitality suppliers with hotel operators across 40+ countries, processing 40M invoices annually. We're making our North American debut at HITEC 2026 and are actively exploring integration partnerships with complementary platforms.\n\nIf your product touches hotel purchasing, finance, ERP, PMS, or data middleware, there's likely a conversation worth having. We integrate with Dynamics 365, major PMS platforms, and EDI supplier networks.\n\nI'll be at Booth #3715. Are you going to be at HITEC? Happy to set up 20 minutes on the floor.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-09',title:'VIP Buyer Pass Delivery',to:'[Priority Lead Name]',subject:'Your complimentary HITEC pass, from PurchasePlus',body:`Hi [First Name],\n\nWe'd love to host you at HITEC 2026 as our guest. Please find your complimentary buyer pass below, it gives you full access to the exhibit floor at Henry B. Gonzalez Convention Center, San Antonio, June 16-18.\n\n[VIP BUYER PASS LINK]\n\nIf you'd like to lock in a specific time to see PurchasePlus at Booth #3715, just reply and I'll send a calendar invite. The demo takes 15 minutes and I'll tailor it entirely to your operation.\n\nLooking forward to seeing you in San Antonio.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
-{id:'email-10',title:'Day-Before Show Reminder',to:'[Priority Lead Name]',subject:'Tomorrow in San Antonio, Booth #3715 is ready',body:`Hi [First Name],\n\nJust a quick note, HITEC opens tomorrow. Our team will be at Booth #3715 from the moment the floor opens.\n\nIf you're attending and want to skip the queue, reply now and I'll hold a dedicated demo slot for you. Otherwise, come find us, we're the ones in cowboy hats, adjacent to the North Concession Area.\n\nSee you on the floor.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'}
+{id:'email-01',title:'Tier 1 CFO / Finance Director (Template)',to:'[First Name] [Last Name], [Title], [Hotel Group]',subject:'What 40 million hotel invoices taught us about AP costs',body:`Hi [First Name],\n\nThe average hotel pays $15-25 to process one invoice manually. PurchasePlus brings that to $3-4.\n\n99% AI accuracy. 90% straight-through processing. Statement reconciliation automated against every approved PO.\n\nWe're at HITEC 2026, Booth 3715, San Antonio, June 16-18. I can show you the numbers in 10 minutes.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com\n+61 420 413 528'},
+{id:'email-02',title:'Vicki Hamilton, Hilton (Personalized)',to:'Vicki Hamilton, Senior Manager Procurement Applications, Hilton',subject:'30,000 hospitality suppliers, contracted, ready to go',body:`Hi Vicki,\n\nThe Hilton supplier base is one of the most complex in hospitality. Managing compliance across that many vendors, across that many properties, is the exact problem PurchasePlus was built to solve.\n\nOur competitive marketplace: 30,000+ suppliers with contracted pricing and automated catalogue management. Accor and IHG run their supply chain through it.\n\nHITEC 2026, Booth 3715. 15 minutes on the floor, I'll show you exactly how it works for a multi-brand portfolio.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-03',title:'John Hearns, Marriott (Personalized)',to:'John Hearns, SVP Global Residential Operations, Marriott International',subject:'Real-time spend visibility across every property, not just at month end',body:`Hi John,\n\nAt Marriott's scale, budget overruns happen because visibility is always 30 days late. By the time the invoice posts, the purchasing decision was made weeks ago.\n\nPurchasePlus commits spend at the purchase order. Every property. In real time.\n\nAccor runs multi-property procurement visibility through the same platform. I'll be at HITEC, Booth 3715. Worth 15 minutes to see it live?`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-04',title:'Suzette Barreto, Loews Hotels (Personalized)',to:'Suzette Barreto, Director of Accounting Services, Loews Hotels',subject:'Statement reconciliation: the AP problem most platforms ignore',body:`Hi Suzette,\n\nMonth-end supplier statement reconciliation is where most AP teams spend the most manual hours, and where most errors hide.\n\nPurchasePlus automates reconciliation against approved purchase orders, flags variances automatically, and produces a clean audit trail with no manual reconstruction.\n\nHITEC 2026, Booth 3715. I can walk you through the reconciliation workflow specifically. 15 minutes.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-05',title:'Jigs Gandhi, MR Hotel Management (Personalized)',to:'Jigs Gandhi, VP Procurement IT and Corporate Services, MR Hotel Management',subject:'Procurement tech that actually connects to your stack',body:`Hi Jigs,\n\nMost procurement platforms require custom integration work. PurchasePlus ships with native connectors for Dynamics 365, major PMS platforms, and EDI supplier networks.\n\n30,000+ supplier marketplace. AI invoice matching at 99% accuracy. Cloud-native, API-first architecture.\n\nI'd like 20 minutes at HITEC to walk through both the functional and integration layers. Booth 3715, June 16-18.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-06',title:'Dawn Fenech, Corinthia Hotels (Personalized)',to:'Dawn Fenech, Head of Finance, Corinthia Hotels',subject:'Live F&B GP% across every property, before the invoice arrives',body:`Hi Dawn,\n\nFinance directors at luxury hotel groups tell us the same thing: month-end F&B cost visibility arrives too late to act on.\n\nPurchasePlus commits the cost at the purchase order. Live GP% by outlet, by property, rolled up to group level, before the invoice is even raised.\n\nI'll be at HITEC 2026, Booth 3715. 20 minutes to show you what this looks like for a portfolio like Corinthia.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-07',title:'Tier 2 Regional Hotel Operators (Template)',to:'[First Name] [Last Name], [Title], [Regional Hotel Group]',subject:'The supplier marketplace 30,000 hospitality vendors are already on',body:`Hi [First Name],\n\nIf your team is sourcing from suppliers outside a negotiated contract, you're leaving margin on every order.\n\nPurchasePlus runs the largest hospitality-specific supplier marketplace: pre-negotiated pricing, contracted catalogues, automated ordering. It works for a single property and scales to hundreds.\n\nWe're at HITEC 2026 in San Antonio, Booth 3715. 15 minutes to show you what's already available for a group your size.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-08',title:'Technology Partner, Integration Opportunity (Template)',to:'[Name], [CEO / MD / VP], [Technology Company]',subject:'40 million hospitality invoices a year. We should talk at HITEC.',body:`Hi [Name],\n\nPurchasePlus connects 30,000 suppliers to hotel operators across 40+ countries. We're making our North American debut at HITEC 2026 and looking for integration partners with complementary platforms.\n\nIf your product touches hotel purchasing, AP, ERP, PMS, or data middleware, there's a commercial conversation worth having.\n\nBooth 3715. Are you going to be there?`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-09',title:'VIP Buyer Pass Delivery',to:'[Priority Lead Name]',subject:'A complimentary HITEC pass, from PurchasePlus',body:`Hi [First Name],\n\nWe'd like to host you at HITEC 2026 as our guest. Your complimentary buyer pass is below, it covers full floor access at Henry B. Gonzalez Convention Center, San Antonio, June 16-18.\n\n[VIP BUYER PASS LINK]\n\nIf you'd like to lock in a demo slot at Booth 3715, reply and I'll hold one. 15 minutes, tailored to your operation.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'},
+{id:'email-10',title:'Day-Before Show Reminder',to:'[Priority Lead Name]',subject:'HITEC opens tomorrow. Booth 3715 is ready.',body:`Hi [First Name],\n\nQuick note: the floor opens tomorrow. Our team will be at Booth 3715 from the moment the doors open.\n\nIf you want to skip the queue, reply now and I'll hold a dedicated slot. Otherwise, come find us. We're the ones in cowboy hats, adjacent to the North Concession.\n\nSee you in San Antonio.`,sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'}
 ];
 
 const CV_POSTS = [
 {id:'post-01',date:'Monday 2 June',scheduledNote:'ANCHOR POST, leave for the full week, no other posts until Friday 5 June',title:'Strattam Capital Investment Announcement',hook:'Something significant just happened for PurchasePlus.',body:`Something significant just happened for PurchasePlus.\n\nWe've secured a strategic investment from Strattam Capital, a San Francisco-based private equity firm backing enterprise software companies with proven products and underserved growth markets.\n\nThis investment funds one thing: the United States.\n\nAfter 25 years, 40 million invoices, and a customer base that includes Accor, IHG Hotels and Resorts, Marriott, Capella Hotels, and Landmark Group, PurchasePlus is entering North America.\n\nThe first step happens in San Antonio this June at HITEC 2026, Booth 3715.\n\nIf you're a hotel operator managing procurement, purchasing, or AP operations in the US: we should talk. The platform is ready. The team is ready. The market is more than ready.\n\nMore to follow.`,hashtags:['#PurchasePlus','#StrattamCapital','#HospitalityTech','#HITEC2026','#HotelTech','#Procurement'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'Hilary Fleischer',url:'https://www.linkedin.com/in/hilary-fleischer-29818737/',type:'person'},{name:'Strattam Capital',url:'https://www.linkedin.com/company/strattam-capital-llc/',type:'company'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
 {id:'post-02',date:'Friday 5 June',scheduledNote:'Resume posts from Friday 5 June',title:'HITEC Debut, PurchasePlus Coming to North America',hook:'PurchasePlus is coming to North America.',body:`PurchasePlus is coming to North America.\n\nFor 25 years, the platform that Accor, IHG Hotels and Resorts, and Marriott use to run hotel procurement has been headquartered in Australia. That's changing.\n\nOur first US activation: HITEC 2026, San Antonio, Texas.\nBooth 3715. June 15-18.\nHenry B. Gonzalez Convention Center.\n\nWhat we're bringing:\n→ 40M invoices processed annually at 99% AI accuracy\n→ 30,000+ supplier network built for hospitality\n→ Live committed spend and real-time GP% for hotel F&B\n→ A team ready to show you all of it in 15 minutes\n\nIf you're going to HITEC, come find us. We'll be the ones in cowboy hats.`,hashtags:['#HITEC2026','#PurchasePlus','#HotelTech','#HospitalityProcurement','#SanAntonio'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'},{name:'Strattam Capital',url:'https://www.linkedin.com/company/strattam-capital-llc/',type:'company'}]},
-{id:'post-03',date:'Saturday 6 June',title:'AI Invoicing, 99% Accuracy',hook:'99% AI accuracy on hotel invoice processing. Here is what that number means.',body:`99% AI accuracy on hotel invoice processing. Here is what that number means.\n\nFor a hotel group processing 5,000 invoices per month:\n\n→ 4,950 invoices matched, validated, and approved automatically\n→ 50 flagged for human review, with the exact discrepancy identified\n→ 0 manual data entry events for the 90% that go straight-through\n\nThe result: AP processing costs drop by 75%. Month-end close accelerates. Duplicate payments disappear. And your finance team stops doing data entry and starts doing finance.\n\nWe've processed 40 million hotel invoices to train this model. It understands hospitality purchasing the way a generic AI tool never will.\n\nHITEC 2026 · Booth 3715 · San Antonio · June 15-18\nCome see a live demo.`,hashtags:['#AIInvoicing','#HotelFinance','#APAutomation','#HospitalityTech','#HITEC2026'],tagLinks:[{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-04',date:'Sunday 7 June',title:'Customer Logos, Who We Serve',hook:'The hospitality brands that trust PurchasePlus.',body:`The hospitality brands that trust PurchasePlus.\n\nAccor. IHG Hotels and Resorts. Marriott. Capella Hotels. Landmark Group.\n\nThese are organisations with thousands of suppliers, hundreds of properties, and zero tolerance for procurement failures or budget surprises.\n\nThey chose PurchasePlus because:\n→ The platform was built for hospitality, not adapted for it\n→ 25 years of industry-specific development\n→ A supplier network of 30,000+ built specifically for hotel operators\n→ AI invoice processing trained on 40M hospitality invoices\n\nIf your operation needs the same level of procurement control, at any scale, we're making our North American debut at HITEC 2026.\n\nBooth 3715. San Antonio. June 15-18.`,hashtags:['#Accor','#IHG','#Marriott','#HospitalityTech','#HITEC2026','#PurchasePlus'],tagLinks:[{name:'Accor',url:'https://www.linkedin.com/company/accor/',type:'company'},{name:'IHG Hotels and Resorts',url:'https://www.linkedin.com/company/ihg-hotels-and-resorts/',type:'company'},{name:'Marriott International',url:'https://www.linkedin.com/company/marriott-international/',type:'company'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-05',date:'Monday 8 June',title:'AP Automation, 75% Cost Reduction',hook:'Hotel AP automation: the numbers your CFO wants to see.',body:`Hotel AP automation: the numbers your CFO wants to see.\n\nAverage cost to process one hotel invoice manually: $15-25.\nAverage cost with PurchasePlus AI: $3-4.\n\nAt 5,000 invoices per month, that's a difference of $60,000-$105,000 every year. In AP labour alone.\n\nAdd the duplicate payment elimination, the early payment discount capture, and the audit cost reduction, and the ROI case writes itself.\n\nThe platform that makes this possible:\n→ 99% AI invoice matching accuracy\n→ 90% straight-through processing rate\n→ Three-way matching: PO + receipt + invoice\n→ Full audit trail, zero manual reconstruction\n\nPurchasePlus at HITEC 2026 · Booth 3715 · San Antonio\nLive demo on the floor, 15 minutes.`,hashtags:['#APAutomation','#HotelFinance','#HITEC2026','#PurchasePlus','#HospitalityTech'],tagLinks:[{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-06',date:'Tuesday 9 June',title:'Live GP% / Commitment-Based Budgeting',hook:'What if your hotel F&B team knew their GP% today, not at month end?',body:`What if your hotel F&B team knew their GP% today, not at month end?\n\nTraditional hotel finance: you see food costs when the invoices post. That's 30-45 days after the purchasing decisions that drove those costs were made.\n\nCommitment-based budgeting: you see the cost the moment the purchase order is raised. Before delivery. Before the invoice. While there's still time to act.\n\nIn PurchasePlus:\n→ Every purchase order commits instantly against the F&B budget\n→ Live GP% updates in real time by outlet, by property, by group\n→ Budget warnings arrive in week two, not on the last day of the month\n\nThis is the financial control that turns an F&B operation from reactive to proactive.\n\nHITEC 2026 · Booth 3715 · San Antonio · June 15-18`,hashtags:['#HotelFB','#FBManagement','#HotelBudgeting','#HITEC2026','#PurchasePlus'],tagLinks:[{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-07',date:'Wednesday 10 June',title:'GTM Machine, 14 AI Agents',hook:'We run 14 AI agents in our go-to-market operation. Here is why.',body:`We run 14 AI agents in our go-to-market operation. Here is why.\n\nIn traditional B2B sales, reps spend 70% of their time on pre-sales: researching prospects, building lists, writing outreach, chasing responses. Only 30% on actual selling.\n\nWe flipped that ratio.\n\nThe PurchasePlus GTM Machine automates the entire pre-MQL pipeline:\n→ ICP identification and company enrichment\n→ Decision-maker contact research\n→ Personalised first-touch email generation\n→ Multi-touch sequence management\n→ Reply classification and meeting scheduling\n→ CRM updates and pipeline reporting\n\nBy the time a human salesperson enters a conversation, the prospect has full context, a personalised history, and a clear reason to be talking.\n\n14 agents. One coordinated system. Human salespeople selling, not researching.\n\nThis is what modern GTM looks like.`,hashtags:['#GTMStrategy','#AIAgents','#SalesAutomation','#B2BSales','#HospitalityTech'],tagLinks:[{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-08',date:'Thursday 11 June',title:'Multi-Property Story',hook:'Running procurement across 10 properties is not 10 times harder than one, if you have the right system.',body:`Running procurement across 10 properties is not 10 times harder than one, if you have the right system.\n\nWithout it: you're managing 10 purchasing operations, 10 supplier relationships, 10 invoice queues, and 10 different versions of the truth.\n\nWith PurchasePlus multi-property rollup:\n→ Single dashboard: committed spend across every property, in real time\n→ Supplier compliance: which properties are buying on-contract vs off-contract\n→ Live F&B GP% by outlet, by property, and rolled up to group level\n→ Consolidated supplier negotiation: leverage total group volume for better pricing\n\nAccor, IHG Hotels and Resorts, and Marriott use this for hundreds of properties. We've built it to work just as well for a regional group of 10.\n\nHITEC 2026 · Booth 3715 · San Antonio · June 15-18\nCome see the group dashboard live.`,hashtags:['#MultiProperty','#HotelGroup','#HospitalityProcurement','#HITEC2026','#PurchasePlus'],tagLinks:[{name:'Accor',url:'https://www.linkedin.com/company/accor/',type:'company'},{name:'IHG Hotels and Resorts',url:'https://www.linkedin.com/company/ihg-hotels-and-resorts/',type:'company'},{name:'Marriott International',url:'https://www.linkedin.com/company/marriott-international/',type:'company'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-09',date:'Friday 12 June',title:'Cowboy Hat Teaser, Texas Energy',hook:'We ordered cowboy hats.',body:`We ordered cowboy hats.\n\n37 of them. Branded. Ready to hand out at HITEC 2026.\n\nThis might sound like a gimmick. It is, a little. But it's also the right energy for a company making its North American debut in San Antonio, Texas, backed by a US investor, with a platform that's been running in the background of the world's best hotels for 25 years, and a team that's genuinely ready to compete in this market.\n\nWe are not here to look at the show. We are here to start something.\n\nBooth 3715. Henry B. Gonzalez Convention Center. June 15-18.\n\nFirst come, first served, on the hats and on the demo slots.`,hashtags:['#HITEC2026','#PurchasePlus','#SanAntonio','#HospitalityTech','#CowboyHats'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
-{id:'post-10',date:'Saturday 13 June',title:'Final Countdown, See You at Booth 3715',hook:'Two days until HITEC.',body:`Two days until HITEC.\n\nFor the PurchasePlus team, this is the moment 25 years of platform building, 40 million invoices, and a Strattam Capital investment have been pointed at.\n\nNorth America. Starting now.\n\nIf you're going to be in San Antonio:\n→ Find us at Booth 3715\n→ Adjacent to the North Concession Area\n→ On the floor Tuesday 16, Wednesday 17, Thursday 18 June\n\nWhat to expect: a 15-minute demo that will change how you think about hotel purchasing. A team that actually knows the operational problem you're trying to solve. And yes, cowboy hats.\n\nSee you on the floor.`,hashtags:['#HITEC2026','#PurchasePlus','#SanAntonio','#HotelTech','#NorthAmerica'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'Hilary Fleischer',url:'https://www.linkedin.com/in/hilary-fleischer-29818737/',type:'person'},{name:'Strattam Capital',url:'https://www.linkedin.com/company/strattam-capital-llc/',type:'company'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]}
+{id:'post-03',date:'Monday 9 June',title:'Karen O\'Neill Joins as SVP Revenue',hook:'PurchasePlus just made its first US sales hire.',body:`PurchasePlus just made its first US sales hire.\n\nKaren O'Neill joins as SVP Revenue, North America.\n\nKaren brings deep experience in hospitality technology sales and a track record of building revenue teams in enterprise software markets. She joins us at exactly the right moment: North American launch, Strattam Capital backed, HITEC 2026 in San Antonio this June.\n\nIf you're attending HITEC and want to understand what PurchasePlus can do for your hotel operation, Karen will be at Booth 3715. She's the person to find.\n\nWelcome to the team, Karen.`,hashtags:['#PurchasePlus','#HospitalityTech','#HITEC2026','#HotelTech','#NewHire','#NorthAmerica'],tagLinks:[{name:'Karen O\'Neill',url:'https://www.linkedin.com/in/kareno4/',type:'person'},{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
+{id:'post-04',date:'Wednesday 11 June',title:'Jon Castillo Joins as VP Partnerships',hook:'Building the US partnership ecosystem. Starting with the right VP.',body:`Building the US partnership ecosystem. Starting with the right VP.\n\nJon Castillo joins PurchasePlus as VP Partnerships, North America.\n\nJon will lead technology and channel partnership development as we build out the US market. 30,000+ hospitality suppliers. Integration pathways across ERP, PMS, and data platforms. A North American partner network to match the scale of what we've built globally.\n\nHe'll be at HITEC 2026, Booth 3715. If you're building something that complements hotel procurement and purchasing, Jon is the conversation to have.\n\nWelcome to the team, Jon.`,hashtags:['#PurchasePlus','#HospitalityTech','#HITEC2026','#Partnerships','#NewHire','#NorthAmerica'],tagLinks:[{name:'Jon Castillo',url:'https://www.linkedin.com/in/jon-castillo-674407109/',type:'person'},{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
+{id:'post-05',date:'Thursday 12 June',scheduledNote:'Personal post from Akila\'s own LinkedIn account',title:'Akila Head of Marketing Promotion Announcement',hook:'I\'ve just taken on the Head of Marketing Global role at PurchasePlus.',body:`I've just taken on the Head of Marketing Global role at PurchasePlus.\n\nThe timing is not a coincidence. Strattam Capital investment. North American launch. HITEC 2026 in three days.\n\nHere is what I'm focused on:\n\nBuilding the brand in the US market from zero to known, in a 90-day window.\nGetting the platform story in front of every hotel operator evaluating procurement technology this year.\nMaking sure everything we start at Booth 3715 this week turns into pipeline.\n\nMalcolm and Mitch gave me full GTM ownership at exactly the moment it matters most. That's the kind of mandate you run toward.\n\nIf you're going to be at HITEC, I will be there. Come say hello.`,hashtags:['#PurchasePlus','#HeadOfMarketing','#HospitalityTech','#HITEC2026','#HotelTech','#GTM'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'Strattam Capital',url:'https://www.linkedin.com/company/strattam-capital-llc/',type:'company'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
+{id:'post-06',date:'Friday 13 June',title:'Cowboy Hat Teaser, Texas Energy',hook:'We ordered cowboy hats.',body:`We ordered cowboy hats.\n\n37 of them. Branded. Ready to hand out at HITEC 2026.\n\nThis might sound like a gimmick. It is, a little. But it's also the right energy for a company making its North American debut in San Antonio, Texas, backed by a US investor, with a platform that's been running in the background of the world's best hotels for 25 years, and a team that's genuinely ready to compete in this market.\n\nWe are not here to look at the show. We are here to start something.\n\nBooth 3715. Henry B. Gonzalez Convention Center. June 15-18.\n\nFirst come, first served, on the hats and on the demo slots.`,hashtags:['#HITEC2026','#PurchasePlus','#SanAntonio','#HospitalityTech','#CowboyHats'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]},
+{id:'post-07',date:'Sunday 15 June',title:'Final Countdown, See You at Booth 3715',hook:'Tomorrow. HITEC opens.',body:`Tomorrow. HITEC opens.\n\nFor the PurchasePlus team, this is the moment 25 years of platform building, 40 million invoices, and a Strattam Capital investment have been pointed at.\n\nNorth America. Starting now.\n\nIf you're going to be in San Antonio:\n→ Find us at Booth 3715\n→ Adjacent to the North Concession Area\n→ On the floor Monday 15, Tuesday 16, Wednesday 17, Thursday 18 June\n\nWhat to expect: a 15-minute demo that will change how you think about hotel purchasing. A team that actually knows the operational problem you're trying to solve. And yes, cowboy hats.\n\nSee you on the floor.`,hashtags:['#HITEC2026','#PurchasePlus','#SanAntonio','#HotelTech','#NorthAmerica'],tagLinks:[{name:'Malcolm Jull',url:'https://www.linkedin.com/in/malcolmjull/',type:'person'},{name:'Mitch Hulst',url:'https://www.linkedin.com/in/mitch-hulst-58181443/',type:'person'},{name:'Hilary Fleischer',url:'https://www.linkedin.com/in/hilary-fleischer-29818737/',type:'person'},{name:'Karen O\'Neill',url:'https://www.linkedin.com/in/kareno4/',type:'person'},{name:'Jon Castillo',url:'https://www.linkedin.com/in/jon-castillo-674407109/',type:'person'},{name:'Strattam Capital',url:'https://www.linkedin.com/company/strattam-capital-llc/',type:'company'},{name:'PurchasePlus',url:'https://www.linkedin.com/company/purchaseplus/',type:'company'}]}
 ];
 
 
@@ -1396,6 +1347,8 @@ const cvTitleId = { art: 'artTitle', eml: 'emlTitle', post: 'postTitle' };
 const cvCounterId = { art: 'artCounter', eml: 'emlCounter', post: 'postCounter' };
 const cvPrevId = { art: 'artPrev', eml: 'emlPrev', post: 'postPrev' };
 const cvNextId = { art: 'artNext', eml: 'emlNext', post: 'postNext' };
+const cvSidePrevId = { art: 'artSidePrev', eml: 'emlSidePrev', post: 'postSidePrev' };
+const cvSideNextId = { art: 'artSideNext', eml: 'emlSideNext', post: 'postSideNext' };
 
 function cvRender(type) {
   const items = cvData[type];
@@ -1403,8 +1356,11 @@ function cvRender(type) {
   const item = items[i];
   document.getElementById(cvCounterId[type]).textContent = (i+1) + ' / ' + items.length;
   document.getElementById(cvTitleId[type]).textContent = item.title;
-  document.getElementById(cvPrevId[type]).disabled = (i === 0);
-  document.getElementById(cvNextId[type]).disabled = (i === items.length - 1);
+  const atStart = (i === 0), atEnd = (i === items.length - 1);
+  document.getElementById(cvPrevId[type]).disabled = atStart;
+  document.getElementById(cvNextId[type]).disabled = atEnd;
+  document.getElementById(cvSidePrevId[type]).disabled = atStart;
+  document.getElementById(cvSideNextId[type]).disabled = atEnd;
   const body = document.getElementById(cvBodyId[type]);
   body.scrollTop = 0;
 
