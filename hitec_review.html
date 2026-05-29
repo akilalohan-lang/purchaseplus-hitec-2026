@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Review · HITEC 2026 · PurchasePlus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/logo-emblem.png">
+<style>
+:root {
+  --grad: linear-gradient(135deg,#a956ff 0%,#7c5dff 50%,#3766fe 100%);
+  --purple: #7c5dff; --pink: #a956ff; --blue: #3766fe;
+  --ink: #111827; --ink-soft: #1f2937; --body: #374151;
+  --muted: #6b7280; --border: #e5e7eb; --softer: #fafafa;
+  --green: #10b981; --red: #e11d48; --amber: #f59e0b;
+  --radius: 12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#fff}
+body{font-family:'Inter',-apple-system,sans-serif;color:var(--body);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow:hidden}
+h1,h2,h3,h4,p{text-wrap:balance;color:var(--ink)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ── Setup modal ── */
+.setup-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center}
+.setup-box{background:#fff;border-radius:20px;padding:36px 40px;max-width:460px;width:90%;box-shadow:0 24px 80px rgba(0,0,0,.2)}
+.setup-title{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.setup-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5}
+.setup-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;display:block}
+.setup-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .15s}
+.setup-input:focus{border-color:var(--purple)}
+.setup-hint{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
+.setup-hint a{color:var(--purple);text-decoration:none}
+.setup-btn{margin-top:20px;width:100%;padding:11px;background:var(--grad);color:#fff;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:opacity .15s}
+.setup-btn:hover{opacity:.88}
+.setup-error{font-size:12px;color:var(--red);margin-top:8px;display:none}
+
+/* ── App shell ── */
+.rv-app{display:grid;grid-template-columns:280px 1fr;height:100vh;overflow:hidden}
+
+/* ── Sidebar ── */
+.rv-sb{border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--softer)}
+.rv-sb-top{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
+.rv-sb-logo{height:40px;object-fit:contain;margin-bottom:10px}
+.rv-sb-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+
+/* Tabs */
+.rv-tabs{display:flex;gap:4px;padding:10px 12px 0;background:#fff;border-bottom:1px solid var(--border)}
+.rv-tab{flex:1;padding:7px 4px;font-size:11px;font-weight:700;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;text-align:center;transition:all .15s;white-space:nowrap}
+.rv-tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+
+/* Item list */
+.rv-list{flex:1;overflow-y:auto;padding:8px 10px}
+.rv-list::-webkit-scrollbar{width:4px}
+.rv-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.rv-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;margin-bottom:2px;border:1px solid transparent;transition:all .15s;user-select:none}
+.rv-item:hover{background:#f3f4f6}
+.rv-item.active{background:linear-gradient(135deg,rgba(169,86,255,.08),rgba(55,102,254,.06));border-color:rgba(124,93,255,.22)}
+.rv-item-num{font-size:10px;font-weight:600;color:var(--muted);font-family:'JetBrains Mono',monospace;min-width:18px}
+.rv-item.active .rv-item-num{color:var(--purple)}
+.rv-item-label{font-size:12px;font-weight:500;color:var(--ink-soft);flex:1;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv-item.active .rv-item-label{font-weight:600;color:var(--ink)}
+.rv-comment-badge{font-size:10px;font-weight:700;background:var(--softer);border:1px solid var(--border);border-radius:99px;padding:1px 6px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-width:20px;text-align:center;flex-shrink:0}
+.rv-comment-badge.has-comments{background:rgba(124,93,255,.1);border-color:rgba(124,93,255,.3);color:var(--purple)}
+
+/* Agent character in sidebar */
+.rv-agent-wrap{padding:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s}
+.rv-agent-wrap:hover{background:#f0eeff}
+.rv-agent-img{width:44px;height:44px;object-fit:contain;object-position:bottom}
+.rv-agent-info{flex:1}
+.rv-agent-name{font-size:12px;font-weight:700;color:var(--ink)}
+.rv-agent-status{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-top:1px}
+.rv-agent-dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 0 2px rgba(16,185,129,.2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(16,185,129,.2)}50%{box-shadow:0 0 0 5px rgba(16,185,129,.05)}}
+
+/* ── Main content area ── */
+.rv-main{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.rv-main-header{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:#fff}
+.rv-main-header-left{display:flex;align-items:center;gap:12px}
+.rv-breadcrumb{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.rv-piece-title{font-size:16px;font-weight:700;color:var(--ink)}
+.rv-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rv-kw-badge{font-size:10px;font-weight:600;background:rgba(124,93,255,.08);color:var(--purple);border-radius:99px;padding:2px 9px;border:1px solid rgba(124,93,255,.2)}
+.rv-review-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--grad);color:#fff;font-size:12px;font-weight:700;border:none;border-radius:99px;cursor:pointer;transition:opacity .15s;flex-shrink:0}
+.rv-review-btn:hover{opacity:.88}
+
+/* Content scrollable body */
+.rv-content-body{flex:1;overflow-y:auto;padding:32px 32px 0}
+.rv-content-body::-webkit-scrollbar{width:5px}
+.rv-content-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Article styles */
+.art-meta-desc{font-size:14px;color:var(--muted);line-height:1.7;padding:12px 16px;background:var(--softer);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:24px;font-style:italic}
+.art-body h2{font-size:17px;font-weight:700;margin:24px 0 8px;color:var(--ink)}
+.art-body h3{font-size:14px;font-weight:700;margin:18px 0 6px;color:var(--ink)}
+.art-body p{font-size:14px;line-height:1.8;margin-bottom:14px;color:var(--body)}
+.art-body ul,.art-body ol{margin:10px 0 14px 20px;display:flex;flex-direction:column;gap:6px}
+.art-body li{font-size:14px;line-height:1.7;color:var(--body)}
+.art-body strong{color:var(--ink);font-weight:700}
+.art-keywords{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0;padding:16px;background:var(--softer);border-radius:10px;border:1px solid var(--border)}
+.art-kw-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);width:100%;margin-bottom:4px}
+.art-faq{margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(169,86,255,.04),rgba(55,102,254,.03));border:1px solid rgba(124,93,255,.15);border-radius:12px}
+.art-faq-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:16px}
+.faq-item{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.faq-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.faq-q{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.faq-a{font-size:13px;color:var(--body);line-height:1.65}
+
+/* Email styles */
+.email-shell{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;max-width:680px}
+.email-header-bar{background:var(--softer);padding:14px 20px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.email-field{display:flex;gap:8px;font-size:12.5px}
+.email-field-label{font-weight:700;color:var(--muted);min-width:50px}
+.email-field-val{color:var(--ink)}
+.email-subject{font-size:15px;font-weight:800;color:var(--ink);padding:16px 20px 8px;border-bottom:1px solid var(--border)}
+.email-body{padding:20px;font-size:14px;line-height:1.8;color:var(--body)}
+.email-body p{margin-bottom:12px}
+.email-body .sig{font-size:13px;color:var(--muted);border-top:1px solid var(--border);margin-top:16px;padding-top:12px}
+.email-cta{display:inline-flex;align-items:center;gap:6px;margin:10px 0;padding:9px 18px;background:var(--grad);color:#fff;font-size:13px;font-weight:700;border-radius:99px;text-decoration:none}
+
+/* LinkedIn post styles */
+.li-post{max-width:560px;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.li-post-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.li-avatar{width:44px;height:44px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;flex-shrink:0}
+.li-author-name{font-size:13px;font-weight:700;color:var(--ink)}
+.li-author-role{font-size:11px;color:var(--muted)}
+.li-date-badge{margin-left:auto;font-size:10px;font-weight:700;color:var(--purple);background:rgba(124,93,255,.08);border:1px solid rgba(124,93,255,.2);border-radius:99px;padding:3px 10px;white-space:nowrap}
+.li-body{padding:18px;font-size:14px;line-height:1.75;color:var(--body);white-space:pre-line}
+.li-hashtags{padding:0 18px 16px;display:flex;flex-wrap:wrap;gap:6px}
+.li-hashtag{font-size:12px;font-weight:600;color:var(--blue)}
+.li-image-placeholder{background:linear-gradient(135deg,#f0e8ff,#e5edff);height:200px;display:flex;align-items:center;justify-content:center;color:var(--purple);font-size:12px;font-weight:600;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+
+/* Comment section at bottom of content */
+.rv-comment-section{border-top:1px solid var(--border);margin-top:32px;padding:24px 32px 32px;flex-shrink:0}
+.rv-comment-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.rv-comment-count-pill{font-size:10px;font-weight:700;background:rgba(124,93,255,.1);color:var(--purple);border-radius:99px;padding:2px 8px;font-family:'JetBrains Mono',monospace}
+.rv-comment-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.rv-cmt{display:flex;gap:10px}
+.rv-cmt-avatar{width:30px;height:30px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0}
+.rv-cmt-bubble{flex:1;background:var(--softer);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.rv-cmt-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rv-cmt-author{font-size:12px;font-weight:700;color:var(--ink)}
+.rv-cmt-time{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.rv-cmt-text{font-size:13px;color:var(--body);line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.rv-cmt-text img{max-width:100%;border-radius:8px;margin-top:6px;display:block}
+.rv-empty-state{font-size:13px;color:var(--muted);font-style:italic}
+.rv-quick-reply{display:flex;gap:8px;align-items:flex-end}
+.rv-quick-input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;resize:none;height:38px;outline:none;transition:border-color .15s;overflow:hidden}
+.rv-quick-input:focus{border-color:var(--purple);height:80px}
+.rv-quick-send{padding:9px 14px;background:var(--grad);color:#fff;font-size:12px;font-weight:700;border:none;border-radius:10px;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.rv-quick-send:hover{opacity:.88}
+
+/* ── Review chat panel ── */
+.rv-panel{position:fixed;top:0;right:0;bottom:0;width:380px;background:#fff;border-left:1px solid var(--border);z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 32px rgba(0,0,0,.1)}
+.rv-panel.open{transform:translateX(0)}
+.rv-panel-head{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;background:linear-gradient(135deg,rgba(169,86,255,.05),rgba(55,102,254,.03))}
+.rv-panel-agent{width:48px;height:48px;object-fit:contain;object-position:bottom;flex-shrink:0}
+.rv-panel-head-info{flex:1}
+.rv-panel-agent-name{font-size:13px;font-weight:800;color:var(--ink)}
+.rv-panel-context{font-size:11px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.rv-panel-close{width:28px;height:28px;border:none;background:var(--softer);border-radius:50%;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.rv-panel-close:hover{background:var(--border);color:var(--ink)}
+.rv-panel-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.rv-panel-msgs::-webkit-scrollbar{width:4px}
+.rv-panel-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.rv-msg-agent{display:flex;gap:8px;align-items:flex-start}
+.rv-msg-agent-bubble{background:linear-gradient(135deg,rgba(169,86,255,.06),rgba(55,102,254,.04));border:1px solid rgba(124,93,255,.15);border-radius:12px 12px 12px 3px;padding:10px 12px;max-width:85%;font-size:13px;color:var(--ink);line-height:1.55}
+.rv-msg-user{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.rv-msg-user-bubble{background:var(--grad);color:#fff;border-radius:12px 12px 3px 12px;padding:10px 12px;max-width:85%;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.rv-msg-user-bubble img{max-width:100%;border-radius:6px;display:block;margin-top:6px}
+.rv-msg-meta{font-size:10px;color:var(--muted);padding:0 4px;font-family:'JetBrains Mono',monospace}
+.rv-panel-foot{padding:12px;border-top:1px solid var(--border);flex-shrink:0;background:#fff}
+.rv-panel-input-wrap{display:flex;flex-direction:column;gap:8px}
+.rv-panel-textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;resize:none;height:70px;outline:none;transition:border-color .15s;line-height:1.5}
+.rv-panel-textarea:focus{border-color:var(--purple)}
+.rv-panel-actions{display:flex;align-items:center;gap:8px}
+.rv-panel-upload{width:30px;height:30px;background:var(--softer);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;flex-shrink:0}
+.rv-panel-upload:hover{background:rgba(124,93,255,.08);border-color:rgba(124,93,255,.3)}
+.rv-panel-submit{flex:1;padding:9px;background:var(--grad);color:#fff;font-size:13px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:opacity .15s}
+.rv-panel-submit:hover{opacity:.88}
+.rv-panel-submit:disabled{opacity:.5;cursor:not-allowed}
+.rv-panel-hint{font-size:10px;color:var(--muted);text-align:center}
+.rv-img-preview{position:relative;display:inline-block}
+.rv-img-preview img{max-height:80px;border-radius:6px;border:1px solid var(--border)}
+.rv-img-preview-rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--red);color:#fff;border-radius:50%;font-size:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ── Loading states ── */
+.rv-loading{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.rv-spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .rv-app{grid-template-columns:1fr}
+  .rv-sb{display:none}
+  .rv-panel{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- Setup modal -->
+<div class="setup-backdrop" id="setupModal">
+  <div class="setup-box">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <img src="assets/agents/manager.png" style="height:48px;object-fit:contain;" alt="Event Agent">
+      <div>
+        <div class="setup-title">Event Agent Setup</div>
+        <div style="font-size:12px;color:var(--muted);">One-time setup for Malcolm's review access</div>
+      </div>
+    </div>
+    <div class="setup-sub">Comments are stored as GitHub Issues in the PurchasePlus HITEC repo. Enter a GitHub Personal Access Token with <strong>repo</strong> scope to enable commenting and image uploads.</div>
+    <label class="setup-label" for="patInput">GitHub Personal Access Token</label>
+    <input class="setup-input" type="password" id="patInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="setup-hint">
+      Need a token? <a href="https://github.com/settings/tokens/new?scopes=repo&description=HITEC+Review" target="_blank">Create one on GitHub</a> — select <strong>repo</strong> scope. Your token is stored locally and never shared.
+    </div>
+    <div class="setup-error" id="patError">Invalid token — please check and try again.</div>
+    <button class="setup-btn" id="patSubmit">Connect &amp; Start Reviewing</button>
+    <div style="text-align:center;margin-top:12px;">
+      <button onclick="skipSetup()" style="background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;">Skip for now (read-only mode)</button>
+    </div>
+  </div>
+</div>
+
+<!-- App -->
+<div class="rv-app" id="rvApp">
+
+  <!-- Sidebar -->
+  <aside class="rv-sb">
+    <div class="rv-sb-top">
+      <img class="rv-sb-logo" src="assets/logo.png" alt="PurchasePlus">
+      <div class="rv-sb-title">Content Review · HITEC 2026</div>
+    </div>
+    <div class="rv-tabs">
+      <button class="rv-tab active" data-tab="articles" onclick="switchTab('articles')">Articles</button>
+      <button class="rv-tab" data-tab="emails" onclick="switchTab('emails')">Emails</button>
+      <button class="rv-tab" data-tab="posts" onclick="switchTab('posts')">LinkedIn</button>
+    </div>
+    <nav class="rv-list" id="rvList"></nav>
+    <div class="rv-agent-wrap" onclick="togglePanel()">
+      <img class="rv-agent-img" src="assets/agents/manager.png" alt="Event Agent">
+      <div class="rv-agent-info">
+        <div class="rv-agent-name">Event Agent</div>
+        <div class="rv-agent-status"><span class="rv-agent-dot"></span> Ready to review</div>
+      </div>
+      <span style="font-size:18px;color:var(--muted);">💬</span>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="rv-main">
+    <div class="rv-main-header">
+      <div class="rv-main-header-left">
+        <div>
+          <div class="rv-breadcrumb" id="rvBreadcrumb">Articles · 1 of 10</div>
+          <div class="rv-piece-title" id="rvPieceTitle">Loading…</div>
+        </div>
+        <div class="rv-meta" id="rvMeta"></div>
+      </div>
+      <button class="rv-review-btn" onclick="togglePanel()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h3l3 3 3-3h3a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Add Review
+      </button>
+    </div>
+    <div class="rv-content-body" id="rvContentBody">
+      <div style="padding:40px;text-align:center;color:var(--muted);">Loading content…</div>
+    </div>
+    <div class="rv-comment-section" id="rvCommentSection">
+      <div class="rv-comment-section-title">
+        Reviews <span class="rv-comment-count-pill" id="rvCommentCountPill">0</span>
+      </div>
+      <div class="rv-comment-list" id="rvCommentList">
+        <div class="rv-empty-state">No reviews yet. Be the first to add feedback.</div>
+      </div>
+      <div class="rv-quick-reply">
+        <textarea class="rv-quick-input" id="rvQuickInput" placeholder="Add a quick note…" rows="1"></textarea>
+        <button class="rv-quick-send" onclick="quickReply()">Send</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Review panel -->
+<div class="rv-panel" id="rvPanel">
+  <div class="rv-panel-head">
+    <img class="rv-panel-agent" src="assets/agents/manager.png" alt="Event Agent">
+    <div class="rv-panel-head-info">
+      <div class="rv-panel-agent-name">Event Agent · Malcolm Review</div>
+      <div class="rv-panel-context" id="rvPanelContext">Select a piece to review</div>
+    </div>
+    <button class="rv-panel-close" onclick="togglePanel()">✕</button>
+  </div>
+  <div class="rv-panel-msgs" id="rvPanelMsgs">
+    <div class="rv-msg-agent">
+      <div class="rv-msg-agent-bubble">Hi Malcolm 👋 Open any article, email, or LinkedIn post and drop your feedback here. I'll tag it to the right piece and store it in GitHub so Akila can action each one. You can also paste screenshots directly into the comment box.</div>
+    </div>
+  </div>
+  <div class="rv-panel-foot">
+    <div class="rv-panel-input-wrap">
+      <div id="rvImgPreviewWrap" style="display:none;margin-bottom:6px;"></div>
+      <textarea class="rv-panel-textarea" id="rvPanelInput" placeholder="Type your review here… (paste images too)"></textarea>
+      <div class="rv-panel-actions">
+        <label class="rv-panel-upload" title="Upload image">
+          📎
+          <input type="file" id="rvFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+        </label>
+        <button class="rv-panel-submit" id="rvPanelSubmit" onclick="submitReview()">Post Review</button>
+      </div>
+      <div class="rv-panel-hint" id="rvPanelHint">Stored as GitHub Issues · <span id="rvStatusText">Connecting…</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONTENT DATA
+// ══════════════════════════════════════════════
+
+const ARTICLES = [
+{
+  id:'article-01',
+  title:'Strattam Capital Invests in PurchasePlus — US Expansion Begins',
+  date:'2 June 2026',
+  keywords:['PurchasePlus Strattam Capital','hospitality procurement software','hotel spend management platform','procure-to-pay hotels US'],
+  metaDesc:'PurchasePlus secures Strattam Capital investment to fund its US expansion. The hospitality procurement platform trusted by Accor, IHG, and Marriott enters North America at HITEC 2026, Booth #3715.',
+  body:`<h2>A Defining Investment in Hospitality Procurement</h2>
+<p>PurchasePlus, the procure-to-pay platform purpose-built for the hospitality industry, has secured strategic investment from <strong>Strattam Capital</strong> to fund its expansion into the United States. The investment marks the beginning of a new chapter for a company that has spent 25 years building the most complete purchasing and invoicing platform in global hospitality.</p>
+<p>Strattam Capital is a San Francisco-based private equity firm specializing in enterprise software companies with proven product-market fit and underserved growth markets. Their decision to back PurchasePlus signals clear confidence in the North American opportunity and in the platform's readiness to compete.</p>
+
+<h2>What PurchasePlus Does</h2>
+<p>PurchasePlus is a <strong>procure-to-pay platform</strong> that automates the entire purchasing lifecycle for hotels and hospitality operators — from purchase orders and supplier management through invoice processing, payment approval, and financial reporting. The platform processes more than <strong>40 million invoices annually</strong>, connects <strong>30,000+ suppliers</strong>, and serves global brands including Accor, IHG, Marriott, Qantas, and Emirates.</p>
+<p>Its AI-powered invoice processing achieves <strong>99% accuracy</strong> with <strong>90% straight-through processing</strong> — meaning invoices are matched, validated, and approved without human intervention at rates that eliminate the cost of traditional AP operations.</p>
+
+<h2>Why the US, and Why Now</h2>
+<p>North American hotel operators collectively manage billions in annual supply spend. The majority of that spend is still managed through fragmented systems — email-based orders, shared spreadsheets, and disconnected point solutions that leave finance teams working in arrears, chasing invoices, and unable to see committed spend in real time.</p>
+<p>PurchasePlus enters the US with 25 years of hospitality-specific data, integrations, and supplier relationships. Unlike generic ERP bolt-ons or regional procurement tools, the platform was built exclusively for the hotel industry — with F&B cost control, multi-property rollup, and operator workflows embedded from the ground up.</p>
+
+<h2>First US Activation: HITEC 2026</h2>
+<p>The company's US debut takes place at <strong>HITEC 2026</strong>, North America's largest hospitality technology conference, held at the Henry B. Gonzalez Convention Center, San Antonio, Texas, June 15–18, 2026. PurchasePlus will exhibit at <strong>Booth #3715</strong>.</p>`,
+  faq:[
+    {q:'What is PurchasePlus?',a:'PurchasePlus is a procure-to-pay platform built specifically for hotels and hospitality operators. It automates purchasing, invoice processing, supplier management, and financial reporting across single and multi-property operations, processing 40 million invoices annually.'},
+    {q:'Who is Strattam Capital?',a:'Strattam Capital is a San Francisco-based private equity firm focused on enterprise software investments. They specialize in backing companies with proven products entering growth phases.'},
+    {q:'Why is PurchasePlus expanding to the United States?',a:'The Strattam Capital investment provides capital and market access to establish a US-based team, build go-to-market infrastructure, and serve the large North American hotel operator market that remains underserved by integrated procurement software.'},
+    {q:'How many invoices does PurchasePlus process per year?',a:'PurchasePlus processes over 40 million invoices annually, with an AI accuracy rate of 99% and 90% straight-through processing — meaning most invoices require no manual intervention.'},
+    {q:'Where can I meet PurchasePlus at HITEC 2026?',a:'PurchasePlus will be exhibiting at Booth #3715, Henry B. Gonzalez Convention Center, San Antonio, Texas. The show runs June 15–18, 2026.'}
+  ]
+},
+{
+  id:'article-02',
+  title:'Why We Built for Hospitality — 25 Years, 40 Million Invoices, One Platform',
+  date:'3 June 2026',
+  keywords:['hotel procurement software','hospitality spend management','hotel purchasing platform','hotel invoice processing history'],
+  metaDesc:'PurchasePlus has been built exclusively for the hospitality industry for 25 years. Here is why that specialisation matters — and what 40 million annual invoices have taught us about hotel procurement.',
+  body:`<h2>Specialisation Is Not a Limitation — It Is the Product</h2>
+<p>Most enterprise software is built for horizontal markets and then adapted for hospitality. PurchasePlus is the opposite. From its founding, the platform was designed exclusively for hotels — their supplier networks, their F&B cost structures, their multi-property complexity, and their finance team workflows.</p>
+<p>That decision, made 25 years ago, is why the platform looks and works the way it does today. It is not a generic procurement tool with a hospitality skin. It is a system built from thousands of conversations with hotel operators, thousands of supplier relationships, and 40 million invoices worth of real-world data.</p>
+
+<h2>What 25 Years in Hospitality Teaches You</h2>
+<p>Hotels have fundamentally different procurement needs than other industries. A hotel's supply base is unusually diverse — fresh produce, dry goods, chemicals, linens, engineering parts, and capital equipment may all run through the same purchasing system on the same day. Each supplier relationship has different pricing agreements, rebate structures, and delivery windows.</p>
+<p>Add to that the multi-property complexity of a hotel group — different properties, different cost centres, different menus, and different regional suppliers — and you have a procurement challenge that generic software fails repeatedly.</p>
+<p>PurchasePlus has been refined to handle exactly this. Features like <strong>commitment-based budgeting</strong>, <strong>multi-property F&B rollup</strong>, and <strong>automated invoice matching</strong> were built in response to real operator problems, not product roadmap theory.</p>
+
+<h2>40 Million Invoices Annually: What the Data Shows</h2>
+<p>Processing 40 million invoices a year gives PurchasePlus a data advantage that no competitor can replicate quickly. The platform understands pricing norms by category, flags anomalies in real time, and benchmarks supplier performance across thousands of hotels. When a property's produce costs spike, the system knows before the chef does.</p>
+
+<h2>Who Trusts the Platform Today</h2>
+<p>PurchasePlus serves some of the most operationally demanding hotel brands in the world: <strong>Accor, IHG, Marriott, Qantas, and Emirates</strong>. These are organisations with thousands of suppliers, hundreds of properties, and zero tolerance for invoice errors or budget overruns. Their continued use of PurchasePlus is the strongest possible validation of the platform's depth.`,
+  faq:[
+    {q:'How long has PurchasePlus been in business?',a:'PurchasePlus has been operating for 25 years, building exclusively for the hospitality industry throughout its entire history.'},
+    {q:'Which hotel brands use PurchasePlus?',a:'PurchasePlus serves Accor, IHG, Marriott, Qantas, and Emirates, among many others across 40+ countries.'},
+    {q:'What makes PurchasePlus different from generic procurement software?',a:'PurchasePlus was built specifically for hospitality from day one. It includes hospitality-specific features like commitment-based budgeting, multi-property F&B rollup, and a supplier network of 30,000+ hospitality vendors — none of which are available in generic ERP or procurement tools.'},
+    {q:'How many suppliers does PurchasePlus connect to?',a:'PurchasePlus connects hotel operators to over 30,000 suppliers globally, with direct integrations that enable automated ordering, invoice matching, and pricing compliance.'}
+  ]
+},
+{
+  id:'article-03',
+  title:'How AI Invoice Processing Works — 99% Accuracy Explained',
+  date:'4 June 2026',
+  keywords:['AI invoice processing hotels','automated hotel invoice matching','hotel AP automation','straight-through invoice processing hospitality'],
+  metaDesc:'PurchasePlus achieves 99% accuracy in automated hotel invoice processing with 90% straight-through rates. Here is how the AI works — and what it means for hotel finance teams.',
+  body:`<h2>The Invoice Problem in Hospitality</h2>
+<p>A mid-sized hotel group with 20 properties can receive 5,000–10,000 supplier invoices per month. Each invoice needs to be received, matched to a purchase order, checked against delivery confirmation, coded to the correct cost centre, approved, and posted to the general ledger.</p>
+<p>In most hotels, this process is largely manual. AP staff spend hours each day on data entry, chasing approvals, and resolving discrepancies. Errors are common. Duplicate payments happen. Early payment discounts are missed. And the finance team always works in arrears — knowing what was spent last month, never knowing what is committed today.</p>
+
+<h2>How PurchasePlus AI Invoice Processing Works</h2>
+<p>PurchasePlus uses a multi-layer AI model trained on more than <strong>40 million hospitality invoices</strong>. When a supplier invoice arrives — whether by email, EDI, or direct portal submission — the system processes it through the following steps:</p>
+<ol>
+<li><strong>Data extraction:</strong> Line items, quantities, unit prices, supplier codes, and invoice numbers are extracted automatically, regardless of format.</li>
+<li><strong>Three-way matching:</strong> The extracted data is matched against the original purchase order and the goods receipt confirmation.</li>
+<li><strong>Anomaly detection:</strong> Pricing is checked against contracted rates and historical norms. Duplicates, overcharges, and coding errors are flagged immediately.</li>
+<li><strong>Approval routing:</strong> Matched and validated invoices are approved automatically (straight-through). Exceptions are routed to the correct approver with context.</li>
+<li><strong>Posting:</strong> Approved invoices post directly to the GL, coded correctly, with a full audit trail.</li>
+</ol>
+
+<h2>What 99% Accuracy Means in Practice</h2>
+<p>A 99% accuracy rate means that for every 10,000 invoices processed, 9,900 are handled correctly without human correction. The remaining 100 are flagged — not failed — and routed for review with the specific discrepancy identified. This is categorically different from a system that routes 10,000 invoices to a human to check.</p>
+<p>Combined with a <strong>90% straight-through processing rate</strong>, the result is that 9 out of 10 invoices require no human involvement from receipt to posting. For a hotel group processing 5,000 invoices per month, that eliminates 4,500 manual invoice handling events every 30 days.</p>
+
+<h2>The Impact on Hotel Finance Operations</h2>
+<p>Hotels using PurchasePlus AI invoicing report an average <strong>75% reduction in invoice processing costs</strong>. AP headcount requirements drop. Month-end close accelerates. And because every invoice is matched against a purchase order before approval, <strong>maverick spend is eliminated at the point of invoice</strong>, not discovered in a quarterly audit.`,
+  faq:[
+    {q:'What accuracy rate does PurchasePlus AI invoice processing achieve?',a:'PurchasePlus achieves 99% accuracy in AI invoice processing, trained on more than 40 million hospitality invoices.'},
+    {q:'What is straight-through invoice processing?',a:'Straight-through processing means an invoice is received, matched, validated, and approved without any human intervention. PurchasePlus achieves a 90% straight-through rate, meaning 9 out of 10 invoices are fully automated from receipt to posting.'},
+    {q:'How much does automated invoice processing reduce costs for hotels?',a:'Hotels using PurchasePlus AI invoicing report an average 75% reduction in invoice processing costs, driven by elimination of manual data entry, faster approval cycles, and fewer errors and duplicate payments.'},
+    {q:'Can PurchasePlus process invoices in multiple formats?',a:'Yes. PurchasePlus accepts invoices via email, EDI, supplier portal submission, and PDF upload — extracting structured data automatically regardless of format.'}
+  ]
+},
+{
+  id:'article-04',
+  title:'The Hidden Cost of Maverick Spending in Hotels',
+  date:'4 June 2026',
+  keywords:['maverick spending hotels','unauthorized hotel purchases','hotel procurement compliance','hotel spend control'],
+  metaDesc:'Maverick spending in hotels — unauthorized purchases made outside approved channels — costs the industry billions annually. Here is how to measure it, control it, and eliminate it.',
+  body:`<h2>What Is Maverick Spending?</h2>
+<p>Maverick spending is purchasing made outside of approved channels, contracted suppliers, or budget-authorised processes. In hotels, it happens constantly — a department head orders from an unapproved vendor, a chef purchases directly from a market instead of through the purchasing system, or a maintenance technician buys parts without a purchase order.</p>
+<p>Each individual instance may seem minor. Cumulatively, maverick spending typically represents <strong>10–30% of total hotel supply spend</strong> — and almost none of it is captured, measured, or managed in real time.</p>
+
+<h2>The Real Cost Is Invisible Until It Is Too Late</h2>
+<p>The visible cost of maverick spending is the price premium paid when purchasing outside contracted rates. Hotels have negotiated supplier agreements for a reason — volume discounts, quality standards, and credit terms. When departments buy outside these agreements, they pay retail prices instead of contract prices, often 15–40% higher.</p>
+<p>The invisible costs are larger:</p>
+<ul>
+<li><strong>Audit exposure:</strong> Purchases without purchase orders create gaps in the audit trail that regulators and owners find unacceptable.</li>
+<li><strong>Food safety and brand risk:</strong> Unauthorised food suppliers bypass quality controls and allergen protocols.</li>
+<li><strong>Rebate leakage:</strong> Purchasing volume sent to unapproved suppliers reduces consolidated spend thresholds, forfeiting rebates negotiated with primary suppliers.</li>
+<li><strong>Budget inaccuracy:</strong> Committed spend not captured in the system means budgets appear healthier than they are until invoices arrive — usually at month end.</li>
+</ul>
+
+<h2>Why Hotels Struggle to Control It</h2>
+<p>Traditional procurement systems make it easy to order the wrong way. If the approved ordering system has more friction than picking up a phone or walking to a supplier, people will take the path of least resistance. The system loses.</p>
+<p>The solution is not more rules — it is making the approved channel the easiest channel. PurchasePlus does this by embedding the approved supplier catalogue, contracted pricing, and purchase order workflow into a mobile-first interface that works as fast as an informal call to a supplier.</p>
+
+<h2>Commitment-Based Visibility Stops Maverick Spend Before the Invoice Arrives</h2>
+<p>The most powerful weapon against maverick spending is <strong>commitment visibility</strong>. When every purchase order raised against an approved supplier is immediately recorded as a commitment against the budget, managers see in real time what has been spent and what is remaining. The budget warning comes before the invoice, not after it.</p>`,
+  faq:[
+    {q:'What is maverick spending in hotels?',a:'Maverick spending refers to purchases made outside of approved procurement channels, contracted suppliers, or budget-authorised processes. It typically represents 10–30% of total hotel supply spend.'},
+    {q:'How much does maverick spending cost hotels?',a:'The price premium from buying outside contracted rates alone ranges from 15–40% above negotiated prices. Additional hidden costs include audit exposure, rebate leakage, food safety risk, and budget inaccuracy.'},
+    {q:'How can hotels stop maverick spending?',a:'The most effective approach is making approved channels easier than informal purchasing — using a mobile-first procurement platform with embedded catalogues and contracted pricing. Commitment-based budgeting also provides real-time visibility so managers see budget impact before the invoice arrives.'}
+  ]
+},
+{
+  id:'article-05',
+  title:'Commitment-Based Budgeting vs Traditional Month-End Finance',
+  date:'5 June 2026',
+  keywords:['commitment accounting hotels','real-time hotel budgeting','hotel financial management software','hotel live GP percentage'],
+  metaDesc:'Traditional hotel finance shows what was spent last month. Commitment-based budgeting shows what is committed today — before the invoice arrives. Here is the difference and why it matters.',
+  body:`<h2>The Problem with Month-End Finance</h2>
+<p>In most hotels, the finance team produces a P&L at the end of each month. Department managers see their cost performance — often 30–45 days after the costs were incurred. By the time a food cost overrun appears on a report, the purchasing decisions that caused it are weeks in the past. The damage is done and uncorrectable.</p>
+<p>This is not a reporting failure. It is an architectural one. Traditional accounting systems record costs when invoices are posted, not when purchasing decisions are made. The gap between decision and visibility is where budgets are lost.</p>
+
+<h2>What Is Commitment-Based Budgeting?</h2>
+<p>Commitment-based budgeting records the financial impact of a purchase <strong>at the moment a purchase order is raised</strong> — not when the invoice arrives. The moment a chef orders 50kg of beef from the approved supplier, that cost is committed against the F&B budget and the GP% recalculates in real time.</p>
+<p>This means department managers have a live view of their cost position at any point in the month — not a retrospective one at the end of it. They can make decisions based on current reality, not historical data.</p>
+
+<h2>What Live GP% Changes for Hotel F&B Operations</h2>
+<p>For hotel food and beverage managers, live GP% is transformative. Instead of discovering at month end that food costs ran at 38% against a 32% budget, the system shows the overrun happening in week two — with enough time to adjust ordering, menu mix, or selling prices to recover.</p>
+<p>PurchasePlus integrates purchasing data with recipe costs and sales data to produce a live gross profit percentage by outlet, by day, by week. This is the same financial clarity that the best restaurant groups have used for years — now available across a hotel's entire F&B operation, at property level and group level simultaneously.</p>
+
+<h2>The Audit Advantage</h2>
+<p>Commitment-based accounting also creates a complete audit trail from budget to purchase order to receipt to invoice to payment. Every step is recorded, timestamped, and attributable. For hotel operators facing owner audits, brand audits, or regulatory reviews, this trail reduces audit preparation time from weeks to hours.`,
+  faq:[
+    {q:'What is commitment-based budgeting for hotels?',a:'Commitment-based budgeting records the financial impact of a purchase when the purchase order is raised, not when the invoice is posted. This gives managers a live view of costs and committed spend throughout the month rather than a retrospective month-end report.'},
+    {q:'How is commitment accounting different from traditional hotel finance?',a:'Traditional hotel finance shows what was spent — after invoices are posted, usually 30–45 days after purchasing decisions were made. Commitment accounting shows what is committed in real time, enabling managers to course-correct before the month ends.'},
+    {q:'What is live GP% in hotel F&B?',a:'Live gross profit percentage shows the current food and beverage profit margin in real time, calculated from committed purchasing costs and sales data. PurchasePlus provides live GP% by outlet, by day, and rolled up across multi-property groups.'}
+  ]
+},
+{
+  id:'article-06',
+  title:'How Accor, IHG, and Marriott Control Multi-Property F&B Spend',
+  date:'5 June 2026',
+  keywords:['multi-property F&B management hotels','hotel group procurement software','Accor IHG Marriott procurement platform','food beverage cost control hotel chains'],
+  metaDesc:'Accor, IHG, and Marriott use PurchasePlus to control F&B spend across hundreds of properties. Here is how multi-property procurement works at scale and what smaller hotel groups can learn from it.',
+  body:`<h2>The Multi-Property Procurement Challenge</h2>
+<p>Running procurement across a portfolio of hotels is fundamentally different from running it in a single property. Each property has its own menus, its own suppliers, its own cost centre structure, and its own team making daily purchasing decisions. Without centralised visibility, a hotel group is managing 50 different businesses — not one.</p>
+<p>Accor, IHG, and Marriott have solved this. They use PurchasePlus to give regional directors and group finance teams a single view of purchasing activity, committed spend, and F&B cost performance across their entire portfolio — in real time.</p>
+
+<h2>What Multi-Property Rollup Looks Like in Practice</h2>
+<p>In PurchasePlus, a group finance director can log in and see the following across all properties simultaneously:</p>
+<ul>
+<li>Total committed spend by category (food, beverage, chemicals, linen, engineering)</li>
+<li>Live GP% by property and by outlet type</li>
+<li>Supplier compliance — which properties are ordering from approved suppliers vs off-contract</li>
+<li>Invoice processing status — how many invoices are outstanding, matched, or in exception</li>
+<li>Purchase order approvals awaiting action, by property and approver</li>
+</ul>
+<p>This is not a monthly report. It is a live dashboard that reflects the current state of purchasing across every property in the group.</p>
+
+<h2>Consolidated Supplier Negotiation</h2>
+<p>When a group can see consolidated purchasing volume across 100+ properties, supplier negotiations change. The group can demonstrate exact volumes to preferred suppliers, negotiate rebates based on total spend, and enforce contracted pricing compliance down to property level — flagging automatically when a property purchases a category item off-contract.</p>
+
+<h2>What Smaller Hotel Groups Can Learn</h2>
+<p>The multi-property model scales down as well as up. A regional hotel group with 10–15 properties faces the same core challenges as a global brand — maverick spending, inconsistent supplier usage, and lack of real-time cost visibility. PurchasePlus provides the same consolidated view for a group of any size. A group finance director managing 10 properties gets the same cross-property rollup, live GP%, and supplier compliance dashboard as their counterpart at Accor.`,
+  faq:[
+    {q:'How do hotel groups like Accor and Marriott manage procurement across multiple properties?',a:'They use PurchasePlus to centralise purchasing visibility, enforce supplier compliance, and track committed spend and live F&B GP% across all properties simultaneously — giving regional and group finance directors a single real-time view.'},
+    {q:'What is multi-property F&B rollup?',a:'Multi-property F&B rollup aggregates food and beverage purchasing data, costs, and gross profit percentages from multiple hotel properties into a single dashboard — enabling group-level visibility and benchmarking across the portfolio.'},
+    {q:'Can smaller hotel groups use enterprise procurement software?',a:'Yes. PurchasePlus scales from individual properties to global hotel chains. The same multi-property rollup, live GP%, and supplier management tools available to Accor and IHG are accessible to hotel groups with 5–15 properties.'}
+  ]
+},
+{
+  id:'article-07',
+  title:'What Is the GTM Machine? 14 AI Agents Running the Pre-MQL Pipeline',
+  date:'6 June 2026',
+  keywords:['AI GTM machine B2B','AI sales agents pipeline','automated lead generation B2B SaaS','hotel technology sales automation'],
+  metaDesc:'PurchasePlus runs 14 AI agents in its go-to-market machine — automating lead research, qualification, and personalised outreach before a human salesperson makes first contact.',
+  body:`<h2>The Problem with Traditional B2B Sales</h2>
+<p>In most B2B software companies, sales reps spend the majority of their time on pre-sales activities — researching prospects, building contact lists, writing personalised outreach, and chasing responses. The actual selling — demonstrating value, handling objections, closing — happens in a fraction of the time.</p>
+<p>PurchasePlus has built a <strong>GTM Machine</strong>: 14 coordinated AI agents that automate the entire pre-MQL (Marketing Qualified Lead) pipeline, so human salespeople enter conversations with context, intent signals, and already-personalised relationship history.</p>
+
+<h2>The 14 AI Agents — What Each One Does</h2>
+<p>The GTM Machine operates as a coordinated system. Each agent has a specific function:</p>
+<ol>
+<li><strong>ICP Identifier:</strong> Maps inbound and outbound contacts against the Ideal Customer Profile</li>
+<li><strong>Company Enricher:</strong> Pulls firmographic data — property count, brand affiliation, revenue signals</li>
+<li><strong>Contact Finder:</strong> Identifies decision-maker contacts within target accounts</li>
+<li><strong>LinkedIn Researcher:</strong> Analyses contact activity, recent posts, and shared connections</li>
+<li><strong>Intent Signal Detector:</strong> Identifies purchase intent signals from web activity and event registrations</li>
+<li><strong>Personalisation Writer:</strong> Generates bespoke first-touch emails using enrichment data</li>
+<li><strong>Sequence Manager:</strong> Coordinates multi-touch cadences across email, LinkedIn, and phone</li>
+<li><strong>Reply Classifier:</strong> Categorises incoming responses (interested, not now, not a fit, referred)</li>
+<li><strong>Meeting Scheduler:</strong> Proposes call times and confirms bookings for interested prospects</li>
+<li><strong>CRM Updater:</strong> Writes structured notes and updates deal stages automatically</li>
+<li><strong>Event Intelligence:</strong> Identifies conference attendees for targeted pre-show outreach</li>
+<li><strong>Competitive Monitor:</strong> Tracks competitor mentions and displacement opportunities</li>
+<li><strong>Champion Tracker:</strong> Monitors job changes among existing customers and advocates</li>
+<li><strong>Pipeline Reporter:</strong> Produces daily pipeline summaries and conversion metrics</li>
+</ol>
+
+<h2>The Result: Human Salespeople Selling, Not Researching</h2>
+<p>When the GTM Machine hands off a lead, the salesperson receives a contact with full company context, their specific pain points, relevant customer case studies pre-selected, and a personalised first message already sent. The human enters the conversation at the point of qualified interest — not at the beginning of a cold prospecting exercise.</p>`,
+  faq:[
+    {q:'What is a GTM Machine?',a:'A GTM (go-to-market) Machine is an AI-powered system that automates the pre-sales pipeline — from lead identification and research through personalised outreach and meeting booking — enabling human salespeople to focus on qualified conversations rather than manual prospecting.'},
+    {q:'How many AI agents does PurchasePlus run in its GTM Machine?',a:'PurchasePlus operates 14 coordinated AI agents in its GTM Machine, covering ICP identification, company enrichment, contact research, personalised writing, sequence management, reply classification, CRM updating, and pipeline reporting.'},
+    {q:'What is a pre-MQL pipeline?',a:'The pre-MQL pipeline covers all activities before a lead is classified as Marketing Qualified — including research, enrichment, first outreach, and initial response. Automating this stage with AI dramatically reduces the cost per MQL and accelerates time from contact to qualified conversation.'}
+  ]
+},
+{
+  id:'article-08',
+  title:'Procure-to-Pay vs Fragmented Hotel Purchasing — What the Difference Costs',
+  date:'6 June 2026',
+  keywords:['procure to pay hotel software','hotel purchasing process automation','hotel P2P procurement','fragmented hotel purchasing systems'],
+  metaDesc:'Most hotels run purchasing on a mix of spreadsheets, emails, and disconnected systems. Procure-to-pay integrates the entire cycle. Here is what fragmentation costs — and what integration delivers.',
+  body:`<h2>How Most Hotels Actually Do Purchasing</h2>
+<p>In a typical hotel, purchasing happens across a patchwork of systems and processes. Orders may be placed by phone, email, WhatsApp, or a supplier's own portal. Invoices arrive by email and are processed in a separate accounting system — or on paper. Purchase order numbers, when they exist, are tracked in spreadsheets that rarely match what accounting sees.</p>
+<p>This fragmentation is not the result of bad management. It is the cumulative result of adding systems over time without a unifying architecture. Each department solves its immediate problem. The organisation pays the cost in invisible inefficiency.</p>
+
+<h2>What Procure-to-Pay Means</h2>
+<p><strong>Procure-to-pay (P2P)</strong> is the complete purchasing cycle — from the initial need, through requisition, purchase order creation, supplier delivery, goods receipt, invoice matching, approval, and payment — managed in a single connected system. Every step is recorded, every cost is attributed, and every exception is visible.</p>
+<p>In a P2P system, there are no invoices that arrive without purchase orders. There is no spend that exists outside the budget system. There are no approval gaps, no duplicate payments, and no month-end surprises.</p>
+
+<h2>The Cost of Fragmentation — A Direct Comparison</h2>
+<ul>
+<li><strong>Invoice processing:</strong> Fragmented: 8–12 minutes per invoice manual handling. P2P: 90% automated, 90 seconds average.</li>
+<li><strong>Maverick spend:</strong> Fragmented: 10–30% of spend off-contract. P2P: Supplier catalogue enforces contracted pricing at point of order.</li>
+<li><strong>Budget visibility:</strong> Fragmented: Monthly, retrospective. P2P: Real-time committed spend and live GP%.</li>
+<li><strong>Audit readiness:</strong> Fragmented: Days or weeks to reconstruct purchasing trail. P2P: Complete audit trail available instantly.</li>
+<li><strong>Duplicate payments:</strong> Fragmented: Industry average 0.5–1% of invoices. P2P: AI detection eliminates duplicates before payment.</li>
+</ul>
+
+<h2>Why Hospitality-Specific P2P Matters</h2>
+<p>Generic ERP procurement modules exist — but they were not built for hotel purchasing. They do not understand recipe costing, F&B GP%, or the daily ordering patterns of a hotel kitchen. PurchasePlus P2P is built specifically for hospitality, which means the workflows, supplier networks, and reporting are all native to how hotels actually operate.`,
+  faq:[
+    {q:'What is procure-to-pay (P2P) for hotels?',a:'Procure-to-pay is the complete purchasing lifecycle managed in a single system — from initial order requisition through purchase order, delivery confirmation, invoice matching, approval, and payment. A true P2P system eliminates fragmentation between ordering, receiving, and accounts payable.'},
+    {q:'What does fragmented hotel purchasing cost?',a:'Fragmented hotel purchasing typically results in 10–30% maverick spend, 8–12 minutes of manual processing per invoice, monthly rather than real-time budget visibility, and duplicate payment rates of 0.5–1% of total invoice volume.'},
+    {q:'How is PurchasePlus different from generic ERP procurement modules?',a:'PurchasePlus was built exclusively for hospitality, with native support for hotel F&B cost structures, recipe costing, multi-property rollup, and a 30,000+ supplier network. Generic ERP modules require extensive customisation to replicate functionality that PurchasePlus provides out of the box.'}
+  ]
+},
+{
+  id:'article-09',
+  title:'PurchasePlus at HITEC 2026 — What to Expect at Booth #3715',
+  date:'7 June 2026',
+  keywords:['PurchasePlus HITEC 2026','HITEC 2026 San Antonio exhibitors','hotel technology conference 2026 procurement','PurchasePlus booth 3715'],
+  metaDesc:'PurchasePlus makes its North American debut at HITEC 2026, Booth #3715, Henry B. Gonzalez Convention Center, San Antonio. Here is what to expect at the booth, June 15–18, 2026.',
+  body:`<h2>First US Activation for PurchasePlus</h2>
+<p>HITEC 2026 marks the first time PurchasePlus has exhibited in North America. Backed by Strattam Capital and operating after 25 years in global hospitality, the platform arrives in San Antonio as a proven enterprise solution — not a startup looking for market fit.</p>
+<p>The booth will be active throughout the show's three exhibit days: Tuesday 16, Wednesday 17, and Thursday 18 June 2026, at the Henry B. Gonzalez Convention Center, San Antonio, Texas.</p>
+
+<h2>Booth #3715 — What You Will See</h2>
+<p>Booth #3715 is a 10×20 island configuration in the Enhanced Plus exhibitor tier, positioned adjacent to the North Concession Area — one of the highest foot-traffic zones on the show floor.</p>
+<p>The booth is designed around the theme of <strong>Texas frontier energy meets high-tech precision</strong>. Expect a visually distinctive branded display, a live product demonstration station, and a relaxed lounge environment for conversations that go beyond a brochure hand-off.</p>
+
+<h2>What Will Be Demonstrated</h2>
+<p>The demo focus will be on capabilities most relevant to HITEC attendees — hotel finance directors, procurement managers, and operations leads:</p>
+<ul>
+<li><strong>AI invoice processing:</strong> Live demonstration of the 99% accuracy, 90% straight-through workflow</li>
+<li><strong>Commitment-based budgeting:</strong> Real-time committed spend view and live GP% dashboard</li>
+<li><strong>Multi-property rollup:</strong> Group-level visibility across a simulated portfolio</li>
+<li><strong>Supplier catalogue:</strong> The 30,000+ supplier network and contracted pricing enforcement</li>
+</ul>
+
+<h2>Who Should Visit the Booth</h2>
+<p>If you are a hotel operator managing purchasing across one or more properties and you are still running any part of the process manually — this demonstration is for you. Finance directors, controllers, procurement leads, F&B managers, and operations directors will all find direct relevance.</p>
+<p>If you are a technology partner, consultant, or investor active in hospitality — the team at Booth #3715 will be happy to discuss integration opportunities, referral relationships, and what the Strattam Capital investment means for PurchasePlus's North American roadmap.</p>
+
+<h2>The Show Special</h2>
+<p>First come, first served: PurchasePlus is giving away <strong>branded cowboy hats</strong> at the booth. Stop by Booth #3715 and pick one up. Stocks are limited to 37 units.`,
+  faq:[
+    {q:'Where is PurchasePlus at HITEC 2026?',a:'PurchasePlus is at Booth #3715, Henry B. Gonzalez Convention Center, San Antonio, Texas. The booth is located adjacent to the North Concession Area, active June 16–18, 2026.'},
+    {q:'What will PurchasePlus demonstrate at HITEC 2026?',a:'PurchasePlus will demonstrate AI invoice processing (99% accuracy), commitment-based budgeting with live GP%, multi-property rollup across a simulated hotel portfolio, and the 30,000+ supplier catalogue.'},
+    {q:'Who should visit PurchasePlus at HITEC 2026?',a:'Hotel finance directors, controllers, procurement managers, F&B managers, and operations directors — particularly those managing manual purchasing processes across single or multi-property operations.'},
+    {q:'Is there a show special at the PurchasePlus booth?',a:'Yes — PurchasePlus is giving away branded cowboy hats at Booth #3715, while stocks last (37 units available across the three show days).'}
+  ]
+},
+{
+  id:'article-10',
+  title:'How to Get Audit-Ready in Hospitality Finance',
+  date:'7 June 2026',
+  keywords:['hotel financial audit preparation','hospitality finance compliance','hotel audit trail software','hotel procurement audit ready'],
+  metaDesc:'Hotel financial audits expose gaps in procurement processes, invoice trails, and spend approvals. Here is how to get audit-ready in hospitality finance — and keep it that way year-round.',
+  body:`<h2>Why Hotel Audits Find What They Find</h2>
+<p>Hotel financial audits — whether owner, brand, or regulatory — consistently surface the same categories of issues: invoices without purchase orders, approvals that cannot be attributed to a named individual, off-contract purchasing that bypassed authorised channels, and budget commitments that did not appear in the ledger until month end.</p>
+<p>These are not accounting errors. They are purchasing process failures. The invoice trail problem starts at the moment a purchase is made without a purchase order. Everything downstream — receipt, matching, approval, posting — is then reconstructed manually rather than recorded automatically. That reconstruction takes time, introduces errors, and rarely survives auditor scrutiny.</p>
+
+<h2>What Auditors Actually Look For</h2>
+<p>In a hotel financial audit, the procurement section typically covers five areas:</p>
+<ol>
+<li><strong>Purchase order coverage:</strong> What percentage of invoices have a corresponding, pre-approved purchase order?</li>
+<li><strong>Approval authority:</strong> Can every approval be tied to an individual with documented authorisation at the right level?</li>
+<li><strong>Supplier compliance:</strong> Are purchases being made from approved suppliers at contracted prices?</li>
+<li><strong>Duplicate payment controls:</strong> What prevents the same invoice from being paid twice?</li>
+<li><strong>Budget attribution:</strong> Can every expense be traced from the original purchase order to the correct budget line?</li>
+</ol>
+
+<h2>The Audit-Ready State: What It Looks Like</h2>
+<p>An audit-ready hotel finance operation can answer every one of those questions in minutes, not days. The complete purchase-to-payment trail for any transaction — from the original requisition through PO, receipt, invoice, approval, and posting — is retrievable instantly from a single system.</p>
+<p>This is the state that PurchasePlus creates by default. Because every purchase begins with a purchase order in the system, and because every step is recorded with timestamps and user attributions, the audit trail exists automatically. There is no reconstruction exercise. The auditor can query any transaction in real time.</p>
+
+<h2>Maintaining Audit Readiness Year-Round</h2>
+<p>Audit readiness is not a project — it is a process. The hotels that pass audits most cleanly are the ones where the procurement system enforces correct process on every transaction, every day. No purchase order exemptions for 'emergency' purchasing. No approval bypasses for 'urgent' invoices. No supplier switching without documented authorisation.</p>
+<p>PurchasePlus enforces these controls at the system level — not as a policy document that depends on individual compliance, but as a workflow that makes the correct process the only available process.`,
+  faq:[
+    {q:'What do hotel financial audits examine in procurement?',a:'Hotel audits examine purchase order coverage (invoices with pre-approved POs), approval authority attribution, supplier compliance with contracted rates, duplicate payment controls, and complete budget attribution from purchase order to GL posting.'},
+    {q:'How can hotels prepare for a financial audit quickly?',a:'The fastest path to audit readiness is a procurement system that records every step of the purchase-to-payment cycle automatically — so the complete audit trail is available instantly rather than requiring manual reconstruction.'},
+    {q:'What is an audit trail in hotel procurement?',a:'An audit trail in hotel procurement is the complete, timestamped record of every purchasing event — from initial requisition through purchase order creation, goods receipt, invoice matching, approval, and payment — with every action attributed to a named individual.'},
+    {q:'Does PurchasePlus help hotels pass financial audits?',a:'Yes. Because PurchasePlus enforces purchase order creation before any purchase and records every subsequent step automatically, the complete audit trail exists by default. Hotels using PurchasePlus can retrieve any transaction history instantly without manual reconstruction.'}
+  ]
+}
+];
+
+const EMAILS = [
+{
+  id:'email-01',
+  title:'Tier 1 — Finance Director / CFO (Template)',
+  to:'[First Name] [Last Name], [Title], [Hotel Group]',
+  subject:'One thing we do that your AP team will thank you for',
+  body:`Hi [First Name],
+
+I'm Akila, Head of Marketing at PurchasePlus — the procurement platform used by Accor, IHG, and Marriott to automate hotel purchasing and invoice processing.
+
+We process 40M invoices a year at 99% AI accuracy. Hotels using our platform cut AP processing costs by 75% and get live committed spend visibility before the invoice lands.
+
+We're exhibiting at HITEC 2026 this June in San Antonio — Booth #3715. I'd love to show you a 10-minute demo on the floor. Would any time on June 16, 17, or 18 work?`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com\n+61 420 413 528'
+},
+{
+  id:'email-02',
+  title:'Vicki Hamilton — Hilton (Personalized)',
+  to:'Vicki Hamilton, Senior Manager Procurement Applications, Hilton',
+  subject:'Procurement automation for Hilton — worth 10 minutes at HITEC?',
+  body:`Hi Vicki,
+
+Hilton's procurement complexity — global supplier base, multi-property operations, brand standards — is exactly the environment PurchasePlus was built for. We automate invoice processing at 99% AI accuracy and give procurement teams live committed spend visibility across every property.
+
+Accor and IHG use us for the same reason you're likely evaluating options now: the scale problem doesn't get smaller, and spreadsheet-driven AP doesn't scale.
+
+I'll be at HITEC 2026 — Booth #3715. Would you have 15 minutes to see a live demo? I'll keep it specific to Hilton's procurement context.`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-03',
+  title:'John Hearns — Marriott (Personalized)',
+  to:'John Hearns, SVP Global Residential Operations, Marriott International',
+  subject:'Multi-property purchasing visibility — PurchasePlus at HITEC',
+  body:`Hi John,
+
+For an operation at Marriott's scale, the challenge isn't purchasing — it's visibility. Knowing what's committed across hundreds of properties, in real time, before month end.
+
+PurchasePlus gives residential and hotel operations teams a live rollup of committed spend, F&B cost performance, and supplier compliance across every property simultaneously. Accor uses it for exactly this purpose.
+
+I'll be at HITEC this June in San Antonio — Booth #3715. Happy to walk you through how the multi-property dashboard works. Would any slot on June 16 or 17 work for a 15-minute session?`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-04',
+  title:'Suzette Barreto — Loews Hotels (Personalized)',
+  to:'Suzette Barreto, Director of Accounting Services, Loews Hotels',
+  subject:'Your AP team and ours should talk — HITEC June 2026',
+  body:`Hi Suzette,
+
+Hotel AP operations are where most procurement value leaks: manual matching, approval delays, invoices without POs, duplicate payments. It's invisible until you measure it.
+
+PurchasePlus automates the entire purchase-to-pay cycle — 99% AI accuracy, 90% straight-through processing, full audit trail. For an accounting director managing a multi-property portfolio like Loews, the audit readiness benefit alone is typically worth the conversation.
+
+I'll be at Booth #3715 at HITEC this June. Can I put 20 minutes on your HITEC calendar for a demo focused on Loews's AP workflow?`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-05',
+  title:'Jigs Gandhi — MR Hotel Management (Personalized)',
+  to:'Jigs Gandhi, VP Procurement IT & Corporate Services, MR Hotel Management',
+  subject:'Procurement + IT — a platform worth seeing at HITEC',
+  body:`Hi Jigs,
+
+VP of Procurement and IT is a rare combination — it means you're evaluating not just what the platform does but how it integrates. PurchasePlus connects to the ERP stack, handles EDI supplier integrations, and runs fully cloud-native.
+
+On the procurement side: 30,000+ supplier network, AI invoice processing at 99% accuracy, and live spend dashboards across every property and cost centre.
+
+I'll be at HITEC Booth #3715 — would you have time for a 20-minute technical demo? I can walk through both the functional and integration architecture.`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-06',
+  title:'Dawn Fenech — Corinthia Hotels (Personalized)',
+  to:'Dawn Fenech, Head of Finance, Corinthia Hotels',
+  subject:'Hotel finance visibility — live committed spend before month end',
+  body:`Hi Dawn,
+
+The Corinthia portfolio — luxury, multi-property, international — is the exact profile where PurchasePlus delivers the most impact: real-time committed spend across every property, live GP% for F&B operations, and an audit trail that survives any owner or brand review.
+
+We process over 40 million hotel invoices a year for groups including Accor and IHG. The finance director use case is our strongest.
+
+I'll be at HITEC 2026, Booth #3715 in San Antonio. Would you be open to 20 minutes on June 16 or 17 to see the platform?`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-07',
+  title:'Tier 2 — Regional Hotel Operators (Template)',
+  to:'[First Name] [Last Name], [Title], [Regional Hotel Group]',
+  subject:'How regional hotel groups cut invoice processing costs by 75%',
+  body:`Hi [First Name],
+
+If your team is still processing hotel invoices manually, you're paying 3–5x more than you need to — and your budget visibility is always at least 30 days late.
+
+PurchasePlus automates hotel purchasing and invoicing for operators ranging from single properties to 100+ property groups. The platform connects your approved suppliers, automates invoice matching at 99% accuracy, and shows you committed spend in real time.
+
+I'll be at HITEC 2026 in San Antonio — Booth #3715, June 15–18. Happy to show you a 15-minute demo relevant to a group your size.`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-08',
+  title:'Technology Partner — Integration Opportunity',
+  to:'[Name], [CEO / MD / VP], [Technology Company]',
+  subject:'PurchasePlus at HITEC — integration partnership conversation',
+  body:`Hi [Name],
+
+PurchasePlus connects 30,000 hospitality suppliers with hotel operators across 40+ countries — processing 40M invoices annually. We're making our North American debut at HITEC 2026 and are actively exploring integration partnerships with complementary platforms.
+
+If your product touches hotel purchasing, finance, ERP, PMS, or data middleware, there's likely a conversation worth having. We integrate with Dynamics 365, major PMS platforms, and EDI supplier networks.
+
+I'll be at Booth #3715. Are you going to be at HITEC? Happy to set up 20 minutes on the floor.`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-09',
+  title:'VIP Buyer Pass Delivery',
+  to:'[Priority Lead Name]',
+  subject:'Your complimentary HITEC pass — from PurchasePlus',
+  body:`Hi [First Name],
+
+We'd love to host you at HITEC 2026 as our guest. Please find your complimentary buyer pass below — it gives you full access to the exhibit floor at Henry B. Gonzalez Convention Center, San Antonio, June 16–18.
+
+[VIP BUYER PASS LINK]
+
+If you'd like to lock in a specific time to see PurchasePlus at Booth #3715, just reply and I'll send a calendar invite. The demo takes 15 minutes and I'll tailor it entirely to your operation.
+
+Looking forward to seeing you in San Antonio.`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+},
+{
+  id:'email-10',
+  title:'Day-Before Show Reminder',
+  to:'[Priority Lead Name]',
+  subject:'Tomorrow in San Antonio — Booth #3715 is ready',
+  body:`Hi [First Name],
+
+Just a quick note — HITEC opens tomorrow. Our team will be at Booth #3715 from the moment the floor opens.
+
+If you're attending and want to skip the queue, reply now and I'll hold a dedicated demo slot for you. Otherwise, come find us — we're the ones in cowboy hats, adjacent to the North Concession Area.
+
+See you on the floor.`,
+  sig:'Akila Lohan\nHead of Marketing Global\nPurchasePlus\nakila.lohan@purchaseplus.com'
+}
+];
+
+const POSTS = [
+{
+  id:'post-01',
+  date:'Monday 2 June',
+  scheduledNote:'ANCHOR POST — leave for the full week, no other posts until Friday 5 June',
+  title:'Strattam Capital Investment Announcement',
+  hook:'Something significant just happened for PurchasePlus.',
+  body:`Something significant just happened for PurchasePlus.
+
+We've secured a strategic investment from Strattam Capital — a San Francisco-based private equity firm backing enterprise software companies with proven products and underserved growth markets.
+
+This investment funds one thing: the United States.
+
+After 25 years, 40 million invoices, and a customer base that includes Accor, IHG, Marriott, Qantas, and Emirates — PurchasePlus is entering North America.
+
+The first step happens in San Antonio this June at HITEC 2026 — Booth #3715.
+
+If you're a hotel operator managing procurement, purchasing, or AP operations in the US: we should talk. The platform is ready. The team is ready. The market is more than ready.
+
+More to follow.`,
+  hashtags:['#PurchasePlus','#StrattamCapital','#HospitalityTech','#HITEC2026','#HotelTech','#Procurement']
+},
+{
+  id:'post-02',
+  date:'Friday 5 June',
+  scheduledNote:'Resume posts from Friday 5 June',
+  title:'HITEC Debut — PurchasePlus Coming to North America',
+  hook:'PurchasePlus is coming to North America.',
+  body:`PurchasePlus is coming to North America.
+
+For 25 years, the platform that Accor, IHG, and Marriott use to run hotel procurement has been headquartered in Australia. That's changing.
+
+Our first US activation: HITEC 2026, San Antonio, Texas.
+Booth #3715. June 15–18.
+Henry B. Gonzalez Convention Center.
+
+What we're bringing:
+→ 40M invoices processed annually at 99% AI accuracy
+→ 30,000+ supplier network built for hospitality
+→ Live committed spend and real-time GP% for hotel F&B
+→ A team ready to show you all of it in 15 minutes
+
+If you're going to HITEC — come find us. We'll be the ones in cowboy hats.`,
+  hashtags:['#HITEC2026','#PurchasePlus','#HotelTech','#HospitalityProcurement','#SanAntonio']
+},
+{
+  id:'post-03',
+  date:'Saturday 6 June',
+  title:'AI Invoicing — 99% Accuracy',
+  hook:'99% AI accuracy on hotel invoice processing. Here is what that number means.',
+  body:`99% AI accuracy on hotel invoice processing. Here is what that number means.
+
+For a hotel group processing 5,000 invoices per month:
+
+→ 4,950 invoices matched, validated, and approved automatically
+→ 50 flagged for human review — with the exact discrepancy identified
+→ 0 manual data entry events for the 90% that go straight-through
+
+The result: AP processing costs drop by 75%. Month-end close accelerates. Duplicate payments disappear. And your finance team stops doing data entry and starts doing finance.
+
+We've processed 40 million hotel invoices to train this model. It understands hospitality purchasing the way a generic AI tool never will.
+
+HITEC 2026 · Booth #3715 · San Antonio · June 15–18
+Come see a live demo.`,
+  hashtags:['#AIInvoicing','#HotelFinance','#APAutomation','#HospitalityTech','#HITEC2026']
+},
+{
+  id:'post-04',
+  date:'Sunday 7 June',
+  title:'Customer Logos — Who We Serve',
+  hook:'The hospitality brands that trust PurchasePlus.',
+  body:`The hospitality brands that trust PurchasePlus.
+
+Accor. IHG. Marriott. Qantas. Emirates.
+
+These are organisations with thousands of suppliers, hundreds of properties, and zero tolerance for procurement failures or budget surprises.
+
+They chose PurchasePlus because:
+→ The platform was built for hospitality — not adapted for it
+→ 25 years of industry-specific development
+→ A supplier network of 30,000+ built specifically for hotel operators
+→ AI invoice processing trained on 40M hospitality invoices
+
+If your operation needs the same level of procurement control — at any scale — we're making our North American debut at HITEC 2026.
+
+Booth #3715. San Antonio. June 15–18.`,
+  hashtags:['#Accor','#IHG','#Marriott','#HospitalityTech','#HITEC2026','#PurchasePlus']
+},
+{
+  id:'post-05',
+  date:'Monday 8 June',
+  title:'AP Automation — 75% Cost Reduction',
+  hook:'Hotel AP automation: the numbers your CFO wants to see.',
+  body:`Hotel AP automation: the numbers your CFO wants to see.
+
+Average cost to process one hotel invoice manually: $15–25.
+Average cost with PurchasePlus AI: $3–4.
+
+At 5,000 invoices per month, that's a difference of $60,000–$105,000 every year. In AP labour alone.
+
+Add the duplicate payment elimination, the early payment discount capture, and the audit cost reduction — and the ROI case writes itself.
+
+The platform that makes this possible:
+→ 99% AI invoice matching accuracy
+→ 90% straight-through processing rate
+→ Three-way matching: PO + receipt + invoice
+→ Full audit trail, zero manual reconstruction
+
+PurchasePlus at HITEC 2026 · Booth #3715 · San Antonio
+Live demo on the floor — 15 minutes.`,
+  hashtags:['#APAutomation','#HotelFinance','#HITEC2026','#PurchasePlus','#HospitalityTech']
+},
+{
+  id:'post-06',
+  date:'Tuesday 9 June',
+  title:'Live GP% / Commitment-Based Budgeting',
+  hook:'What if your hotel F&B team knew their GP% today — not at month end?',
+  body:`What if your hotel F&B team knew their GP% today — not at month end?
+
+Traditional hotel finance: you see food costs when the invoices post. That's 30–45 days after the purchasing decisions that drove those costs were made.
+
+Commitment-based budgeting: you see the cost the moment the purchase order is raised. Before delivery. Before the invoice. While there's still time to act.
+
+In PurchasePlus:
+→ Every purchase order commits instantly against the F&B budget
+→ Live GP% updates in real time by outlet, by property, by group
+→ Budget warnings arrive in week two — not on the last day of the month
+
+This is the financial control that turns an F&B operation from reactive to proactive.
+
+HITEC 2026 · Booth #3715 · San Antonio · June 15–18`,
+  hashtags:['#HotelFB','#FBManagement','#HotelBudgeting','#HITEC2026','#PurchasePlus']
+},
+{
+  id:'post-07',
+  date:'Wednesday 10 June',
+  title:'GTM Machine — 14 AI Agents',
+  hook:'We run 14 AI agents in our go-to-market operation. Here is why.',
+  body:`We run 14 AI agents in our go-to-market operation. Here is why.
+
+In traditional B2B sales, reps spend 70% of their time on pre-sales: researching prospects, building lists, writing outreach, chasing responses. Only 30% on actual selling.
+
+We flipped that ratio.
+
+The PurchasePlus GTM Machine automates the entire pre-MQL pipeline:
+→ ICP identification and company enrichment
+→ Decision-maker contact research
+→ Personalised first-touch email generation
+→ Multi-touch sequence management
+→ Reply classification and meeting scheduling
+→ CRM updates and pipeline reporting
+
+By the time a human salesperson enters a conversation, the prospect has full context, a personalised history, and a clear reason to be talking.
+
+14 agents. One coordinated system. Human salespeople selling — not researching.
+
+This is what modern GTM looks like.`,
+  hashtags:['#GTMStrategy','#AIAgents','#SalesAutomation','#B2BSales','#HospitalityTech']
+},
+{
+  id:'post-08',
+  date:'Thursday 11 June',
+  title:'Multi-Property Story',
+  hook:'Running procurement across 10 properties is not 10 times harder than one — if you have the right system.',
+  body:`Running procurement across 10 properties is not 10 times harder than one — if you have the right system.
+
+Without it: you're managing 10 purchasing operations, 10 supplier relationships, 10 invoice queues, and 10 different versions of the truth.
+
+With PurchasePlus multi-property rollup:
+→ Single dashboard: committed spend across every property, in real time
+→ Supplier compliance: which properties are buying on-contract vs off-contract
+→ Live F&B GP% by outlet, by property, and rolled up to group level
+→ Consolidated supplier negotiation: leverage total group volume for better pricing
+
+Accor and IHG use this for hundreds of properties. We've built it to work just as well for a regional group of 10.
+
+HITEC 2026 · Booth #3715 · San Antonio · June 15–18
+Come see the group dashboard live.`,
+  hashtags:['#MultiProperty','#HotelGroup','#HospitalityProcurement','#HITEC2026','#PurchasePlus']
+},
+{
+  id:'post-09',
+  date:'Friday 12 June',
+  title:'Cowboy Hat Teaser — Texas Energy',
+  hook:'We ordered cowboy hats.',
+  body:`We ordered cowboy hats.
+
+37 of them. Branded. Ready to hand out at HITEC 2026.
+
+This might sound like a gimmick. It is, a little. But it's also the right energy for a company making its North American debut in San Antonio, Texas — backed by a US investor, with a platform that's been running in the background of the world's best hotels for 25 years, and a team that's genuinely ready to compete in this market.
+
+We are not here to look at the show. We are here to start something.
+
+Booth #3715. Henry B. Gonzalez Convention Center. June 15–18.
+
+First come, first served — on the hats and on the demo slots.`,
+  hashtags:['#HITEC2026','#PurchasePlus','#SanAntonio','#HospitalityTech','#CowboyHats']
+},
+{
+  id:'post-10',
+  date:'Saturday 13 June',
+  title:'Final Countdown — See You at Booth #3715',
+  hook:'Two days until HITEC.',
+  body:`Two days until HITEC.
+
+For the PurchasePlus team, this is the moment 25 years of platform building, 40 million invoices, and a Strattam Capital investment have been pointed at.
+
+North America. Starting now.
+
+If you're going to be in San Antonio:
+→ Find us at Booth #3715
+→ Adjacent to the North Concession Area
+→ On the floor Tuesday 16, Wednesday 17, Thursday 18 June
+
+What to expect: a 15-minute demo that will change how you think about hotel purchasing. A team that actually knows the operational problem you're trying to solve. And yes — cowboy hats.
+
+See you on the floor.`,
+  hashtags:['#HITEC2026','#PurchasePlus','#SanAntonio','#HotelTech','#NorthAmerica']
+}
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const REPO = 'akilalohan-lang/purchaseplus-hitec-2026';
+const state = {
+  tab: 'articles',
+  index: 0,
+  token: null,
+  readOnly: false,
+  issueMap: JSON.parse(localStorage.getItem('rv-issue-map') || '{}'),
+  commentCounts: {},
+  pendingImage: null
+};
+
+function data() {
+  return state.tab === 'articles' ? ARTICLES : state.tab === 'emails' ? EMAILS : POSTS;
+}
+
+function currentPiece() { return data()[state.index]; }
+
+// ══════════════════════════════════════════════
+// SETUP
+// ══════════════════════════════════════════════
+function skipSetup() {
+  state.readOnly = true;
+  document.getElementById('setupModal').style.display = 'none';
+  document.getElementById('rvStatusText').textContent = 'Read-only mode';
+  document.getElementById('rvPanelSubmit').disabled = true;
+  document.getElementById('rvQuickInput').disabled = true;
+  renderSidebar();
+  renderContent();
+}
+
+async function ghHeaders() {
+  return { 'Authorization': `token ${state.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+}
+
+document.getElementById('patSubmit').onclick = async function() {
+  const pat = document.getElementById('patInput').value.trim();
+  if (!pat) return;
+  this.textContent = 'Connecting…';
+  this.disabled = true;
+  try {
+    const resp = await fetch('https://api.github.com/user', {
+      headers: { 'Authorization': `token ${pat}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!resp.ok) throw new Error('invalid');
+    state.token = pat;
+    localStorage.setItem('rv-pat', pat);
+    // Create label if needed
+    try {
+      await fetch(`https://api.github.com/repos/${REPO}/labels`, {
+        method: 'POST',
+        headers: await ghHeaders(),
+        body: JSON.stringify({ name: 'hitec-review', color: '7c5dff', description: 'HITEC 2026 content review' })
+      });
+    } catch(e) {} // 422 = already exists, fine
+    document.getElementById('setupModal').style.display = 'none';
+    document.getElementById('rvStatusText').textContent = 'Connected to GitHub';
+    renderSidebar();
+    renderContent();
+    fetchAllCommentCounts();
+  } catch(e) {
+    document.getElementById('patError').style.display = 'block';
+    this.textContent = 'Connect & Start Reviewing';
+    this.disabled = false;
+  }
+};
+
+// ══════════════════════════════════════════════
+// GITHUB API
+// ══════════════════════════════════════════════
+async function getOrCreateIssue(piece) {
+  if (state.issueMap[piece.id]) return state.issueMap[piece.id];
+  // Search first
+  const q = encodeURIComponent(`repo:${REPO} [${piece.id}] is:issue in:title`);
+  const sr = await fetch(`https://api.github.com/search/issues?q=${q}&per_page=1`, { headers: await ghHeaders() });
+  const sd = await sr.json();
+  if (sd.items && sd.items[0]) {
+    state.issueMap[piece.id] = sd.items[0].number;
+    localStorage.setItem('rv-issue-map', JSON.stringify(state.issueMap));
+    return sd.items[0].number;
+  }
+  // Create
+  const cr = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
+    method: 'POST',
+    headers: await ghHeaders(),
+    body: JSON.stringify({
+      title: `[${piece.id}] ${piece.title}`,
+      body: `**Content Review Thread**\n\nPiece: ${piece.title}\nType: ${state.tab}\n\n---\nReview comments below.`,
+      labels: ['hitec-review']
+    })
+  });
+  const cd = await cr.json();
+  state.issueMap[piece.id] = cd.number;
+  localStorage.setItem('rv-issue-map', JSON.stringify(state.issueMap));
+  return cd.number;
+}
+
+async function getComments(issueNumber) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/issues/${issueNumber}/comments?per_page=100`, {
+    headers: await ghHeaders()
+  });
+  return r.json();
+}
+
+async function postComment(issueNumber, body) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/issues/${issueNumber}/comments`, {
+    method: 'POST',
+    headers: await ghHeaders(),
+    body: JSON.stringify({ body })
+  });
+  return r.json();
+}
+
+async function uploadImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result.split(',')[1];
+      const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'_')}`;
+      const path = `reviews/images/${filename}`;
+      try {
+        const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+          method: 'PUT',
+          headers: await ghHeaders(),
+          body: JSON.stringify({ message: `Add review image: ${filename}`, content: base64 })
+        });
+        if (r.ok) {
+          resolve(`https://raw.githubusercontent.com/${REPO}/main/${path}`);
+        } else { resolve(null); }
+      } catch(e) { resolve(null); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function fetchAllCommentCounts() {
+  if (!state.token) return;
+  const pieces = [...ARTICLES, ...EMAILS, ...POSTS];
+  for (const piece of pieces) {
+    const num = state.issueMap[piece.id];
+    if (num) {
+      try {
+        const r = await fetch(`https://api.github.com/repos/${REPO}/issues/${num}`, { headers: await ghHeaders() });
+        const d = await r.json();
+        state.commentCounts[piece.id] = d.comments || 0;
+      } catch(e) {}
+    }
+  }
+  renderSidebar();
+}
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function switchTab(tab) {
+  state.tab = tab;
+  state.index = 0;
+  document.querySelectorAll('.rv-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  renderSidebar();
+  renderContent();
+  renderCommentSection();
+}
+
+function selectItem(index) {
+  state.index = index;
+  document.querySelectorAll('.rv-item').forEach((el, i) => el.classList.toggle('active', i === index));
+  renderContent();
+  renderCommentSection();
+  // Update panel context
+  const piece = currentPiece();
+  document.getElementById('rvPanelContext').textContent = piece.title;
+}
+
+function renderSidebar() {
+  const items = data();
+  const list = document.getElementById('rvList');
+  list.innerHTML = items.map((item, i) => {
+    const count = state.commentCounts[item.id] || 0;
+    return `<div class="rv-item${i === state.index ? ' active' : ''}" onclick="selectItem(${i})">
+      <span class="rv-item-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="rv-item-label" title="${item.title}">${item.title}</span>
+      <span class="rv-comment-badge${count > 0 ? ' has-comments' : ''}">${count}</span>
+    </div>`;
+  }).join('');
+  const items2 = items;
+  document.getElementById('rvBreadcrumb').textContent = `${state.tab.charAt(0).toUpperCase()+state.tab.slice(1)} · ${state.index+1} of ${items2.length}`;
+}
+
+// ══════════════════════════════════════════════
+// CONTENT RENDERING
+// ══════════════════════════════════════════════
+function renderContent() {
+  const piece = currentPiece();
+  const tab = state.tab;
+  document.getElementById('rvBreadcrumb').textContent = `${tab.charAt(0).toUpperCase()+tab.slice(1)} · ${state.index+1} of ${data().length}`;
+  document.getElementById('rvPieceTitle').textContent = piece.title;
+  document.getElementById('rvPanelContext').textContent = piece.title;
+
+  let meta = '';
+  if (tab === 'articles') {
+    meta = (piece.keywords||[]).slice(0,3).map(k => `<span class="rv-kw-badge">${k}</span>`).join('');
+  } else if (tab === 'emails') {
+    meta = `<span class="rv-kw-badge">To: ${piece.to.split(',')[0]}</span>`;
+  } else {
+    meta = `<span class="rv-kw-badge">📅 ${piece.date}</span>${piece.scheduledNote ? `<span class="rv-kw-badge" style="color:var(--red);border-color:rgba(225,29,72,.3);background:rgba(225,29,72,.06);">Anchor — leave running</span>` : ''}`;
+  }
+  document.getElementById('rvMeta').innerHTML = meta;
+
+  let html = '';
+  if (tab === 'articles') {
+    html = renderArticle(piece);
+  } else if (tab === 'emails') {
+    html = renderEmail(piece);
+  } else {
+    html = renderPost(piece);
+  }
+  document.getElementById('rvContentBody').innerHTML = html;
+}
+
+function renderArticle(a) {
+  return `
+    <div style="max-width:720px;">
+      <div class="art-meta-desc">${a.metaDesc}</div>
+      <div class="art-keywords">
+        <span class="art-kw-label">SEO / AEO / GEO Keywords</span>
+        ${(a.keywords||[]).map(k=>`<span class="rv-kw-badge">${k}</span>`).join('')}
+      </div>
+      <div class="art-body">${a.body}</div>
+      <div class="art-faq">
+        <div class="art-faq-title">Frequently Asked Questions (AEO / GEO)</div>
+        ${(a.faq||[]).map(f=>`<div class="faq-item"><div class="faq-q">Q: ${f.q}</div><div class="faq-a">${f.a}</div></div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderEmail(e) {
+  return `
+    <div style="max-width:680px;">
+      <div class="email-shell">
+        <div class="email-header-bar">
+          <div class="email-field"><span class="email-field-label">To:</span><span class="email-field-val">${e.to}</span></div>
+          <div class="email-field"><span class="email-field-label">From:</span><span class="email-field-val">Akila Lohan &lt;akila.lohan@purchaseplus.com&gt;</span></div>
+        </div>
+        <div class="email-subject">${e.subject}</div>
+        <div class="email-body">
+          ${e.body.split('\n\n').map(p => p.startsWith('[VIP') ? `<div style="margin:12px 0;padding:12px;background:linear-gradient(135deg,rgba(169,86,255,.06),rgba(55,102,254,.04));border:1px dashed rgba(124,93,255,.3);border-radius:8px;font-size:13px;color:var(--purple);font-weight:600;">${p}</div>` : `<p>${p}</p>`).join('')}
+          <div class="sig">${e.sig.split('\n').join('<br>')}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPost(p) {
+  return `
+    <div style="max-width:580px;">
+      ${p.scheduledNote ? `<div style="background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.2);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;font-weight:700;color:var(--red);">📌 ${p.scheduledNote}</div>` : ''}
+      <div class="li-post">
+        <div class="li-post-header">
+          <div class="li-avatar">AL</div>
+          <div>
+            <div class="li-author-name">Akila Lohan</div>
+            <div class="li-author-role">Head of Marketing Global · PurchasePlus</div>
+          </div>
+          <span class="li-date-badge">${p.date}</span>
+        </div>
+        <div class="li-image-placeholder">📸 Image to be added by Akila (AI-generated per brief)</div>
+        <div class="li-body">${p.body}</div>
+        <div class="li-hashtags">${p.hashtags.map(h=>`<span class="li-hashtag">${h}</span>`).join('')}</div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// COMMENT SECTION (below content)
+// ══════════════════════════════════════════════
+async function renderCommentSection() {
+  const piece = currentPiece();
+  const pill = document.getElementById('rvCommentCountPill');
+  const list = document.getElementById('rvCommentList');
+
+  if (!state.token) {
+    pill.textContent = '—';
+    list.innerHTML = '<div class="rv-empty-state">Connect your GitHub token to view and add reviews.</div>';
+    return;
+  }
+
+  list.innerHTML = '<div class="rv-loading"><div class="rv-spinner"></div> Loading reviews…</div>';
+  pill.textContent = '…';
+
+  try {
+    const num = state.issueMap[piece.id];
+    if (!num) {
+      pill.textContent = '0';
+      list.innerHTML = '<div class="rv-empty-state">No reviews yet. Add the first one above.</div>';
+      return;
+    }
+    const comments = await getComments(num);
+    if (!Array.isArray(comments) || comments.length === 0) {
+      pill.textContent = '0';
+      list.innerHTML = '<div class="rv-empty-state">No reviews yet. Add the first one above.</div>';
+      return;
+    }
+    state.commentCounts[piece.id] = comments.length;
+    pill.textContent = comments.length;
+    list.innerHTML = comments.map(c => {
+      const initials = c.user.login.substring(0,2).toUpperCase();
+      const time = new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const body = c.body.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<br><img src="$2" alt="$1" style="max-width:100%;border-radius:8px;margin-top:6px;">').replace(/\n/g,'<br>');
+      return `<div class="rv-cmt">
+        <div class="rv-cmt-avatar">${initials}</div>
+        <div class="rv-cmt-bubble">
+          <div class="rv-cmt-meta"><span class="rv-cmt-author">@${c.user.login}</span><span class="rv-cmt-time">${time}</span></div>
+          <div class="rv-cmt-text">${body}</div>
+        </div>
+      </div>`;
+    }).join('');
+    renderSidebar();
+  } catch(e) {
+    list.innerHTML = '<div class="rv-empty-state">Could not load reviews. Check your GitHub token.</div>';
+  }
+}
+
+async function quickReply() {
+  const input = document.getElementById('rvQuickInput');
+  const text = input.value.trim();
+  if (!text || !state.token) return;
+  input.value = '';
+  input.disabled = true;
+  try {
+    const piece = currentPiece();
+    const num = await getOrCreateIssue(piece);
+    await postComment(num, `**Review from Malcolm**\n\n${text}`);
+    state.commentCounts[piece.id] = (state.commentCounts[piece.id]||0) + 1;
+    await renderCommentSection();
+  } catch(e) {
+    alert('Failed to post. Check your GitHub token.');
+  }
+  input.disabled = false;
+}
+
+// ══════════════════════════════════════════════
+// PANEL
+// ══════════════════════════════════════════════
+function togglePanel() {
+  const panel = document.getElementById('rvPanel');
+  const isOpen = panel.classList.toggle('open');
+  if (isOpen) loadPanelComments();
+}
+
+async function loadPanelComments() {
+  const msgs = document.getElementById('rvPanelMsgs');
+  if (!state.token) return;
+  const piece = currentPiece();
+  const num = state.issueMap[piece.id];
+  if (!num) return;
+  try {
+    const comments = await getComments(num);
+    if (!Array.isArray(comments) || comments.length === 0) return;
+    const extra = comments.map(c => {
+      const initials = c.user.login.substring(0,2).toUpperCase();
+      const time = new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const body = c.body.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1" style="max-width:100%;border-radius:6px;display:block;margin-top:6px;">').replace(/\n/g,'<br>');
+      return `<div class="rv-msg-user">
+        <div class="rv-msg-user-bubble">${body}</div>
+        <div class="rv-msg-meta">@${c.user.login} · ${time}</div>
+      </div>`;
+    }).join('');
+    msgs.innerHTML = `<div class="rv-msg-agent"><div class="rv-msg-agent-bubble">Hi Malcolm 👋 Here are the existing reviews for "<strong>${piece.title.substring(0,40)}…</strong>". Add your feedback below — it saves directly to GitHub.</div></div>${extra}`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(e) {}
+}
+
+// Image handling
+document.getElementById('rvPanelInput').addEventListener('paste', async (e) => {
+  const items = e.clipboardData.items;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      const file = item.getAsFile();
+      showImagePreview(file);
+    }
+  }
+});
+
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) showImagePreview(file);
+}
+
+function showImagePreview(file) {
+  state.pendingImage = file;
+  const wrap = document.getElementById('rvImgPreviewWrap');
+  const reader = new FileReader();
+  reader.onload = e => {
+    wrap.style.display = 'block';
+    wrap.innerHTML = `<div class="rv-img-preview">
+      <img src="${e.target.result}" alt="preview">
+      <button class="rv-img-preview-rm" onclick="clearImage()">✕</button>
+    </div>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage() {
+  state.pendingImage = null;
+  document.getElementById('rvImgPreviewWrap').style.display = 'none';
+  document.getElementById('rvImgPreviewWrap').innerHTML = '';
+  document.getElementById('rvFileInput').value = '';
+}
+
+async function submitReview() {
+  const textarea = document.getElementById('rvPanelInput');
+  const text = textarea.value.trim();
+  const btn = document.getElementById('rvPanelSubmit');
+  if (!text && !state.pendingImage) return;
+  if (!state.token) { alert('Please set up your GitHub token first.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Posting…';
+
+  try {
+    const piece = currentPiece();
+    const num = await getOrCreateIssue(piece);
+
+    let body = `**Review from Malcolm**\n\n${text}`;
+
+    if (state.pendingImage) {
+      btn.textContent = 'Uploading image…';
+      const url = await uploadImage(state.pendingImage);
+      if (url) body += `\n\n![review screenshot](${url})`;
+      else body += '\n\n*(Image upload failed — try again)*';
+      clearImage();
+    }
+
+    const comment = await postComment(num, body);
+    textarea.value = '';
+
+    // Append to panel
+    const msgs = document.getElementById('rvPanelMsgs');
+    const time = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const commentBody = comment.body.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1" style="max-width:100%;border-radius:6px;display:block;margin-top:6px;">').replace(/\n/g,'<br>');
+    msgs.innerHTML += `<div class="rv-msg-user">
+      <div class="rv-msg-user-bubble">${commentBody}</div>
+      <div class="rv-msg-meta">Just now</div>
+    </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+
+    state.commentCounts[piece.id] = (state.commentCounts[piece.id]||0)+1;
+    renderSidebar();
+    await renderCommentSection();
+  } catch(e) {
+    alert('Failed to post review. Check your GitHub token and permissions.');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Post Review';
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+function init() {
+  const params = new URLSearchParams(window.location.search);
+  const tabParam = params.get('tab');
+  if (tabParam && ['articles','emails','posts'].includes(tabParam)) {
+    state.tab = tabParam;
+    document.querySelectorAll('.rv-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabParam));
+  }
+  const savedPat = localStorage.getItem('rv-pat');
+  if (savedPat) {
+    state.token = savedPat;
+    document.getElementById('setupModal').style.display = 'none';
+    document.getElementById('rvStatusText').textContent = 'Connected to GitHub';
+    renderSidebar();
+    renderContent();
+    renderCommentSection();
+    fetchAllCommentCounts();
+  } else {
+    renderSidebar();
+    renderContent();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
