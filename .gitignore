@@ -1,0 +1,16 @@
+# Exclude all large original PNGs in Images/ except the compressed JPEGs we use
+Images/*.png
+Images/hf_*
+Images/Screenshot*
+
+# Exclude all original booth artwork PNGs (keep only the .jpg compressed versions)
+Booth Artwork/**/*.png
+
+# Credentials always excluded
+02_CREDENTIALS.md
+
+# Track all markdown content, intelligence, planning, and to-do docs
+# (no blanket *.md exclusion)
+
+# macOS
+.DS_Store
