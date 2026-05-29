@@ -394,6 +394,22 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 .sp-badge--link { color:#3766fe; background:rgba(55,102,254,.09); }
 .sp-badge--internal { color:var(--muted); background:var(--border-soft); }
 
+/* ── Lead contact rows ── */
+.lead-row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:1px 16px;
+  padding:11px 24px;
+  border-bottom:1px solid var(--border-soft);
+  transition:background .1s;
+}
+.lead-row:hover { background:rgba(124,93,255,.03); }
+.lead-name { font-size:12.5px; font-weight:700; color:var(--ink); line-height:1.3; align-self:end; }
+.lead-co { font-size:11px; font-weight:600; color:var(--purple); opacity:.8; text-align:right; line-height:1.3; align-self:end; }
+.lead-title { font-size:11px; color:var(--body); line-height:1.4; grid-column:1; }
+.lead-email { font-size:10.5px; color:var(--muted); text-align:right; line-height:1.4; font-family:var(--mono, monospace); grid-column:2; }
+
 /* ── PDF Slider ── */
 .pdf-section { display:flex; flex-direction:column; gap:14px; }
 .pdf-sec-hd { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
@@ -939,82 +955,137 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
         <p class="eyebrow">06 / Lead Outreach</p>
         <h2 class="headline">83 Priority Leads.<br><span class="grad">Start with Tier 1.</span></h2>
         <div class="divider"></div>
-        <p class="sub" style="margin-bottom:16px;">CSV is ready in the Lead Hunter folder. Pre-show messages go out this week. Tier 1 are the most valuable, reach them personally before the show floor becomes a race.</p>
-        <a href="assets/HITEC2026_Priority_Leads.csv" download="HITEC2026_Priority_Leads.csv" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#a956ff 0%,#7c5dff 50%,#3766fe 100%);color:#fff;font-size:13px;font-weight:700;padding:10px 20px;border-radius:99px;text-decoration:none;margin-bottom:20px;transition:opacity .15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        <p class="sub" style="margin-bottom:20px;">CSV is ready in the Lead Hunter folder. Pre-show messages go out this week. Tier 1 are the most valuable — reach them personally before the show floor becomes a race.</p>
+        <a href="assets/HITEC2026_Priority_Leads.csv" download="HITEC2026_Priority_Leads.csv" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#a956ff 0%,#7c5dff 50%,#3766fe 100%);color:#fff;font-size:13px;font-weight:700;padding:10px 20px;border-radius:99px;text-decoration:none;margin-bottom:24px;transition:opacity .15s;white-space:nowrap;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M2 12h12" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Download Priority Leads CSV (83 contacts)
+          Download CSV (83 contacts)
         </a>
-        <div class="checklist">
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">Vicki Hamilton, Hilton</span><span class="cl-badge badge-blocking">Tier 1</span></div>
-              <div class="cl-desc">Senior Manager, Procurement Applications · vicki.hamilton@hilton.com</div>
-            </div>
-          </div>
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">John Hearns, Marriott International</span><span class="cl-badge badge-blocking">Tier 1</span></div>
-              <div class="cl-desc">SVP Global Residential Operations · john.hearns@marriott.com</div>
-            </div>
-          </div>
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">Suzette Barreto, Loews Hotels</span><span class="cl-badge badge-blocking">Tier 1</span></div>
-              <div class="cl-desc">Director of Accounting Services · suzette.barreto@loewshotels.com</div>
-            </div>
-          </div>
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">Jigs Gandhi, MR Hotel Management</span><span class="cl-badge badge-blocking">Tier 1</span></div>
-              <div class="cl-desc">VP Procurement, IT &amp; Corporate Services · jgandhi@mrhotelmanagement.net</div>
-            </div>
-          </div>
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">Dawn Fenech, Corinthia Hotels</span><span class="cl-badge badge-blocking">Tier 1</span></div>
-              <div class="cl-desc">Head of Finance · dawnfenech@gmail.com</div>
-            </div>
-          </div>
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">Send pre-show messages to 83 priority leads</span><span class="cl-badge badge-now">83 total</span></div>
-              <div class="cl-desc">CSV ready at: Lead Hunter/HITEC2026_Priority_Leads.csv. Personalise Tier 1 messages. Tier 2 can use a templated outreach.</div>
-            </div>
-          </div>
-          <div class="cl-item">
-            <div class="cl-check urgent"></div>
-            <div class="cl-body">
-              <div class="cl-top"><span class="cl-title">Distribute VIP Buyer Pass to top 20 targets</span><span class="cl-badge badge-now">20 VIP passes</span></div>
-              <div class="cl-desc">VIP buyer pass link gives top targets expedited access. Send with the pre-show message to Tier 1 contacts.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-right" style="background:linear-gradient(135deg,#f0e8ff 0%,#e5edff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:16px;">
-        <div style="font-size:48px;text-align:center;">🎯</div>
-        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:320px;">
-          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Lead breakdown</p>
+        <!-- Lead breakdown box -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">Lead Breakdown</p>
           <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:8px;">
-              <span style="font-weight:700;color:#b91c1c;">Tier 1, Major brands</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.18);border-radius:8px;">
+              <span style="font-weight:700;color:#b91c1c;">Tier 1 &nbsp;·&nbsp; Major brands</span>
               <span class="mono" style="font-weight:800;color:#b91c1c;">14</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--softer);border:1px solid var(--border);border-radius:8px;">
-              <span style="font-weight:600;color:var(--ink);">Tier 2, Regional hotels</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--softer);border:1px solid var(--border);border-radius:8px;">
+              <span style="font-weight:600;color:var(--ink);">Tier 2 &nbsp;·&nbsp; Regional hotels</span>
               <span class="mono" style="font-weight:700;">69</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(124,93,255,.05);border:1px solid rgba(124,93,255,.15);border-radius:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(124,93,255,.06);border:1px solid rgba(124,93,255,.18);border-radius:8px;">
               <span style="font-weight:700;color:var(--purple);">Total priority leads</span>
               <span class="mono" style="font-weight:800;color:var(--purple);">83</span>
             </div>
           </div>
-          <div style="margin-top:12px;font-size:11px;color:var(--muted);">Full list: Lead Hunter/HITEC2026_Priority_Leads.csv</div>
+        </div>
+      </div>
+
+      <!-- Right: scrollable full contact list -->
+      <div class="slide-right" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="padding:18px 24px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:#fafafa;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);">All Contacts</span>
+          <span style="font-size:11px;font-weight:600;color:var(--purple);">83 leads</span>
+        </div>
+        <div style="flex:1;overflow-y:auto;overscroll-behavior:contain;" onwheel="event.stopPropagation()">
+
+          <!-- TIER 1 HEADER -->
+          <div style="padding:10px 24px;background:rgba(239,68,68,.05);border-bottom:1px solid rgba(239,68,68,.12);display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:2;">
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#b91c1c;">Tier 1</span>
+            <span style="font-size:10px;color:#b91c1c;opacity:.7;">Major Brands</span>
+            <span style="margin-left:auto;font-size:11px;font-weight:700;color:#b91c1c;">14</span>
+          </div>
+
+          <div class="lead-row"><div class="lead-name">Derek Alvey</div><div class="lead-co">Highgate</div><div class="lead-title">Regional Director of IT</div><div class="lead-email">dalvey@highgate.com</div></div>
+          <div class="lead-row"><div class="lead-name">Suzette Barreto</div><div class="lead-co">Loews Hotels &amp; Co</div><div class="lead-title">Director of Accounting Services</div><div class="lead-email">suzette.barreto@loewshotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Tom Beedon</div><div class="lead-co">Sheraton Universal Hotel</div><div class="lead-title">General Manager</div><div class="lead-email">tbeedon@aol.com</div></div>
+          <div class="lead-row"><div class="lead-name">Michael Blum</div><div class="lead-co">High Hotels, LTD</div><div class="lead-title">Regional Director of Operations</div><div class="lead-email">mblum@highhotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Cassie Bond</div><div class="lead-co">Lodging Dynamics</div><div class="lead-title">VP Revenue Generation</div><div class="lead-email">cassie.bond@lodgingdynamics.com</div></div>
+          <div class="lead-row"><div class="lead-name">Andrew Casperson</div><div class="lead-co">Coury Hospitality</div><div class="lead-title">President</div><div class="lead-email">acasperson@couryh.com</div></div>
+          <div class="lead-row"><div class="lead-name">Patricia Cruz</div><div class="lead-co">Caesars Entertainment</div><div class="lead-title">Sr Director Revenue Management</div><div class="lead-email">pcruz@caesars.com</div></div>
+          <div class="lead-row"><div class="lead-name">Tiffany Darr</div><div class="lead-co">Caesars Entertainment</div><div class="lead-title">Revenue Operations Manager</div><div class="lead-email">tdarr@caesars.com</div></div>
+          <div class="lead-row"><div class="lead-name">Tony Gaeta</div><div class="lead-co">Peregrine Hospitality</div><div class="lead-title">SVP Technology &amp; IT Operations</div><div class="lead-email">tgaeta@peregrinehg.com</div></div>
+          <div class="lead-row"><div class="lead-name">John Hearns</div><div class="lead-co">Marriott International</div><div class="lead-title">SVP Global Residential Operations</div><div class="lead-email">john.hearns@marriott.com</div></div>
+          <div class="lead-row"><div class="lead-name">Phil Hornstra</div><div class="lead-co">Arizona Biltmore, Waldorf Astoria</div><div class="lead-title">Director of Property Operations</div><div class="lead-email">phil.hornstra@arizonabiltmore.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jessica Lamont</div><div class="lead-co">Coury Hospitality</div><div class="lead-title">Corporate Director, System Admin</div><div class="lead-email">jlamont@couryh.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jeff Leung</div><div class="lead-co">Pacific Reach / Hilton Vancouver</div><div class="lead-title">General Manager / Asset Manager</div><div class="lead-email">jeff.leung@hilton.com</div></div>
+          <div class="lead-row"><div class="lead-name">Dan Slattery</div><div class="lead-co">Ramada by Wyndham Viscount</div><div class="lead-title">Director of Revenue Management</div><div class="lead-email">dorm@viscountsuite.com</div></div>
+
+          <!-- TIER 2 HEADER -->
+          <div style="padding:10px 24px;background:rgba(124,93,255,.05);border-top:1px solid var(--border);border-bottom:1px solid rgba(124,93,255,.12);display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:2;">
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);">Tier 2</span>
+            <span style="font-size:10px;color:var(--purple);opacity:.7;">Regional Hotels</span>
+            <span style="margin-left:auto;font-size:11px;font-weight:700;color:var(--purple);">69</span>
+          </div>
+
+          <div class="lead-row"><div class="lead-name">Gunnar Backhaus</div><div class="lead-co">Mt. Olympus Water &amp; Theme Park</div><div class="lead-title">Assistant General Manager</div><div class="lead-email">gunnar.b@mtolympuspark.com</div></div>
+          <div class="lead-row"><div class="lead-name">Ryan Bender</div><div class="lead-co">Fisher Island Club</div><div class="lead-title">Assistant Director of Finance</div><div class="lead-email">rbender@fisherislandclub.com</div></div>
+          <div class="lead-row"><div class="lead-name">Melinda Benum</div><div class="lead-co">Peppermill Reno</div><div class="lead-title">Director of Hotel Operations</div><div class="lead-email">mbenum@peppermillreno.com</div></div>
+          <div class="lead-row"><div class="lead-name">Neal Berz</div><div class="lead-co">MIS Computer Corporation</div><div class="lead-title">CEO</div><div class="lead-email">berz@miscomputer.com</div></div>
+          <div class="lead-row"><div class="lead-name">Vardan Bhangara</div><div class="lead-co">The Park Infinity</div><div class="lead-title">Owner</div><div class="lead-email">ananthotels@gmail.com</div></div>
+          <div class="lead-row"><div class="lead-name">John Brown</div><div class="lead-co">Station Casinos</div><div class="lead-title">Corporate VP Hotel &amp; Revenue</div><div class="lead-email">john.brown@stationcasinos.com</div></div>
+          <div class="lead-row"><div class="lead-name">Fred Brown</div><div class="lead-co">Hansji Corporation</div><div class="lead-title">VP Operations and Technology</div><div class="lead-email">fredb@hansji.com</div></div>
+          <div class="lead-row"><div class="lead-name">Dan Campbell</div><div class="lead-co">Camelback Hotel Corp.</div><div class="lead-title">CFO</div><div class="lead-email">dan@camelbackhotel.com</div></div>
+          <div class="lead-row"><div class="lead-name">Karen Cardwell</div><div class="lead-co">Pursuit Collection</div><div class="lead-title">Sr Director, Revenue</div><div class="lead-email">kcardwell@pursuitcollection.com</div></div>
+          <div class="lead-row"><div class="lead-name">Joel Cerino</div><div class="lead-co">PAM HOTELS</div><div class="lead-title">VP of IT Operations</div><div class="lead-email">jcerino@pamhotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Keane Chin</div><div class="lead-co">Happier</div><div class="lead-title">Director Global IT Operations</div><div class="lead-email">keanechin@gmail.com</div></div>
+          <div class="lead-row"><div class="lead-name">Brandon Cicero</div><div class="lead-co">Edge Communications</div><div class="lead-title">VP Customer Success</div><div class="lead-email">bcicero@edgecommunications.com</div></div>
+          <div class="lead-row"><div class="lead-name">Christian Clifford</div><div class="lead-co">Raymond James</div><div class="lead-title">Managing Director</div><div class="lead-email">natallie@fetchpay.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jose Cruz Ramos</div><div class="lead-co">PAM Hotels</div><div class="lead-title">VP Enterprise Systems &amp; Data</div><div class="lead-email">jcruz@pamhotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Sue Dancy</div><div class="lead-co">OTO Development, LLC</div><div class="lead-title">Controller</div><div class="lead-email">sdancy@otodevelopment.com</div></div>
+          <div class="lead-row"><div class="lead-name">Bill Deller</div><div class="lead-co">Harrison Group</div><div class="lead-title">CFO</div><div class="lead-email">bill.deller@harrisongp.com</div></div>
+          <div class="lead-row"><div class="lead-name">Darren Desilva</div><div class="lead-co">Arlo Hotels</div><div class="lead-title">VP Information Technology</div><div class="lead-email">ddesilva@arlohotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Dennis Eichen</div><div class="lead-co">Camber Corporation</div><div class="lead-title">V.P. of Finance</div><div class="lead-email">deichen@cambercorporation.com</div></div>
+          <div class="lead-row"><div class="lead-name">Dawn Fenech</div><div class="lead-co">Corinthia Hotels</div><div class="lead-title">Head of Finance</div><div class="lead-email">dawnfenech@gmail.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jigs Gandhi</div><div class="lead-co">MR Hotel Management</div><div class="lead-title">VP Procurement, IT &amp; Corporate Services</div><div class="lead-email">jgandhi@mrhotelmanagement.net</div></div>
+          <div class="lead-row"><div class="lead-name">Andrew Geiger</div><div class="lead-co">Harrison Group</div><div class="lead-title">Director of Revenue Management</div><div class="lead-email">ageiger@harrisongp.com</div></div>
+          <div class="lead-row"><div class="lead-name">Perry Grove</div><div class="lead-co">Cote Hospitality Co</div><div class="lead-title">Corporate Director of IT</div><div class="lead-email">perry.grove@cotehospitality.com</div></div>
+          <div class="lead-row"><div class="lead-name">Brandi Hamilton</div><div class="lead-co">Zachry Hotels</div><div class="lead-title">Administrative Coordinator</div><div class="lead-email">brandi.hamilton@zachrycorp.com</div></div>
+          <div class="lead-row"><div class="lead-name">Vicki Hamilton</div><div class="lead-co">Hilton</div><div class="lead-title">Sr Manager, Procurement Applications</div><div class="lead-email">vicki.hamilton@hilton.com</div></div>
+          <div class="lead-row"><div class="lead-name">James Hazzard</div><div class="lead-co">FCL Management</div><div class="lead-title">Regional Director of Operations</div><div class="lead-email">jhazzard@foundhotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Matthew Hughes</div><div class="lead-co">American Hospitality Management</div><div class="lead-title">Chief Operating Officer</div><div class="lead-email">matt.hughes@ahm-hotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Carlos Jacinto</div><div class="lead-co">Ensemble Hospitality</div><div class="lead-title">Corporate Director of IT</div><div class="lead-email">cjacinto@live.com</div></div>
+          <div class="lead-row"><div class="lead-name">Beata Jarmolinska</div><div class="lead-co">Gurney's Resorts</div><div class="lead-title">Director of Revenue</div><div class="lead-email">lindsey.jasso@marriott.com</div></div>
+          <div class="lead-row"><div class="lead-name">Steven Kahn</div><div class="lead-co">Singita Management Company</div><div class="lead-title">Group GM Information &amp; Technology</div><div class="lead-email">steven.k@singita.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jason Kaminski</div><div class="lead-co">American Liberty Hospitality</div><div class="lead-title">Corporate F&amp;B Manager</div><div class="lead-email">jkaminski@amliberty.com</div></div>
+          <div class="lead-row"><div class="lead-name">David Macdonald</div><div class="lead-co">HMC</div><div class="lead-title">COO</div><div class="lead-email">dmacdonald@hotelmc.net</div></div>
+          <div class="lead-row"><div class="lead-name">Neal Madhiwala</div><div class="lead-co">SK Hospitality</div><div class="lead-title">Owner</div><div class="lead-email">skhospitality@yahoo.com</div></div>
+          <div class="lead-row"><div class="lead-name">Samraat Malhotra</div><div class="lead-co">Corinthia Hotels</div><div class="lead-title">Director Finance &amp; Head of Transformation</div><div class="lead-email">samraat.malhotra@corinthia.com</div></div>
+          <div class="lead-row"><div class="lead-name">Robert Martinez</div><div class="lead-co">Azul Hospitality Group</div><div class="lead-title">VP Information Technology</div><div class="lead-email">rmartinez@azulhg.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jon McMillian</div><div class="lead-co">AD1 Global</div><div class="lead-title">Corporate Director eCommerce &amp; Marketing</div><div class="lead-email">jon.mcmillian@ad1global.com</div></div>
+          <div class="lead-row"><div class="lead-name">Oliver Meinzer</div><div class="lead-co">Marriott International</div><div class="lead-title">VP Rooms &amp; Guest Experience Innovation</div><div class="lead-email">oliver.meinzer@marriott.com</div></div>
+          <div class="lead-row"><div class="lead-name">Robert Melendez</div><div class="lead-co">MAKEREADY</div><div class="lead-title">Vice President of IT</div><div class="lead-email">rmelendez@makeready.com</div></div>
+          <div class="lead-row"><div class="lead-name">Carlos Melgar</div><div class="lead-co">Carillon Miami Wellness Resort</div><div class="lead-title">Chief Financial Officer</div><div class="lead-email">carlos.melgar@carillonhotel.com</div></div>
+          <div class="lead-row"><div class="lead-name">Ian Mikheev</div><div class="lead-co">InnVentures</div><div class="lead-title">Task Force General Manager</div><div class="lead-email">imikheev@innventures.com</div></div>
+          <div class="lead-row"><div class="lead-name">Fernando Murguia</div><div class="lead-co">Sybaris Hospitality</div><div class="lead-title">Operations Manager</div><div class="lead-email">fmurguia@sybaris.com</div></div>
+          <div class="lead-row"><div class="lead-name">Chris Myer</div><div class="lead-co">Myer Hospitality / Tripium</div><div class="lead-title">Vice President</div><div class="lead-email">chris@myerhotels.com</div></div>
+          <div class="lead-row"><div class="lead-name">Marcos Oliveira</div><div class="lead-co">IRHG</div><div class="lead-title">Director of Lodging Operations</div><div class="lead-email">moliveira@theindigoroad.com</div></div>
+          <div class="lead-row"><div class="lead-name">Christian Odin Ortiz</div><div class="lead-co">Sandos Hotels</div><div class="lead-title">Corporate Director, Distribution &amp; Revenue</div><div class="lead-email">cortizm@sandos.com</div></div>
+          <div class="lead-row"><div class="lead-name">Pejman Parvazi</div><div class="lead-co">Hilton</div><div class="lead-title">Regional Director, Information Technology</div><div class="lead-email">pejman.parvazi@hilton.com</div></div>
+          <div class="lead-row"><div class="lead-name">Gary Patel</div><div class="lead-co">Bhagvan Hospitality</div><div class="lead-title">CEO</div><div class="lead-email">rilackland@bhagvanhospitality.com</div></div>
+          <div class="lead-row"><div class="lead-name">Harry Patel</div><div class="lead-co">Insignia Hospitality Group</div><div class="lead-title">Senior Vice President</div><div class="lead-email">harry@insigniamgmt.com</div></div>
+          <div class="lead-row"><div class="lead-name">Minesh Patel</div><div class="lead-co">Primary Care Medical</div><div class="lead-title">CEO</div><div class="lead-email">drpatel@primarycaremedic.com</div></div>
+          <div class="lead-row"><div class="lead-name">Niraj Patel</div><div class="lead-co">Ashirwad Property Management</div><div class="lead-title">Vice President</div><div class="lead-email">niraj@blackgoldtx.com</div></div>
+          <div class="lead-row"><div class="lead-name">Vikash Patel</div><div class="lead-co">Haven Management Services</div><div class="lead-title">CEO</div><div class="lead-email">vic.patel@haven-ms.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jessica Pearce</div><div class="lead-co">Pomeroy Lodging</div><div class="lead-title">Area Director of Operations</div><div class="lead-email">jessicap@pomeroylodging.com</div></div>
+          <div class="lead-row"><div class="lead-name">Danette Perrotta</div><div class="lead-co">Catalina Island Company</div><div class="lead-title">VP, Corporate Controller</div><div class="lead-email">dperrotta@scico.com</div></div>
+          <div class="lead-row"><div class="lead-name">Greg Perry</div><div class="lead-co">RREAF Holdings</div><div class="lead-title">VP, Hospitality</div><div class="lead-email">greg@rreaf.com</div></div>
+          <div class="lead-row"><div class="lead-name">Alina Read</div><div class="lead-co">Hotel North Pole</div><div class="lead-title">General Manager</div><div class="lead-email">aread@hotelnorthpole.com</div></div>
+          <div class="lead-row"><div class="lead-name">Nannette Rexach</div><div class="lead-co">Royal Hospitality / El Conquistador</div><div class="lead-title">Finance Director</div><div class="lead-email">nrexach@conquistadorresort.com</div></div>
+          <div class="lead-row"><div class="lead-name">Anastassia Romanova</div><div class="lead-co">Hotel Nikko San Francisco</div><div class="lead-title">VP and CFO</div><div class="lead-email">aromanova@hotelnikkosf.com</div></div>
+          <div class="lead-row"><div class="lead-name">Mitchell Schwartz</div><div class="lead-co">Apple Hospitality REIT</div><div class="lead-title">VP Ancillary Services</div><div class="lead-email">mschwartz@applereit.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jon Scofield</div><div class="lead-co">Hilton</div><div class="lead-title">VP, HSM Strategy &amp; Business Operations</div><div class="lead-email">jonathan.scofield@hilton.com</div></div>
+          <div class="lead-row"><div class="lead-name">Victor Scouten</div><div class="lead-co">Midas Hospitality</div><div class="lead-title">IT Project Coordinator</div><div class="lead-email">vscouten@midashospitality.com</div></div>
+          <div class="lead-row"><div class="lead-name">John Smith</div><div class="lead-co">La Cantera Resort</div><div class="lead-title">Director of Finance</div><div class="lead-email">smith4464@att.net</div></div>
+          <div class="lead-row"><div class="lead-name">Chandresh Sonraj</div><div class="lead-co">Monarch Resorts</div><div class="lead-title">Owner</div><div class="lead-email">sonraj@gmail.com</div></div>
+          <div class="lead-row"><div class="lead-name">Susan Springsteen</div><div class="lead-co">H2O Connected</div><div class="lead-title">President</div><div class="lead-email">email2srb@gmail.com</div></div>
+          <div class="lead-row"><div class="lead-name">Ted Teruya</div><div class="lead-co">TNT Hospitality</div><div class="lead-title">Owner</div><div class="lead-email">ted.teruya@tnthospitalityusa.com</div></div>
+          <div class="lead-row"><div class="lead-name">Leslie Tyma</div><div class="lead-co">Station Casinos</div><div class="lead-title">Product Owner</div><div class="lead-email">leslie.tyma@stationcasinos.com</div></div>
+          <div class="lead-row"><div class="lead-name">Rik van der Berg</div><div class="lead-co">Bucuti &amp; Tara Beach Resort Aruba</div><div class="lead-title">General Manager</div><div class="lead-email">manager@bucuti.com</div></div>
+          <div class="lead-row"><div class="lead-name">Petrus van Grinsven</div><div class="lead-co">Playa Linda Beach Resort</div><div class="lead-title">General Manager</div><div class="lead-email">petervangrinsven@playalinda.com</div></div>
+          <div class="lead-row"><div class="lead-name">Jurgen Van Schaijk</div><div class="lead-co">Amsterdam Manor Beach Resort</div><div class="lead-title">Managing Director</div><div class="lead-email">management@amsterdammanor.aw</div></div>
+          <div class="lead-row"><div class="lead-name">Kevin Wu</div><div class="lead-co">Halekulani Corporation</div><div class="lead-title">Director of Finance</div><div class="lead-email">kevin.wu@halekulanicorp.com</div></div>
+          <div class="lead-row"><div class="lead-name">Bert Yen</div><div class="lead-co">SB Yen Management Group</div><div class="lead-title">President</div><div class="lead-email">byen@sbyen.com</div></div>
+
         </div>
       </div>
     </div>
