@@ -289,6 +289,60 @@ h2.headline { font-size: clamp(24px, 3vw, 38px); font-weight: 800; line-height: 
 }
 .sc-hl:hover { background:rgba(251,191,36,.55); }
 
+/* Scout file attachments */
+.scout-input-area { flex-direction:column; gap:6px; }
+.scout-input-row { display:flex; gap:8px; align-items:flex-end; width:100%; }
+.scout-attach-btn {
+  width:34px; height:34px; border-radius:9px; border:1px solid var(--border);
+  background:#fff; cursor:pointer; color:var(--muted); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  transition:all .15s;
+}
+.scout-attach-btn:hover { border-color:var(--purple); color:var(--purple); background:rgba(124,93,255,.06); }
+.scout-pending {
+  display:flex; flex-wrap:wrap; gap:6px;
+  padding:6px 0 2px;
+}
+.scout-pending:empty { display:none; }
+.scout-pending-item {
+  position:relative; flex-shrink:0;
+}
+.scout-pending-thumb {
+  width:52px; height:52px; object-fit:cover; border-radius:7px;
+  border:1px solid var(--border); display:block;
+}
+.scout-pending-chip {
+  display:flex; align-items:center; gap:5px; padding:4px 8px 4px 6px;
+  background:rgba(124,93,255,.08); border:1px solid rgba(124,93,255,.2);
+  border-radius:7px; font-size:11px; color:var(--purple); font-weight:600;
+  max-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.scout-pending-chip svg { flex-shrink:0; }
+.scout-pending-rm {
+  position:absolute; top:-5px; right:-5px;
+  width:16px; height:16px; border-radius:50%; border:1.5px solid #fff;
+  background:var(--ink); color:#fff; font-size:9px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.scout-attach-strip {
+  display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;
+}
+.scout-img-attach {
+  max-width:100%; border-radius:8px; border:1px solid var(--border);
+  display:block; cursor:pointer; max-height:180px; object-fit:contain;
+}
+.scout-file-attach {
+  display:inline-flex; align-items:center; gap:5px; padding:4px 10px 4px 7px;
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  font-size:11.5px; font-weight:600; color:var(--ink); text-decoration:none;
+  transition:border-color .15s;
+}
+.scout-file-attach:hover { border-color:var(--purple); color:var(--purple); }
+.scout-file-ext {
+  font-size:9px; font-weight:800; text-transform:uppercase; color:#fff;
+  background:var(--purple); border-radius:4px; padding:1px 4px; letter-spacing:.04em;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .app { grid-template-columns: 1fr; }
@@ -1432,14 +1486,21 @@ cvRender('post');
     </div>
     <div class="scout-feed" id="scout-feed"></div>
     <div class="scout-input-area">
-      <textarea class="scout-ta" id="scout-ta" placeholder="Add a note for this content..." rows="1"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();scoutSubmit();}"
-        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
-      <button class="scout-send" onclick="scoutSubmit()" title="Save note">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <path d="M14 2L7 9M14 2L9 14l-2-5L2 7l12-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <div class="scout-pending" id="scout-pending"></div>
+      <div class="scout-input-row">
+        <button class="scout-attach-btn" onclick="document.getElementById('scout-file-in').click()" title="Attach image, PDF, doc, or any file">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <textarea class="scout-ta" id="scout-ta" placeholder="Add a note, or attach a file..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();scoutSubmit();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+        <button class="scout-send" onclick="scoutSubmit()" title="Save note">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M14 2L7 9M14 2L9 14l-2-5L2 7l12-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <input type="file" id="scout-file-in" multiple accept="*/*" style="display:none" onchange="scoutFilesSelected(this)">
     </div>
   </div>
 </div>
@@ -1463,8 +1524,15 @@ cvRender('post');
   let ctx = { type: null, idx: 0, slideIdx: 0 };
   let panelOpen = false;
   let pendingSel = null;
+  let pendingFiles = [];
 
-  function save() { localStorage.setItem(SCOUT_KEY, JSON.stringify(comments)); }
+  function save() {
+    try {
+      localStorage.setItem(SCOUT_KEY, JSON.stringify(comments));
+    } catch(e) {
+      alert('Storage full: the attached files are too large to save locally. Try attaching smaller files or remove some existing notes with attachments.');
+    }
+  }
 
   function ctxKey() {
     return ctx.type ? (ctx.type + ':' + ctx.idx) : ('slide:' + ctx.slideIdx);
@@ -1509,12 +1577,27 @@ cvRender('post');
       return;
     }
     feed.innerHTML = list.map(function(c) {
-      return '<div class="scout-comment-item" data-id="' + esc(c.id) + '">' +
-        (c.sel ? '<div class="scout-ci-sel">“' + esc(c.sel) + '”</div>' : '') +
-        '<div class="scout-ci-text">' + esc(c.text) + '</div>' +
-        '<div class="scout-ci-meta">' +
-          '<span class="scout-ci-time">' + esc(c.time) + '</span>' +
-          '<button class="scout-ci-del" onclick="window.scoutDel(\'' + c.id + '\')">Remove</button>' +
+      var attachHtml = '';
+      if (c.attachments && c.attachments.length) {
+        attachHtml = '<div class=”scout-attach-strip”>' + c.attachments.map(function(a) {
+          if (a.type && a.type.startsWith('image/')) {
+            return '<a href=”' + a.data + '” download=”' + esc(a.name) + '” title=”' + esc(a.name) + '”>' +
+              '<img class=”scout-img-attach” src=”' + a.data + '” alt=”' + esc(a.name) + '”>' +
+              '</a>';
+          }
+          var ext = a.name.split('.').pop().slice(0,5) || 'file';
+          return '<a class=”scout-file-attach” href=”' + a.data + '” download=”' + esc(a.name) + '”>' +
+            '<span class=”scout-file-ext”>' + esc(ext) + '</span>' +
+            esc(a.name) + '</a>';
+        }).join('') + '</div>';
+      }
+      return '<div class=”scout-comment-item” data-id=”' + esc(c.id) + '”>' +
+        (c.sel ? '<div class=”scout-ci-sel”>”' + esc(c.sel) + '”</div>' : '') +
+        (c.text ? '<div class=”scout-ci-text”>' + esc(c.text) + '</div>' : '') +
+        attachHtml +
+        '<div class=”scout-ci-meta”>' +
+          '<span class=”scout-ci-time”>' + esc(c.time) + '</span>' +
+          '<button class=”scout-ci-del” onclick=”window.scoutDel(\'' + c.id + '\')”>Remove</button>' +
         '</div></div>';
     }).join('');
   }
@@ -1591,14 +1674,56 @@ cvRender('post');
   window.scoutSubmit = function() {
     const ta = document.getElementById('scout-ta');
     const text = ta.value.trim();
-    if (!text) return;
+    if (!text && !pendingFiles.length) return;
     const id = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
-    comments.push({ id: id, ctx: ctxKey(), text: text, sel: null, time: fmtTime() });
+    const entry = { id: id, ctx: ctxKey(), text: text, sel: null, time: fmtTime() };
+    if (pendingFiles.length) entry.attachments = pendingFiles.slice();
+    comments.push(entry);
     save();
     ta.value = '';
     ta.style.height = 'auto';
+    pendingFiles = [];
+    renderPending();
     updateBadge();
     renderFeed();
+  };
+
+  function renderPending() {
+    const strip = document.getElementById('scout-pending');
+    if (!strip) return;
+    if (!pendingFiles.length) { strip.innerHTML = ''; return; }
+    strip.innerHTML = pendingFiles.map(function(f, i) {
+      if (f.type && f.type.startsWith('image/')) {
+        return '<div class="scout-pending-item"><img class="scout-pending-thumb" src="' + f.data + '" title="' + esc(f.name) + '">' +
+          '<button class="scout-pending-rm" onclick="scoutRemovePending(' + i + ')">&times;</button></div>';
+      }
+      var ext = f.name.split('.').pop().slice(0,5) || 'file';
+      return '<div class="scout-pending-item"><div class="scout-pending-chip">' +
+        '<span class="scout-file-ext">' + esc(ext) + '</span>' + esc(f.name.length > 16 ? f.name.slice(0,14)+'..' : f.name) + '</div>' +
+        '<button class="scout-pending-rm" onclick="scoutRemovePending(' + i + ')">&times;</button></div>';
+    }).join('');
+  }
+
+  window.scoutRemovePending = function(i) {
+    pendingFiles.splice(i, 1);
+    renderPending();
+  };
+
+  window.scoutFilesSelected = function(input) {
+    const files = Array.from(input.files);
+    if (!files.length) return;
+    var done = 0;
+    files.forEach(function(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        pendingFiles.push({ name: file.name, type: file.type, data: e.target.result });
+        done++;
+        if (done === files.length) renderPending();
+      };
+      reader.readAsDataURL(file);
+    });
+    input.value = '';
+    if (!panelOpen) { panelOpen = true; document.getElementById('scout-panel').classList.add('open'); renderFeed(); }
   };
 
   window.scoutDel = function(id) {
@@ -1704,6 +1829,43 @@ cvRender('post');
   });
 
   updateBadge();
+})();
+</script>
+
+<!-- Scout seed comments — test data as Akila, injected once -->
+<script>
+(function() {
+  var KEY = 'scout_v1';
+  var SEED_PREFIX = 'seed_';
+  var existing = [];
+  try { existing = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) {}
+
+  var seededIds = existing.filter(function(c){ return c.id.indexOf(SEED_PREFIX) === 0; }).map(function(c){ return c.id; });
+  if (seededIds.length > 0) return; // already seeded
+
+  var seeds = [
+    // Articles
+    { id:'seed_art0_a', ctx:'art:0', text:'Hero article. Need to confirm with Malcolm that the Five-Point Plan description is accurate before this goes anywhere near publishing.', sel:null, time:'29 May 09:14 am' },
+    { id:'seed_art0_b', ctx:'art:0', text:'The Hilary quote is gold. Make sure this is attributed exactly as it appears in the press release.', sel:'Hilary Fleischer, Partner at Strattam Capital', time:'29 May 09:17 am' },
+    { id:'seed_art2_a', ctx:'art:2', text:'Love the AI accuracy angle here. Can we get a specific customer quote to back the 99% claim? Even an anonymous reference would help.', sel:null, time:'29 May 10:02 am' },
+    { id:'seed_art4_a', ctx:'art:4', text:'This one needs a second pass before SEO publish. The FAQ section feels a bit generic compared to the others.', sel:null, time:'29 May 10:44 am' },
+    // Emails
+    { id:'seed_eml0_a', ctx:'eml:0', text:'Good template. Before blast, personalise the invoice volume number for each segment. Tier 1 hotels are 10k+ invoices/month not 5k.', sel:null, time:'29 May 11:03 am' },
+    { id:'seed_eml1_a', ctx:'eml:1', text:'Vicki Hamilton is a warm lead via the Accor network. Mention Accor by name in outreach, she will know the platform already.', sel:null, time:'29 May 11:08 am' },
+    { id:'seed_eml3_a', ctx:'eml:3', text:'Statement reconciliation angle is the strongest of all 10 emails. This is the one to A/B test at volume.', sel:'Statement reconciliation: the AP problem most platforms ignore', time:'29 May 11:22 am' },
+    { id:'seed_eml8_a', ctx:'eml:8', text:'VIP pass links are not confirmed yet. Do NOT send this email until we have the buyer pass portal link from the HITEC team.', sel:null, time:'29 May 12:00 pm' },
+    // Posts
+    { id:'seed_post0_a', ctx:'post:0', text:'Malcolm approved the tag list verbally. Get written sign-off before scheduling. Strattam comms team also needs to approve timing.', sel:null, time:'29 May 12:30 pm' },
+    { id:'seed_post0_b', ctx:'post:0', text:'Do not post this before the press release is live. Coordinate with Peter Berk at Hot Ice Media.', sel:'More to follow.', time:'29 May 12:32 pm' },
+    { id:'seed_post2_a', ctx:'post:2', text:'Check with Karen that she is happy with this before scheduling. She may want to write her own version or approve the wording.', sel:null, time:'29 May 01:14 pm' },
+    { id:'seed_post3_a', ctx:'post:3', text:'Same check needed for Jon. Ping him via Malcolm once he starts.', sel:null, time:'29 May 01:16 pm' },
+    { id:'seed_post4_a', ctx:'post:4', text:'My personal post. I want to rewrite the last paragraph before this goes out. The tone feels a bit flat at the end.', sel:'That is the kind of mandate you run toward.', time:'29 May 01:45 pm' },
+    // Slide-level
+    { id:'seed_slide0_a', ctx:'slide:0', text:'Move HITEC exhibitor portal registration confirmation to top of this week list. Still waiting on badge allocation.', sel:null, time:'29 May 08:55 am' }
+  ];
+
+  var merged = existing.concat(seeds);
+  localStorage.setItem(KEY, JSON.stringify(merged));
 })();
 </script>
 </body>
